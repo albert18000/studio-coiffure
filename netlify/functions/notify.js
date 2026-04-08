@@ -31,7 +31,7 @@ exports.handler = async function(event) {
               <div style="font-size:16px;color:#2d7a4a">à ${slot_time}</div>
             </div>
             <p style="color:#7a7870;font-size:14px">Réservez vite avant qu'il ne soit pris !</p>
-            <a href="https://starlit-starburst-fa1d1e.netlify.app" style="display:block;background:#c9a227;color:#fff;text-align:center;padding:12px;border-radius:8px;text-decoration:none;font-weight:600;margin-top:16px">Réserver maintenant →</a>
+            <a href="https://incomparable-profiterole-678573.netlify.app" style="display:block;background:#c9a227;color:#fff;text-align:center;padding:12px;border-radius:8px;text-decoration:none;font-weight:600;margin-top:16px">Réserver maintenant →</a>
           </div>
           <p style="text-align:center;font-size:12px;color:#b0ada4;margin-top:16px">Studio Coiffure — Gestion des réservations</p>
         </div>`;
@@ -45,7 +45,7 @@ exports.handler = async function(event) {
           <div style="background:#fff;border:1px solid #e8e6e0;border-top:none;padding:24px;border-radius:0 0 12px 12px">
             <h2 style="color:#1c1b18;font-size:18px;margin-bottom:12px">Les créneaux sont ouverts à la réservation !</h2>
             <p style="color:#7a7870;font-size:15px;line-height:1.6">De nouveaux créneaux viennent d'être mis en ligne. Connectez-vous pour réserver le vôtre avant qu'ils ne soient tous pris !</p>
-            <a href="https://starlit-starburst-fa1d1e.netlify.app" style="display:block;background:#c9a227;color:#fff;text-align:center;padding:12px;border-radius:8px;text-decoration:none;font-weight:600;margin-top:20px">Voir les créneaux →</a>
+            <a href="https://incomparable-profiterole-678573.netlify.app" style="display:block;background:#c9a227;color:#fff;text-align:center;padding:12px;border-radius:8px;text-decoration:none;font-weight:600;margin-top:20px">Voir les créneaux →</a>
           </div>
           <p style="text-align:center;font-size:12px;color:#b0ada4;margin-top:16px">Studio Coiffure — Gestion des réservations</p>
         </div>`;
@@ -63,7 +63,7 @@ exports.handler = async function(event) {
               <div style="font-size:20px;font-weight:700;color:#b87020">${slot_date}</div>
               <div style="font-size:16px;color:#b87020">à ${slot_time}</div>
             </div>
-            <a href="https://starlit-starburst-fa1d1e.netlify.app" style="display:block;background:#c9a227;color:#fff;text-align:center;padding:12px;border-radius:8px;text-decoration:none;font-weight:600;margin-top:16px">Réserver maintenant →</a>
+            <a href="https://incomparable-profiterole-678573.netlify.app" style="display:block;background:#c9a227;color:#fff;text-align:center;padding:12px;border-radius:8px;text-decoration:none;font-weight:600;margin-top:16px">Réserver maintenant →</a>
           </div>
           <p style="text-align:center;font-size:12px;color:#b0ada4;margin-top:16px">Studio Coiffure — Gestion des réservations</p>
         </div>`;
