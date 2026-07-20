@@ -403,9 +403,6 @@ table.cal{width:100%;min-width:390px;border-collapse:collapse;table-layout:fixed
         <div class="fld"><label class="lbl">Heure début</label><select id="adm-time-start" class="inp"></select></div>
         <div class="fld"><label class="lbl">Heure fin (optionnel)</label><select id="adm-time-end" class="inp"><option value="">Une seule heure</option></select></div>
       </div>
-      <div class="a-row">
-        <div class="fld"><label class="lbl">Prestation</label><select id="adm-service" class="inp"></select></div>
-      </div>
       <div style="margin-bottom:10px">
         <label class="toggle-wrap" style="font-size:13px">
           <label class="toggle"><input type="checkbox" id="slot-visible-inp" checked><div class="toggle-track"></div><div class="toggle-thumb"></div></label>
@@ -417,6 +414,7 @@ table.cal{width:100%;min-width:390px;border-collapse:collapse;table-layout:fixed
         <input type="datetime-local" id="adm-publish-at" class="inp">
         <p style="font-size:11px;color:var(--hint);margin-top:4px">Si renseigné, le créneau reste caché puis devient visible tout seul à cette heure, avec notification automatique envoyée à tous.</p>
       </div>
+      <p style="font-size:11px;color:var(--hint);margin-bottom:10px">La prestation sera choisie par le client juste après sa réservation.</p>
       <button class="btn btn-dark btn-sm" onclick="addSlot()">+ Ajouter</button>
       <div id="as-msg" class="msg" style="margin-top:10px"></div>
     </div>
@@ -547,6 +545,15 @@ table.cal{width:100%;min-width:390px;border-collapse:collapse;table-layout:fixed
       <button class="btn btn-dark" onclick="saveProfil()">Enregistrer</button>
       <button class="btn btn-out" onclick="closeEditProfil()">Annuler</button>
     </div>
+  </div>
+</div>
+
+<!-- MODAL CHOIX PRESTATION -->
+<div class="ov" id="ov-svc">
+  <div class="modal">
+    <h3>Quelle prestation souhaitez-vous ?</h3>
+    <p class="ms">Choisissez la coupe correspondant à votre créneau réservé.</p>
+    <div class="modal-acts" id="svc-pick-acts"></div>
   </div>
 </div>
 
@@ -684,7 +691,7 @@ async function loadAnnonces(){
 // ── SERVICES ──
 function populateServiceSelects(){
   const opts=allServices.filter(s=>s.active!==false).map(s=>`<option value="${s.id}">${s.name} — ${(s.price_cents/100).toFixed(2)}€</option>`).join('');
-  ['adm-service','man-service'].forEach(id=>{const el=document.getElementById(id);if(el)el.innerHTML=opts;});
+  ['man-service'].forEach(id=>{const el=document.getElementById(id);if(el)el.innerHTML=opts;});
 }
 async function addService(){
   const name=document.getElementById('svc-name').value.trim();
@@ -985,7 +992,8 @@ function openM(sid){
     <button class="btn btn-out" style="color:var(--red);border-color:var(--red-b)" onclick="admDelSlot()">Supprimer</button>
     <button class="btn btn-out" onclick="closeM()">Fermer ✕</button>`;
   }else if(isMine){
-    acts.innerHTML=`<button class="btn btn-red" onclick="cancelBook()">Annuler ma réservation</button>
+    acts.innerHTML=`<button class="btn btn-out" onclick="openServicePicker('${slot.id}',false)">🏷 ${svc?'Changer la prestation':'Choisir la prestation'}</button>
+    <button class="btn btn-red" onclick="cancelBook()">Annuler ma réservation</button>
     <button class="btn btn-out" onclick="closeM()">Fermer ✕</button>`;
   }else if(!isTaken){
     let b=`<button class="btn btn-dark" onclick="confirmBook()">Réserver ✓</button>
@@ -996,7 +1004,8 @@ function openM(sid){
   }else if(CU?.is_admin){
     const bkr=allUsers.find(u=>u.id===slot.booked_by);
     document.getElementById('m-sub').textContent+=` · @${bkr?.username||'?'}`;
-    acts.innerHTML=`<button class="btn btn-red" onclick="admCancelBook()">Annuler la réservation</button>
+    acts.innerHTML=`<button class="btn btn-out" onclick="openServicePicker('${slot.id}',false)">🏷 ${svc?'Changer la prestation':'Choisir la prestation'}</button>
+    <button class="btn btn-red" onclick="admCancelBook()">Annuler la réservation</button>
     <button class="btn btn-out" style="color:var(--red);border-color:var(--red-b)" onclick="admDelSlot()">Supprimer</button>
     <button class="btn btn-out" onclick="closeM()">Fermer ✕</button>`;
   }else{acts.innerHTML=`<button class="btn btn-out" onclick="closeM()">Fermer ✕</button>`;}
@@ -1022,7 +1031,28 @@ async function confirmBook(){
   const{data:check}=await sb.from('slots').select('booked_by').eq('id',pendSlot).single();
   if(check?.booked_by!==CU.id){closeM();showAlert('⚡','Déjà réservé','Réservé au même moment.');return;}
   allSlots=allSlots.map(s=>s.id===pendSlot?{...s,booked_by:CU.id}:s);
+  const bookedId=pendSlot;
   closeM();showToast('✓ Créneau réservé !');renderCal();
+  openServicePicker(bookedId,true);
+}
+function openServicePicker(sid,allowSkip){
+  const acts=document.getElementById('svc-pick-acts');
+  const active=allServices.filter(s=>s.active!==false);
+  let html=active.map(s=>`<button class="btn btn-out" onclick="chooseService('${sid}','${s.id}')">${s.name} — ${(s.price_cents/100).toFixed(2)}€</button>`).join('');
+  if(!active.length)html='<p style="font-size:13px;color:var(--hint)">Aucune prestation disponible pour le moment.</p>';
+  if(allowSkip)html+=`<button class="btn btn-out btn-sm" style="margin-top:6px;color:var(--muted)" onclick="closeSvcPicker()">Choisir plus tard</button>`;
+  else html+=`<button class="btn btn-out btn-sm" style="margin-top:6px" onclick="closeSvcPicker()">Annuler</button>`;
+  acts.innerHTML=html;
+  document.getElementById('ov-svc').classList.add('on');
+}
+function closeSvcPicker(){document.getElementById('ov-svc').classList.remove('on');}
+async function chooseService(sid,serviceId){
+  const price_charged_cents=serviceCents(serviceId);
+  await sb.from('slots').update({service_id:serviceId,price_charged_cents}).eq('id',sid);
+  allSlots=allSlots.map(s=>s.id===sid?{...s,service_id:serviceId,price_charged_cents}:s);
+  closeSvcPicker();
+  showToast('✓ Prestation enregistrée');
+  renderCal();renderASlots();
 }
 async function cancelBook(){
   await sb.from('slots').update({booked_by:null}).eq('id',pendSlot).eq('booked_by',CU.id);
@@ -1046,8 +1076,8 @@ function serviceCents(id){return allServices.find(s=>s.id===id)?.price_cents||nu
 async function quickAdd(date,time){
   if(allSlots.find(s=>s.date===date&&s.time===time))return;
   const dur=parseInt(document.getElementById('adm-dur')?.value||30);
-  const service_id=defaultServiceId();
-  await sb.from('slots').insert({date,time,booked_by:null,visible:true,duration_minutes:dur,service_id,price_charged_cents:serviceCents(service_id)});
+  const service_id=null;
+  await sb.from('slots').insert({date,time,booked_by:null,visible:true,duration_minutes:dur,service_id,price_charged_cents:null});
   showToast('Créneau ajouté');
 }
 async function toggleSlotVis(id,visible){
@@ -1132,7 +1162,7 @@ async function addSlot(){
   const publishAtRaw=document.getElementById('adm-publish-at').value;
   const visibleChecked=document.getElementById('slot-visible-inp').checked;
   const dur=parseInt(document.getElementById('adm-dur').value);
-  const service_id=document.getElementById('adm-service').value||null;
+  const service_id=null;
   const m=document.getElementById('as-msg');
   if(!date||!timeStart){showMsg(m,'err','Sélectionnez une date et une heure.');return;}
   const publish_at=publishAtRaw?new Date(publishAtRaw).toISOString():null;
