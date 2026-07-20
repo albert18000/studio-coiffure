@@ -6,7 +6,7 @@
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="default">
 <meta name="apple-mobile-web-app-title" content="AlBarber">
-<meta name="theme-color" content="#f2ead9">
+<meta name="theme-color" content="#f8f5fb">
 <title>AlBarber — Réservations</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600;9..144,700&family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
@@ -15,17 +15,17 @@
 <style>
 *{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
 :root{
-  --bg:#f2ead9;--surface:#fffcf5;--s2:#eae0c9;--s3:#e0d3b4;
-  --bdr:#ddd0ac;--bdr2:#c7b489;
-  --tx:#231f16;--muted:#75694f;--hint:#a6987a;
-  --acc:#20301f;--acc2:#152315;
-  --gold:#2f5138;--gold-l:#e3ebe0;--gold-b:#a9c2a3;
-  --green:#2f5138;--green-l:#e3ebe0;--green-b:#a9c2a3;
-  --red:#a05a35;--red-l:#f3e2d2;--red-b:#dcb48c;
-  --amber:#a8813a;--amber-l:#f5ecd6;--amber-b:#ddc287;
-  --purple:#6d5468;--purple-l:#ece3ea;--purple-b:#c9b2c4;
+  --bg:#f8f5fb;--surface:#ffffff;--s2:#f1eaf7;--s3:#e6daf0;
+  --bdr:#e4d7f0;--bdr2:#cbb3de;
+  --tx:#221a2e;--muted:#786e88;--hint:#aca0bd;
+  --acc:#4b1e77;--acc2:#341552;
+  --gold:#4b1e77;--gold-l:#efe6f7;--gold-b:#cbadde;
+  --green:#2f7d52;--green-l:#e5f4ec;--green-b:#a9d9bf;
+  --red:#b23a55;--red-l:#f8e7ec;--red-b:#e3aebb;
+  --amber:#a8791f;--amber-l:#f7edd8;--amber-b:#e0c485;
+  --purple:#6d6478;--purple-l:#eeebf1;--purple-b:#cac1d3;
   --r:18px;--r-sm:11px;--r-xs:8px;
-  --sh:0 3px 16px rgba(35,31,22,.07);--sh-lg:0 20px 56px rgba(20,24,15,.18);
+  --sh:0 3px 16px rgba(40,20,60,.08);--sh-lg:0 20px 56px rgba(30,10,50,.2);
   --ease-out:cubic-bezier(.23,1,.32,1);--ease-in-out:cubic-bezier(.77,0,.175,1);
 }
 html{background:var(--bg)}
@@ -39,20 +39,14 @@ button,input,select,textarea{font-family:inherit}
 .btn:active,.i-btn:active,.wk-btn:active:not(:disabled),.a-tab:active,.htab:active,.seg button:active,.mx:active,.bell-btn:active,.sc:active{transform:scale(.97)}
 
 /* LOADER */
-.loader-wrap{position:fixed;inset:0;background:var(--bg);display:flex;flex-direction:column;align-items:center;justify-content:center;z-index:999;gap:6px;transition:opacity .45s var(--ease-in-out)}
+.loader-wrap{position:fixed;inset:0;background:var(--bg);display:flex;flex-direction:column;align-items:center;justify-content:center;z-index:999;gap:14px;transition:opacity .45s var(--ease-in-out)}
 .loader-wrap.hide{opacity:0;pointer-events:none}
-.loader-illustration{width:180px;height:150px;margin-bottom:6px}
-.loader-svg{width:100%;height:100%}
-.loader-arm{transform-box:fill-box;transform-origin:100% 50%;animation:snipArm 1.6s var(--ease-in-out) infinite}
-.loader-scissors{transform-box:fill-box;transform-origin:center;animation:snipBlade 1.6s var(--ease-in-out) infinite}
-@keyframes snipArm{0%,100%{transform:rotate(0deg)}50%{transform:rotate(-4deg)}}
-@keyframes snipBlade{0%,20%,100%{transform:rotate(-16deg)}10%{transform:rotate(2deg)}}
-.loader-clip{animation:clipFall 1.6s var(--ease-in-out) infinite;opacity:0}
-.loader-clip.c2{animation-delay:.15s}.loader-clip.c3{animation-delay:.3s}
-@keyframes clipFall{0%{opacity:0;transform:translateY(0)}10%{opacity:1}70%{opacity:0;transform:translateY(10px)}100%{opacity:0}}
-.loader-brand{font-family:'Fraunces',serif;font-size:20px;letter-spacing:-.01em;color:var(--tx);margin-top:4px}
+.loader-mark{color:var(--acc)}
+.loader-brand{font-family:'Fraunces',serif;font-size:23px;letter-spacing:-.01em;color:var(--tx)}
+.loader-ring{width:26px;height:26px;border:2.5px solid var(--s3);border-top-color:var(--acc);border-radius:50%;animation:loaderSpin .8s linear infinite}
 .loader-txt{font-size:13px;color:var(--muted);letter-spacing:.02em}
-@media(prefers-reduced-motion:reduce){.loader-arm,.loader-scissors,.loader-clip{animation:none!important}}
+@keyframes loaderSpin{to{transform:rotate(360deg)}}
+@media(prefers-reduced-motion:reduce){.loader-ring{animation:none}}
 
 .rt-dot{width:7px;height:7px;border-radius:50%;background:var(--green);display:inline-block;margin-right:4px;animation:pulse 2s infinite}
 .rt-dot.off{background:var(--hint);animation:none}
@@ -66,7 +60,7 @@ button,input,select,textarea{font-family:inherit}
 .hdr-r{display:flex;align-items:center;gap:6px;flex-shrink:0}
 .badge{font-size:11px;font-weight:700;padding:4px 10px 4px 8px;border-radius:20px;white-space:nowrap;display:inline-flex;align-items:center;gap:4px;letter-spacing:.01em}
 .badge.user{background:var(--s2);color:var(--muted)}
-.badge.admin{background:linear-gradient(135deg,var(--acc),var(--gold));color:#fdf9ef}
+.badge.admin{background:linear-gradient(135deg,var(--acc),var(--gold));color:#fbf7fd}
 .hdr-tabs{display:flex;gap:2px}
 .htab{background:none;border:none;padding:7px 10px;border-radius:var(--r-sm);cursor:pointer;color:var(--muted);display:flex;align-items:center}
 .htab.on{background:var(--s2);color:var(--acc)}
@@ -97,11 +91,11 @@ textarea.inp{resize:vertical;min-height:84px;line-height:1.5}
 .btn{display:flex;align-items:center;justify-content:center;gap:7px;width:100%;padding:12px 18px;border:none;border-radius:var(--r-sm);font-size:14px;font-weight:700;cursor:pointer;text-align:center;-webkit-appearance:none;letter-spacing:.01em}
 .btn+.btn{margin-top:8px}
 .btn:disabled{opacity:.5;cursor:not-allowed}
-.btn-dark{background:var(--acc);color:#fdf9ef}.btn-dark:hover:not(:disabled){background:var(--acc2)}
-.btn-gold{background:var(--gold);color:#fdf9ef}.btn-gold:hover:not(:disabled){background:var(--acc2)}
+.btn-dark{background:var(--acc);color:#fbf7fd}.btn-dark:hover:not(:disabled){background:var(--acc2)}
+.btn-gold{background:var(--gold);color:#fbf7fd}.btn-gold:hover:not(:disabled){background:var(--acc2)}
 .btn-out{background:transparent;border:1px solid var(--bdr);color:var(--tx)}.btn-out:hover:not(:disabled){background:var(--s2)}
-.btn-red{background:var(--red);color:#fff8f1}.btn-red:hover:not(:disabled){opacity:.9}
-.btn-green{background:var(--green);color:#fdf9ef}.btn-green:hover:not(:disabled){opacity:.9}
+.btn-red{background:var(--red);color:#fbf7fd}.btn-red:hover:not(:disabled){opacity:.9}
+.btn-green{background:var(--green);color:#fbf7fd}.btn-green:hover:not(:disabled){opacity:.9}
 .btn-sm{padding:8px 14px;font-size:13px;width:auto;display:inline-flex}
 .link{background:none;border:none;color:var(--gold);cursor:pointer;font-size:13px;font-weight:700}
 .link:hover{text-decoration:underline}
@@ -127,16 +121,16 @@ table.cal{width:100%;min-width:420px;border-collapse:collapse;table-layout:fixed
 .cal th{padding:10px 3px;font-size:10px;font-weight:700;color:var(--muted);text-align:center;text-transform:uppercase;letter-spacing:.06em;border-bottom:1px solid var(--bdr);background:var(--surface)}
 .cal th.td-col{color:var(--gold)}
 .cal th .dn{display:block;font-family:'Fraunces',serif;font-size:16px;font-weight:500;color:var(--tx);margin-top:2px}
-.cal th .dn.td-n{background:var(--gold);color:#fdf9ef;width:27px;height:27px;border-radius:50%;display:inline-flex;align-items:center;justify-content:center;margin-top:2px;font-size:13px}
+.cal th .dn.td-n{background:var(--gold);color:#fbf7fd;width:27px;height:27px;border-radius:50%;display:inline-flex;align-items:center;justify-content:center;margin-top:2px;font-size:13px}
 .cal th.past-col .dn{color:var(--hint)}
 .cal td{padding:3px;vertical-align:middle}
 .cal td.tc{width:42px;font-size:10.5px;color:var(--hint);text-align:right;padding:2px 5px 2px 2px;white-space:nowrap;font-weight:600}
 .sc{min-height:44px;border-radius:var(--r-xs);display:flex;align-items:center;justify-content:center;transition:background .2s var(--ease-out),border .2s var(--ease-out);cursor:default;padding:2px}
 .sc.free{background:var(--green-l);cursor:pointer;border:1px solid var(--green-b)}
-.sc.free:hover{background:#d8e4d4}
+.sc.free:hover{background:#d9ede1}
 .sc.taken{background:var(--red-l);border:1px solid var(--red-b)}
 .sc.mine{background:var(--amber-l);border:1px solid var(--amber-b);cursor:pointer}
-.sc.mine:hover{background:#f0e2bd}
+.sc.mine:hover{background:#f2e2b6}
 .sc.hidden-slot{background:var(--purple-l);border:1px dashed var(--purple-b);cursor:pointer;opacity:.85}
 .sc.past-slot{background:var(--s2);border:1px solid var(--bdr);opacity:.55}
 .sc.empty{background:transparent}
@@ -210,7 +204,7 @@ table.cal{width:100%;min-width:420px;border-collapse:collapse;table-layout:fixed
 .toggle input{opacity:0;width:0;height:0;position:absolute}
 .toggle-track{position:absolute;inset:0;background:var(--bdr2);border-radius:12px;cursor:pointer;transition:background .2s var(--ease-out)}
 .toggle input:checked+.toggle-track{background:var(--gold)}
-.toggle-thumb{position:absolute;top:3px;left:3px;width:18px;height:18px;background:#fffcf5;border-radius:50%;transition:transform .2s var(--ease-out);pointer-events:none;box-shadow:0 1px 4px rgba(0,0,0,.2)}
+.toggle-thumb{position:absolute;top:3px;left:3px;width:18px;height:18px;background:#ffffff;border-radius:50%;transition:transform .2s var(--ease-out);pointer-events:none;box-shadow:0 1px 4px rgba(0,0,0,.2)}
 .toggle input:checked~.toggle-thumb{transform:translateX(18px)}
 
 /* SERVICES / STATS / PAIEMENT */
@@ -245,7 +239,7 @@ table.cal{width:100%;min-width:420px;border-collapse:collapse;table-layout:fixed
 .pay-copy{flex-shrink:0}
 
 /* PROFIL */
-.profil-avatar{width:76px;height:76px;border-radius:50%;background:linear-gradient(135deg,var(--gold),var(--acc));display:flex;align-items:center;justify-content:center;font-size:27px;font-weight:600;color:#fdf9ef;margin:0 auto 18px;font-family:'Fraunces',serif}
+.profil-avatar{width:76px;height:76px;border-radius:50%;background:linear-gradient(135deg,var(--gold),var(--acc));display:flex;align-items:center;justify-content:center;font-size:27px;font-weight:600;color:#fbf7fd;margin:0 auto 18px;font-family:'Fraunces',serif}
 .profil-name{text-align:center;font-family:'Fraunces',serif;font-size:22px;margin-bottom:5px;letter-spacing:-.01em}
 .profil-username{text-align:center;font-size:13px;color:var(--muted);margin-bottom:26px}
 .hist-item{display:flex;align-items:center;justify-content:space-between;padding:11px 13px;background:var(--s2);border-radius:var(--r-sm);margin-bottom:7px;font-size:13px;gap:8px;animation:riseIn .3s var(--ease-out) both}
@@ -261,7 +255,7 @@ table.cal{width:100%;min-width:420px;border-collapse:collapse;table-layout:fixed
 .notif-info span{font-size:12px;color:var(--muted)}
 
 /* TOAST */
-.toast{position:fixed;bottom:30px;left:50%;transform:translateX(-50%) translateY(90px);background:var(--acc);color:#fdf9ef;padding:12px 24px;border-radius:30px;font-size:13px;font-weight:600;z-index:999;transition:transform .32s var(--ease-out);pointer-events:none;white-space:nowrap;box-shadow:var(--sh-lg);display:flex;align-items:center;gap:8px}
+.toast{position:fixed;bottom:30px;left:50%;transform:translateX(-50%) translateY(90px);background:var(--acc);color:#fbf7fd;padding:12px 24px;border-radius:30px;font-size:13px;font-weight:600;z-index:999;transition:transform .32s var(--ease-out);pointer-events:none;white-space:nowrap;box-shadow:var(--sh-lg);display:flex;align-items:center;gap:8px}
 .toast.on{transform:translateX(-50%) translateY(0)}
 
 @keyframes riseIn{from{opacity:0;transform:translateY(7px)}to{opacity:1;transform:translateY(0)}}
@@ -293,30 +287,9 @@ table.cal{width:100%;min-width:420px;border-collapse:collapse;table-layout:fixed
 <body>
 
 <div class="loader-wrap" id="loader">
-  <div class="loader-illustration">
-    <svg class="loader-svg" viewBox="0 0 280 220" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
-      <ellipse cx="140" cy="204" rx="104" ry="8" fill="#e3ebe0"/>
-      <rect x="86" y="176" width="9" height="26" rx="3" fill="#20301f"/>
-      <rect x="121" y="176" width="9" height="26" rx="3" fill="#20301f"/>
-      <rect x="80" y="163" width="56" height="17" rx="7" fill="#20301f"/>
-      <path d="M64 200 C64 158 71 134 85 123 C94 115 128 115 137 123 C151 134 158 158 158 200 Z" fill="#20301f"/>
-      <circle cx="111" cy="88" r="28" fill="#20301f"/>
-      <path d="M83 78 C83 55 96 42 111 42 C126 42 139 55 139 78 C139 69 132 63 124 63 C119 63 117 67 111 67 C105 67 103 63 98 63 C90 63 83 69 83 78Z" fill="#20301f"/>
-      <path d="M172 204 C167 144 176 100 198 84 C209 76 226 77 235 90 C247 107 249 146 243 204 Z" fill="#20301f"/>
-      <circle cx="206" cy="58" r="25" fill="#20301f"/>
-      <path d="M183 54C183 35 193 26 206 26C219 26 229 35 229 54C226 43 217 41 211 46C208 40 201 40 198 46C192 41 186 43 183 54Z" fill="#20301f"/>
-      <path class="loader-arm" d="M198 96 C178 92 158 86 144 80" stroke="#20301f" stroke-width="14" stroke-linecap="round" fill="none"/>
-      <g class="loader-scissors" transform="translate(138,76)">
-        <circle cx="0" cy="9" r="3.4" fill="none" stroke="#2f5138" stroke-width="2.2"/>
-        <circle cx="0" cy="-9" r="3.4" fill="none" stroke="#2f5138" stroke-width="2.2"/>
-        <path d="M0 7 L17 -13 M0 -7 L17 13" stroke="#2f5138" stroke-width="2.2" stroke-linecap="round"/>
-      </g>
-      <circle class="loader-clip c1" cx="94" cy="112" r="2.2" fill="#a8813a"/>
-      <circle class="loader-clip c2" cx="102" cy="119" r="1.7" fill="#a8813a"/>
-      <circle class="loader-clip c3" cx="88" cy="122" r="1.9" fill="#a8813a"/>
-    </svg>
-  </div>
+  <svg class="loader-mark" width="34" height="34" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="6" cy="6" r="2.6"/><circle cx="6" cy="18" r="2.6"/><path d="M8 8l11 11M20 4 8 16"/></svg>
   <div class="loader-brand">AlBarber</div>
+  <div class="loader-ring"></div>
   <div class="loader-txt" id="loader-txt">Préparation de votre expérience…</div>
 </div>
 
@@ -330,7 +303,7 @@ table.cal{width:100%;min-width:420px;border-collapse:collapse;table-layout:fixed
       <button class="htab on" id="tab-cal" onclick="goTab('cal')" title="Calendrier"><svg class="ico" width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="5" width="18" height="16" rx="3.5"/><path d="M3 9.5h18M8 3v4M16 3v4"/></svg></button>
       <button class="htab" id="tab-paiement" onclick="goTab('paiement')" title="Paiement"><svg class="ico" width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="6" width="18" height="13" rx="3"/><path d="M3 10.2h18"/><circle cx="16.5" cy="14.3" r="1" fill="currentColor" stroke="none"/></svg></button>
       <button class="htab" id="tab-profil" onclick="goTab('profil')" title="Profil"><svg class="ico" width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="3.6"/><path d="M4.8 20c1.3-4.1 4-6.2 7.2-6.2s5.9 2.1 7.2 6.2"/></svg></button>
-      <button class="htab" id="tab-adm" onclick="goTab('adm')" style="display:none" title="Administration"><svg class="ico" width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 13a1.7 1.7 0 0 0 .3 1.9l.1.1a2 2 0 1 1-2.8 2.8l-.1-.1a1.7 1.7 0 0 0-1.9-.3 1.7 1.7 0 0 0-1 1.5V19a2 2 0 1 1-4 0v-.1a1.7 1.7 0 0 0-1-1.6 1.7 1.7 0 0 0-1.9.3l-.1.1a2 2 0 1 1-2.8-2.8l.1-.1a1.7 1.7 0 0 0 .3-1.9 1.7 1.7 0 0 0-1.5-1H3a2 2 0 1 1 0-4h.1a1.7 1.7 0 0 0 1.6-1 1.7 1.7 0 0 0-.3-1.9l-.1-.1a2 2 0 1 1 2.8-2.8l.1.1a1.7 1.7 0 0 0 1.9.3H9a1.7 1.7 0 0 0 1-1.5V3a2 2 0 1 1 4 0v.1a1.7 1.7 0 0 0 1 1.6 1.7 1.7 0 0 0 1.9-.3l.1-.1a2 2 0 1 1 2.8 2.8l-.1.1a1.7 1.7 0 0 0-.3 1.9V9a1.7 1.7 0 0 0 1.5 1H21a2 2 0 1 1 0 4h-.1a1.7 1.7 0 0 0-1.6 1z"/></svg></button>
+      <button class="htab" id="tab-adm" onclick="goTab('adm')" style="display:none" title="Administration"><svg class="ico" width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M10.24 2.97 L13.76 2.97 L13.42 5.04 L15.92 6.08 L17.14 4.37 L19.63 6.86 L17.92 8.08 L18.96 10.58 L21.03 10.24 L21.03 13.76 L18.96 13.42 L17.92 15.92 L19.63 17.14 L17.14 19.63 L15.92 17.92 L13.42 18.96 L13.76 21.03 L10.24 21.03 L10.58 18.96 L8.08 17.92 L6.86 19.63 L4.37 17.14 L6.08 15.92 L5.04 13.42 L2.97 13.76 L2.97 10.24 L5.04 10.58 L6.08 8.08 L4.37 6.86 L6.86 4.37 L8.08 6.08 L10.58 5.04 Z"/></svg></button>
     </div>
     <button class="bell-btn" id="bell-btn" style="display:none" onclick="openAnnonces()" title="Annonces">
       <svg class="ico" width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M6 8a6 6 0 1 1 12 0c0 4 1.4 5.5 2 6.5H4c.6-1 2-2.5 2-6.5Z"/><path d="M9.5 18a2.5 2.5 0 0 0 5 0"/></svg>
@@ -661,6 +634,15 @@ table.cal{width:100%;min-width:420px;border-collapse:collapse;table-layout:fixed
   </div>
 </div>
 
+<!-- MODAL AJOUT AGENDA -->
+<div class="ov" id="ov-calprompt" onclick="if(event.target===this)closeCalPrompt()">
+  <div class="modal">
+    <h3>Ajouter à votre agenda ?</h3>
+    <p class="ms">Recevez ce rendez-vous directement dans votre calendrier personnel.</p>
+    <div class="modal-acts" id="calprompt-acts"></div>
+  </div>
+</div>
+
 <!-- ALERT -->
 <div class="ov" id="ov-alert" onclick="closeAlert()">
   <div class="alert-modal" onclick="event.stopPropagation()">
@@ -690,15 +672,77 @@ const ICON_PATHS={
   copy:'<rect x="9" y="9" width="12" height="12" rx="2.5"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/>',
   megaphone:'<path d="M3 10v4a1 1 0 0 0 1 1h2l3.5 4.5a1 1 0 0 0 1.8-.6V5.1a1 1 0 0 0-1.8-.6L6 9H4a1 1 0 0 0-1 1Z"/><path d="M17 8a5 5 0 0 1 0 8M20 5.5a9 9 0 0 1 0 13"/>',
   crown:'<path d="M4 18h16l-1.3-8-4 3-2.7-5-2.7 5-4-3z"/>',
-  check:'<path d="M5 13l4.5 4.5L19 7"/>'
+  check:'<path d="M5 13l4.5 4.5L19 7"/>',
+  calendar:'<rect x="3" y="5" width="18" height="16" rx="3.5"/><path d="M3 9.5h18M8 3v4M16 3v4"/>',
+  download:'<path d="M12 3v12m0 0 4.5-4.5M12 15 7.5 10.5"/><path d="M4 17v2a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-2"/>',
+  extlink:'<path d="M14 4h6v6"/><path d="M10 14 20 4"/><path d="M18 13v5a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h5"/>'
 };
 function ic(name,size){size=size||16;return '<svg class="ico" width="'+size+'" height="'+size+'" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round">'+(ICON_PATHS[name]||'')+'</svg>';}
 function escapeHtml(s){return (s||'').replace(/[&<>"']/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c];});}
 
 let CU=null,WS=null,pendSlot=null,admTab='slots';
 let allSlots=[],allUsers=[],allAnnonces=[],allServices=[],allPayments=[],inviteCode=null,rtChannel=null;
-let slotFilter='upcoming',statsPeriod='week',editingPaymentId=null;
+let slotFilter='upcoming',statsPeriod='week',editingPaymentId=null,pendingCalPromptSlot=null;
 const MAX_FUTURE_WEEKS=2;
+
+// ── CALENDRIER PERSONNEL (.ics / Google) ──
+function icsDateUTC(dateStr,timeStr){
+  const d=new Date(dateStr+'T'+timeStr+':00');
+  return d.toISOString().replace(/[-:]/g,'').split('.')[0]+'Z';
+}
+function calendarEventForSlot(slot,forAdmin){
+  const svc=allServices.find(s=>s.id===slot.service_id);
+  const bkr=slot.booked_by?allUsers.find(u=>u.id===slot.booked_by):null;
+  const clientLabel=slot.is_manual?(slot.manual_client_name||'Client'):(bkr?(bkr.first+' '+bkr.last):'Client');
+  const title=forAdmin?('Coupe — '+clientLabel):'Rendez-vous — AlBarber';
+  let description=svc?('Prestation : '+svc.name+' ('+(svc.price_cents/100).toFixed(2)+'€)'):'';
+  description+=forAdmin?'':(description?'\n':'')+'AlBarber — Réservations';
+  return{title,description,startDate:slot.date,startTime:slot.time,durationMinutes:slot.duration_minutes||30};
+}
+function buildIcs({title,description,startDate,startTime,durationMinutes}){
+  const dtStart=icsDateUTC(startDate,startTime);
+  const endDt=new Date(new Date(startDate+'T'+startTime+':00').getTime()+durationMinutes*60000);
+  const dtEnd=endDt.toISOString().replace(/[-:]/g,'').split('.')[0]+'Z';
+  const uid='albarber-'+startDate.replace(/-/g,'')+startTime.replace(':','')+'-'+Math.random().toString(36).slice(2,8)+'@albarber';
+  const esc=s=>String(s||'').replace(/\\/g,'\\\\').replace(/;/g,'\\;').replace(/,/g,'\\,').replace(/\n/g,'\\n');
+  return['BEGIN:VCALENDAR','VERSION:2.0','PRODID:-//AlBarber//FR','CALSCALE:GREGORIAN','METHOD:PUBLISH',
+    'BEGIN:VEVENT','UID:'+uid,'DTSTAMP:'+dtStart,'DTSTART:'+dtStart,'DTEND:'+dtEnd,
+    'SUMMARY:'+esc(title),description?('DESCRIPTION:'+esc(description)):'','LOCATION:'+esc('AlBarber'),
+    'END:VEVENT','END:VCALENDAR'].filter(Boolean).join('\r\n');
+}
+function downloadIcs(filename,content){
+  const blob=new Blob([content],{type:'text/calendar;charset=utf-8'});
+  const url=URL.createObjectURL(blob);
+  const a=document.createElement('a');a.href=url;a.download=filename;
+  document.body.appendChild(a);a.click();document.body.removeChild(a);
+  setTimeout(()=>URL.revokeObjectURL(url),2000);
+}
+function gcalUrl({title,description,startDate,startTime,durationMinutes}){
+  const s=new Date(startDate+'T'+startTime+':00');
+  const e=new Date(s.getTime()+durationMinutes*60000);
+  const fmt=d=>d.toISOString().replace(/[-:]/g,'').split('.')[0]+'Z';
+  const params=new URLSearchParams({action:'TEMPLATE',text:title,dates:fmt(s)+'/'+fmt(e),details:description||'',location:'AlBarber'});
+  return'https://calendar.google.com/calendar/render?'+params.toString();
+}
+function addSlotToCalendarIcs(slotId,forAdmin){
+  const slot=allSlots.find(s=>s.id===slotId);if(!slot)return;
+  const ev=calendarEventForSlot(slot,forAdmin);
+  downloadIcs('albarber-'+slot.date+'-'+slot.time.replace(':','')+'.ics',buildIcs(ev));
+  showToast('✓ Fichier .ics téléchargé');
+}
+function addSlotToCalendarGoogle(slotId,forAdmin){
+  const slot=allSlots.find(s=>s.id===slotId);if(!slot)return;
+  window.open(gcalUrl(calendarEventForSlot(slot,forAdmin)),'_blank');
+}
+function showCalendarPrompt(sid){
+  const acts=document.getElementById('calprompt-acts');
+  acts.innerHTML=`
+    <button class="btn btn-dark" onclick="addSlotToCalendarIcs('${sid}',false);closeCalPrompt()">${ic('download',15)} Apple / Outlook (.ics)</button>
+    <button class="btn btn-out" onclick="addSlotToCalendarGoogle('${sid}',false);closeCalPrompt()">${ic('extlink',15)} Google Calendar</button>
+    <button class="btn btn-out btn-sm" style="color:var(--muted)" onclick="closeCalPrompt()">Non merci</button>`;
+  document.getElementById('ov-calprompt').classList.add('on');
+}
+function closeCalPrompt(){document.getElementById('ov-calprompt').classList.remove('on');}
 
 (()=>{
   const d=new Date();d.setHours(0,0,0,0);
@@ -1198,7 +1242,9 @@ function openM(sid){
   document.getElementById('m-sub').textContent=`Créneau ${dur} min — ${slot.time}`+(svc?' — '+svc.name+' ('+(svc.price_cents/100).toFixed(2)+'€)':'')+(isHidden?' · Caché':'')+(slot.is_manual&&slot.manual_client_name?' · Client : '+slot.manual_client_name:'');
   const acts=document.getElementById('m-acts');
   if(isHidden&&CU?.is_admin){
+    const calBtn=slot.is_manual?`<button class="btn btn-out" onclick="addSlotToCalendarIcs('${slot.id}',true)">${ic('download',15)} Ajouter à mon agenda</button>`:'';
     acts.innerHTML=`<button class="btn btn-green" onclick="toggleSlotVis('${slot.id}',true)">${ic('eye',15)} Rendre visible</button>
+    ${calBtn}
     <button class="btn btn-out" style="color:var(--red);border-color:var(--red-b)" onclick="admDelSlot()">Supprimer</button>
     <button class="btn btn-out" onclick="closeM()">Fermer</button>`;
   }else if(isMine){
@@ -1215,6 +1261,7 @@ function openM(sid){
     const bkr=allUsers.find(u=>u.id===slot.booked_by);
     document.getElementById('m-sub').textContent+=` · @${bkr?.username||'?'}`;
     acts.innerHTML=`<button class="btn btn-out" onclick="openServicePicker('${slot.id}',false)">${ic('tag',15)} ${svc?'Changer la prestation':'Choisir la prestation'}</button>
+    <button class="btn btn-out" onclick="addSlotToCalendarIcs('${slot.id}',true)">${ic('download',15)} Ajouter à mon agenda</button>
     <button class="btn btn-red" onclick="admCancelBook()">Annuler la réservation</button>
     <button class="btn btn-out" style="color:var(--red);border-color:var(--red-b)" onclick="admDelSlot()">Supprimer</button>
     <button class="btn btn-out" onclick="closeM()">Fermer</button>`;
@@ -1246,6 +1293,7 @@ async function confirmBook(){
   openServicePicker(bookedId,true);
 }
 function openServicePicker(sid,allowSkip){
+  pendingCalPromptSlot=allowSkip?sid:null;
   const acts=document.getElementById('svc-pick-acts');
   const active=allServices.filter(s=>s.active!==false);
   let html=active.map(s=>`<button class="btn btn-out" onclick="chooseService('${sid}','${s.id}')">${s.name} — ${(s.price_cents/100).toFixed(2)}€</button>`).join('');
@@ -1255,14 +1303,18 @@ function openServicePicker(sid,allowSkip){
   acts.innerHTML=html;
   document.getElementById('ov-svc').classList.add('on');
 }
-function closeSvcPicker(){document.getElementById('ov-svc').classList.remove('on');}
+function closeSvcPicker(){
+  document.getElementById('ov-svc').classList.remove('on');
+  if(pendingCalPromptSlot){const sid=pendingCalPromptSlot;pendingCalPromptSlot=null;setTimeout(()=>showCalendarPrompt(sid),250);}
+}
 async function chooseService(sid,serviceId){
   const price_charged_cents=serviceCents(serviceId);
   await sb.from('slots').update({service_id:serviceId,price_charged_cents}).eq('id',sid);
   allSlots=allSlots.map(s=>s.id===sid?{...s,service_id:serviceId,price_charged_cents}:s);
-  closeSvcPicker();
+  document.getElementById('ov-svc').classList.remove('on');
   showToast('✓ Prestation enregistrée');
   renderCal();renderASlots();
+  if(pendingCalPromptSlot===sid){pendingCalPromptSlot=null;setTimeout(()=>showCalendarPrompt(sid),250);}
 }
 async function cancelBook(){
   await sb.from('slots').update({booked_by:null}).eq('id',pendSlot).eq('booked_by',CU.id);
@@ -1554,7 +1606,7 @@ function renderMembres(){
     if(past.length){resHtml+='<div style="font-size:11px;color:var(--hint);font-weight:700;margin:7px 0 3px">Historique</div>';resHtml+=past.slice(-3).map(s=>{const d=new Date(s.date+'T12:00').toLocaleDateString('fr-FR',{weekday:'short',day:'numeric',month:'short'});return`<div style="font-size:12px;color:var(--hint);padding:2px 0">${d} à ${s.time}</div>`;}).join('');}
     return`<div style="background:var(--s2);border-radius:var(--r-sm);padding:13px;margin-bottom:9px">
       <div style="display:flex;align-items:center;gap:11px;margin-bottom:${reservations.length?'9':'0'}px">
-        <div style="width:38px;height:38px;border-radius:50%;background:linear-gradient(135deg,var(--gold),var(--acc));display:flex;align-items:center;justify-content:center;color:#fdf9ef;font-weight:700;font-size:13px;flex-shrink:0;font-family:'Fraunces',serif">${initials}</div>
+        <div style="width:38px;height:38px;border-radius:50%;background:linear-gradient(135deg,var(--gold),var(--acc));display:flex;align-items:center;justify-content:center;color:#fbf7fd;font-weight:700;font-size:13px;flex-shrink:0;font-family:'Fraunces',serif">${initials}</div>
         <div style="flex:1"><div style="font-weight:700;font-size:14px">${escapeHtml(u.first)} ${escapeHtml(u.last)}</div>
         <div style="font-size:12px;color:var(--muted)">@${escapeHtml(u.username)} · ${escapeHtml(u.email||'')} · ${reservations.length} résa</div></div>
         <button class="btn btn-out btn-sm" style="color:var(--red);border-color:var(--red-b);padding:5px 10px;font-size:12px" onclick="delUser('${u.id}')">${ic('trash',13)}</button>
@@ -1599,7 +1651,8 @@ function renderProfil(){
   list.innerHTML=mySlots.map(s=>{
     const d=new Date(s.date+'T12:00').toLocaleDateString('fr-FR',{weekday:'long',day:'numeric',month:'long'});
     const isFuture=new Date(s.date+'T23:59')>=new Date();
-    return`<div class="hist-item"><div class="date">${d}</div><div class="time">${s.time}</div><span class="status ${isFuture?'hist-future':'hist-past'}">${isFuture?'À venir':'Passé'}</span></div>`;
+    const calBtn=isFuture?`<button class="i-btn" style="padding:6px 8px" onclick="showCalendarPrompt('${s.id}')" title="Ajouter à l'agenda">${ic('calendar',14)}</button>`:'';
+    return`<div class="hist-item"><div class="date">${d}</div><div class="time">${s.time}</div>${calBtn}<span class="status ${isFuture?'hist-future':'hist-past'}">${isFuture?'À venir':'Passé'}</span></div>`;
   }).join('');
 }
 function openEditProfil(){
