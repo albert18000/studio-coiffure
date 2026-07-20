@@ -6,263 +6,335 @@
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="default">
 <meta name="apple-mobile-web-app-title" content="AlBarber">
-<meta name="theme-color" content="#c9a227">
+<meta name="theme-color" content="#f2ead9">
 <title>AlBarber — Réservations</title>
-<link href="https://fonts.googleapis.com/css2?family=DM+Sans:opsz,wght@9..40,300;9..40,400;9..40,500;9..40,600&family=Playfair+Display:wght@500;600&display=swap" rel="stylesheet">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600;9..144,700&family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script src="https://cdn.onesignal.com/sdks/web/v16/OneSignalSDK.page.js" defer></script>
 <style>
 *{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
 :root{
-  --bg:#fafaf8;--surface:#fff;--s2:#f4f3f0;--s3:#eceae5;
-  --bdr:#e8e6e0;--bdr2:#d4d1c8;
-  --tx:#1c1b18;--muted:#7a7870;--hint:#b0ada4;
-  --acc:#2b2a27;--acc2:#4a4840;
-  --gold:#c9a227;--gold-l:#fdf4dc;
-  --green:#2d7a4a;--green-l:#e8f5ee;--green-b:#9ed4b2;
-  --red:#b83232;--red-l:#fdf0f0;--red-b:#e8a8a8;
-  --amber:#b87020;--amber-l:#fdf6e3;--amber-b:#e8cc80;
-  --purple:#7c3aed;--purple-l:#f3f0ff;--purple-b:#c4b5fd;
-  --r:12px;--r-sm:8px;--r-xs:6px;
-  --sh:0 2px 12px rgba(0,0,0,.07);--sh-lg:0 8px 40px rgba(0,0,0,.13);
+  --bg:#f2ead9;--surface:#fffcf5;--s2:#eae0c9;--s3:#e0d3b4;
+  --bdr:#ddd0ac;--bdr2:#c7b489;
+  --tx:#231f16;--muted:#75694f;--hint:#a6987a;
+  --acc:#20301f;--acc2:#152315;
+  --gold:#2f5138;--gold-l:#e3ebe0;--gold-b:#a9c2a3;
+  --green:#2f5138;--green-l:#e3ebe0;--green-b:#a9c2a3;
+  --red:#a05a35;--red-l:#f3e2d2;--red-b:#dcb48c;
+  --amber:#a8813a;--amber-l:#f5ecd6;--amber-b:#ddc287;
+  --purple:#6d5468;--purple-l:#ece3ea;--purple-b:#c9b2c4;
+  --r:18px;--r-sm:11px;--r-xs:8px;
+  --sh:0 3px 16px rgba(35,31,22,.07);--sh-lg:0 20px 56px rgba(20,24,15,.18);
+  --ease-out:cubic-bezier(.23,1,.32,1);--ease-in-out:cubic-bezier(.77,0,.175,1);
 }
-body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--tx);min-height:100vh;font-size:15px;-webkit-font-smoothing:antialiased}
-.loader-wrap{position:fixed;inset:0;background:var(--bg);display:flex;flex-direction:column;align-items:center;justify-content:center;z-index:999;gap:16px;transition:opacity .3s}
+html{background:var(--bg)}
+body{font-family:'Manrope',sans-serif;background:var(--bg);color:var(--tx);min-height:100vh;font-size:15px;-webkit-font-smoothing:antialiased;line-height:1.5}
+h1,h2,h3,.brand{font-family:'Fraunces',serif}
+.ico{display:inline-block;vertical-align:-3px;flex-shrink:0}
+button,input,select,textarea{font-family:inherit}
+
+/* PRESS FEEDBACK */
+.btn,.i-btn,.wk-btn,.a-tab,.htab,.seg button,.mx,.bell-btn,.pay-copy,.sli-actions button,.svc-row button{transition:transform .12s var(--ease-out),background .15s var(--ease-out),border-color .15s var(--ease-out),opacity .15s var(--ease-out),color .15s var(--ease-out)}
+.btn:active,.i-btn:active,.wk-btn:active:not(:disabled),.a-tab:active,.htab:active,.seg button:active,.mx:active,.bell-btn:active,.sc:active{transform:scale(.97)}
+
+/* LOADER */
+.loader-wrap{position:fixed;inset:0;background:var(--bg);display:flex;flex-direction:column;align-items:center;justify-content:center;z-index:999;gap:6px;transition:opacity .45s var(--ease-in-out)}
 .loader-wrap.hide{opacity:0;pointer-events:none}
-.spinner{width:36px;height:36px;border:3px solid var(--bdr);border-top-color:var(--gold);border-radius:50%;animation:spin .8s linear infinite}
-@keyframes spin{to{transform:rotate(360deg)}}
-.loader-txt{font-size:14px;color:var(--muted)}
+.loader-illustration{width:180px;height:150px;margin-bottom:6px}
+.loader-svg{width:100%;height:100%}
+.loader-arm{transform-box:fill-box;transform-origin:100% 50%;animation:snipArm 1.6s var(--ease-in-out) infinite}
+.loader-scissors{transform-box:fill-box;transform-origin:center;animation:snipBlade 1.6s var(--ease-in-out) infinite}
+@keyframes snipArm{0%,100%{transform:rotate(0deg)}50%{transform:rotate(-4deg)}}
+@keyframes snipBlade{0%,20%,100%{transform:rotate(-16deg)}10%{transform:rotate(2deg)}}
+.loader-clip{animation:clipFall 1.6s var(--ease-in-out) infinite;opacity:0}
+.loader-clip.c2{animation-delay:.15s}.loader-clip.c3{animation-delay:.3s}
+@keyframes clipFall{0%{opacity:0;transform:translateY(0)}10%{opacity:1}70%{opacity:0;transform:translateY(10px)}100%{opacity:0}}
+.loader-brand{font-family:'Fraunces',serif;font-size:20px;letter-spacing:-.01em;color:var(--tx);margin-top:4px}
+.loader-txt{font-size:13px;color:var(--muted);letter-spacing:.02em}
+@media(prefers-reduced-motion:reduce){.loader-arm,.loader-scissors,.loader-clip{animation:none!important}}
+
 .rt-dot{width:7px;height:7px;border-radius:50%;background:var(--green);display:inline-block;margin-right:4px;animation:pulse 2s infinite}
 .rt-dot.off{background:var(--hint);animation:none}
 @keyframes pulse{0%,100%{opacity:1}50%{opacity:.35}}
 
 /* HDR */
-.hdr{background:var(--surface);border-bottom:1px solid var(--bdr);padding:0 18px;height:56px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:200;gap:8px}
-.logo{font-family:'Playfair Display',serif;font-size:18px;white-space:nowrap}
-.logo em{font-style:normal;color:var(--gold);font-size:12px;font-family:'DM Sans',sans-serif;font-weight:500;margin-left:5px;vertical-align:middle}
+.hdr{background:rgba(255,252,245,.86);backdrop-filter:blur(14px) saturate(160%);border-bottom:1px solid var(--bdr);padding:0 18px;height:58px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:200;gap:8px}
+.logo{display:flex;align-items:center;gap:7px;font-size:19px;white-space:nowrap;letter-spacing:-.01em}
+.logo-mark{color:var(--gold);flex-shrink:0}
+.logo em{font-style:normal;color:var(--gold);font-size:11px;font-family:'Manrope',sans-serif;font-weight:700;margin-left:2px;vertical-align:middle;letter-spacing:.08em;text-transform:uppercase}
 .hdr-r{display:flex;align-items:center;gap:6px;flex-shrink:0}
-.badge{font-size:11px;font-weight:600;padding:3px 9px;border-radius:20px;white-space:nowrap}
+.badge{font-size:11px;font-weight:700;padding:4px 10px 4px 8px;border-radius:20px;white-space:nowrap;display:inline-flex;align-items:center;gap:4px;letter-spacing:.01em}
 .badge.user{background:var(--s2);color:var(--muted)}
-.badge.admin{background:linear-gradient(135deg,var(--purple),#a855f7);color:#fff}
+.badge.admin{background:linear-gradient(135deg,var(--acc),var(--gold));color:#fdf9ef}
 .hdr-tabs{display:flex;gap:2px}
-.htab{background:none;border:none;padding:6px 10px;border-radius:var(--r-sm);font-size:13px;font-weight:500;cursor:pointer;color:var(--muted);font-family:'DM Sans',sans-serif;white-space:nowrap;transition:all .15s}
-.htab.on{background:var(--s2);color:var(--tx)}
-.i-btn{background:none;border:1px solid var(--bdr);border-radius:var(--r-sm);padding:5px 11px;font-size:13px;cursor:pointer;color:var(--muted);font-family:'DM Sans',sans-serif;transition:all .15s;white-space:nowrap}
+.htab{background:none;border:none;padding:7px 10px;border-radius:var(--r-sm);cursor:pointer;color:var(--muted);display:flex;align-items:center}
+.htab.on{background:var(--s2);color:var(--acc)}
+.i-btn{background:none;border:1px solid var(--bdr);border-radius:var(--r-sm);padding:6px 12px;font-size:13px;font-weight:600;cursor:pointer;color:var(--muted);white-space:nowrap}
 .i-btn:hover{background:var(--s2)}
 
 /* CLOCHE */
-.bell-btn{position:relative;background:none;border:none;cursor:pointer;padding:6px;border-radius:var(--r-sm);transition:all .15s;font-size:18px;line-height:1}
+.bell-btn{position:relative;background:none;border:none;cursor:pointer;padding:7px;border-radius:var(--r-sm);color:var(--muted);display:flex}
 .bell-btn:hover{background:var(--s2)}
-.bell-badge{position:absolute;top:2px;right:2px;width:8px;height:8px;background:var(--red);border-radius:50%;border:2px solid var(--surface);display:none}
+.bell-badge{position:absolute;top:4px;right:4px;width:8px;height:8px;background:var(--red);border-radius:50%;border:2px solid var(--surface);display:none}
 .bell-badge.on{display:block}
 
 /* SCREENS */
-.scr{display:none;padding:24px 18px;max-width:860px;margin:0 auto}
-.scr.on{display:block}
+.scr{display:none;padding:26px 18px;max-width:880px;margin:0 auto}
+.scr.on{display:block;animation:screenIn .35s var(--ease-out) both}
+@keyframes screenIn{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:translateY(0)}}
 
 /* AUTH */
-.auth-wrap{min-height:calc(100vh - 56px);display:flex;align-items:center;justify-content:center;padding:20px}
-.auth-card{background:var(--surface);border:1px solid var(--bdr);border-radius:20px;padding:32px 28px;max-width:390px;width:100%;box-shadow:var(--sh-lg)}
-.auth-card h1{font-family:'Playfair Display',serif;font-size:24px;margin-bottom:4px}
-.auth-card .sub{color:var(--muted);font-size:13px;margin-bottom:26px;line-height:1.55}
-label.lbl{display:block;font-size:11px;font-weight:600;color:var(--muted);margin-bottom:5px;text-transform:uppercase;letter-spacing:.5px}
-input.inp,select.inp,textarea.inp{width:100%;padding:10px 13px;border:1px solid var(--bdr);border-radius:var(--r-sm);font-size:14px;font-family:'DM Sans',sans-serif;outline:none;background:var(--surface);color:var(--tx);transition:border .2s,box-shadow .2s;-webkit-appearance:none}
-input.inp:focus,select.inp:focus,textarea.inp:focus{border-color:var(--acc);box-shadow:0 0 0 3px rgba(43,42,39,.07)}
-textarea.inp{resize:vertical;min-height:80px}
-.fld{margin-bottom:13px}
-.btn{display:block;width:100%;padding:12px 18px;border:none;border-radius:var(--r-sm);font-size:14px;font-weight:600;cursor:pointer;font-family:'DM Sans',sans-serif;transition:all .15s;text-align:center;-webkit-appearance:none}
+.auth-wrap{min-height:calc(100vh - 58px);display:flex;align-items:center;justify-content:center;padding:20px}
+.auth-card{background:var(--surface);border:1px solid var(--bdr);border-radius:24px;padding:36px 30px;max-width:400px;width:100%;box-shadow:var(--sh-lg)}
+.auth-card h1{font-size:27px;letter-spacing:-.02em;margin-bottom:6px;font-weight:600}
+.auth-card .sub{color:var(--muted);font-size:13px;margin-bottom:28px;line-height:1.6}
+label.lbl{display:block;font-size:11px;font-weight:700;color:var(--muted);margin-bottom:6px;text-transform:uppercase;letter-spacing:.06em}
+input.inp,select.inp,textarea.inp{width:100%;padding:11px 14px;border:1px solid var(--bdr);border-radius:var(--r-sm);font-size:14px;outline:none;background:var(--surface);color:var(--tx);transition:border .2s var(--ease-out),box-shadow .2s var(--ease-out);-webkit-appearance:none}
+input.inp:focus,select.inp:focus,textarea.inp:focus{border-color:var(--gold);box-shadow:0 0 0 3px var(--gold-l)}
+textarea.inp{resize:vertical;min-height:84px;line-height:1.5}
+.fld{margin-bottom:14px}
+.btn{display:flex;align-items:center;justify-content:center;gap:7px;width:100%;padding:12px 18px;border:none;border-radius:var(--r-sm);font-size:14px;font-weight:700;cursor:pointer;text-align:center;-webkit-appearance:none;letter-spacing:.01em}
 .btn+.btn{margin-top:8px}
 .btn:disabled{opacity:.5;cursor:not-allowed}
-.btn-dark{background:var(--acc);color:#fff}.btn-dark:hover:not(:disabled){background:var(--acc2)}
-.btn-gold{background:var(--gold);color:#fff}.btn-gold:hover:not(:disabled){opacity:.9}
+.btn-dark{background:var(--acc);color:#fdf9ef}.btn-dark:hover:not(:disabled){background:var(--acc2)}
+.btn-gold{background:var(--gold);color:#fdf9ef}.btn-gold:hover:not(:disabled){background:var(--acc2)}
 .btn-out{background:transparent;border:1px solid var(--bdr);color:var(--tx)}.btn-out:hover:not(:disabled){background:var(--s2)}
-.btn-red{background:var(--red);color:#fff}.btn-red:hover:not(:disabled){opacity:.9}
-.btn-green{background:var(--green);color:#fff}.btn-green:hover:not(:disabled){opacity:.9}
-.btn-sm{padding:7px 13px;font-size:13px;width:auto;display:inline-block}
-.link{background:none;border:none;color:var(--gold);cursor:pointer;font-size:13px;font-family:'DM Sans',sans-serif;font-weight:500}
+.btn-red{background:var(--red);color:#fff8f1}.btn-red:hover:not(:disabled){opacity:.9}
+.btn-green{background:var(--green);color:#fdf9ef}.btn-green:hover:not(:disabled){opacity:.9}
+.btn-sm{padding:8px 14px;font-size:13px;width:auto;display:inline-flex}
+.link{background:none;border:none;color:var(--gold);cursor:pointer;font-size:13px;font-weight:700}
 .link:hover{text-decoration:underline}
-.auth-ft{text-align:center;margin-top:14px;font-size:13px;color:var(--muted)}
-.msg{padding:9px 13px;border-radius:var(--r-sm);font-size:13px;margin-bottom:12px;display:none;line-height:1.45}
-.msg.on{display:block}
+.auth-ft{text-align:center;margin-top:16px;font-size:13px;color:var(--muted)}
+.msg{padding:10px 14px;border-radius:var(--r-sm);font-size:13px;margin-bottom:12px;display:none;line-height:1.5}
+.msg.on{display:block;animation:riseIn .25s var(--ease-out) both}
 .msg.err{background:var(--red-l);color:var(--red);border:1px solid var(--red-b)}
 .msg.ok{background:var(--green-l);color:var(--green);border:1px solid var(--green-b)}
 
 /* WEEK NAV */
-.wk-bar{display:flex;align-items:center;justify-content:space-between;margin-bottom:16px;gap:8px}
-.wk-title{font-family:'Playfair Display',serif;font-size:17px;text-align:center;flex:1}
-.wk-btn{width:36px;height:36px;border-radius:50%;border:1px solid var(--bdr);background:var(--surface);font-size:18px;cursor:pointer;display:flex;align-items:center;justify-content:center;flex-shrink:0;transition:all .15s;-webkit-appearance:none}
-.wk-btn:hover{background:var(--s2)}
+.wk-bar{display:flex;align-items:center;justify-content:space-between;margin-bottom:18px;gap:8px}
+.wk-title{font-family:'Fraunces',serif;font-size:19px;text-align:center;flex:1;letter-spacing:-.01em}
+.wk-btn{width:38px;height:38px;border-radius:50%;border:1px solid var(--bdr);background:var(--surface);cursor:pointer;display:flex;align-items:center;justify-content:center;flex-shrink:0;color:var(--tx)}
+.wk-btn:hover:not(:disabled){background:var(--s2)}
 .wk-btn:disabled{opacity:.3;cursor:not-allowed}
-.rt-bar{display:flex;align-items:center;justify-content:flex-end;margin-bottom:10px;font-size:11px;color:var(--hint);gap:4px}
-@keyframes flash{0%{opacity:.5}100%{opacity:1}}
-.cal-flash{animation:flash .35s ease}
+.rt-bar{display:flex;align-items:center;justify-content:flex-end;margin-bottom:12px;font-size:11px;color:var(--hint);gap:4px}
+@keyframes flash{0%{opacity:.4}100%{opacity:1}}
+.cal-flash{animation:flash .4s var(--ease-out)}
 
 /* CALENDAR */
-.cal-scroll{overflow-x:auto;-webkit-overflow-scrolling:touch;border-radius:var(--r);border:1px solid var(--bdr)}
-table.cal{width:100%;min-width:390px;border-collapse:collapse;table-layout:fixed;background:var(--surface)}
-.cal th{padding:8px 3px;font-size:10px;font-weight:600;color:var(--muted);text-align:center;text-transform:uppercase;letter-spacing:.4px;border-bottom:1px solid var(--bdr);background:var(--surface)}
+.cal-scroll{overflow-x:auto;-webkit-overflow-scrolling:touch;border-radius:var(--r);border:1px solid var(--bdr);background:var(--surface)}
+table.cal{width:100%;min-width:420px;border-collapse:collapse;table-layout:fixed;background:var(--surface)}
+.cal th{padding:10px 3px;font-size:10px;font-weight:700;color:var(--muted);text-align:center;text-transform:uppercase;letter-spacing:.06em;border-bottom:1px solid var(--bdr);background:var(--surface)}
 .cal th.td-col{color:var(--gold)}
-.cal th .dn{display:block;font-family:'Playfair Display',serif;font-size:15px;font-weight:500;color:var(--tx);margin-top:1px}
-.cal th .dn.td-n{background:var(--gold);color:#fff;width:26px;height:26px;border-radius:50%;display:inline-flex;align-items:center;justify-content:center;margin-top:1px;font-size:13px}
+.cal th .dn{display:block;font-family:'Fraunces',serif;font-size:16px;font-weight:500;color:var(--tx);margin-top:2px}
+.cal th .dn.td-n{background:var(--gold);color:#fdf9ef;width:27px;height:27px;border-radius:50%;display:inline-flex;align-items:center;justify-content:center;margin-top:2px;font-size:13px}
 .cal th.past-col .dn{color:var(--hint)}
-.cal td{padding:2px;vertical-align:middle}
-.cal td.tc{width:38px;font-size:10px;color:var(--hint);text-align:right;padding:2px 4px 2px 2px;white-space:nowrap}
-.sc{min-height:40px;border-radius:var(--r-xs);display:flex;align-items:center;justify-content:center;transition:background .2s,border .2s;cursor:default;padding:2px}
+.cal td{padding:3px;vertical-align:middle}
+.cal td.tc{width:42px;font-size:10.5px;color:var(--hint);text-align:right;padding:2px 5px 2px 2px;white-space:nowrap;font-weight:600}
+.sc{min-height:44px;border-radius:var(--r-xs);display:flex;align-items:center;justify-content:center;transition:background .2s var(--ease-out),border .2s var(--ease-out);cursor:default;padding:2px}
 .sc.free{background:var(--green-l);cursor:pointer;border:1px solid var(--green-b)}
-.sc.free:active{background:#c8ecd8}
+.sc.free:hover{background:#d8e4d4}
 .sc.taken{background:var(--red-l);border:1px solid var(--red-b)}
 .sc.mine{background:var(--amber-l);border:1px solid var(--amber-b);cursor:pointer}
-.sc.mine:active{background:#f5e4ae}
-.sc.hidden-slot{background:var(--purple-l);border:1px dashed var(--purple-b);cursor:pointer;opacity:.7}
-.sc.past-slot{background:var(--s2);border:1px solid var(--bdr);opacity:.6}
+.sc.mine:hover{background:#f0e2bd}
+.sc.hidden-slot{background:var(--purple-l);border:1px dashed var(--purple-b);cursor:pointer;opacity:.85}
+.sc.past-slot{background:var(--s2);border:1px solid var(--bdr);opacity:.55}
 .sc.empty{background:transparent}
-.sc.adm-e{background:var(--s2);cursor:pointer;border:1px dashed var(--bdr2)}
-.sl{font-size:10px;font-weight:600;text-align:center;line-height:1.3}
-.sl.f{color:var(--green)}.sl.t{color:var(--red)}.sl.m{color:var(--amber)}.sl.h{color:var(--purple)}.sl.a{color:#7070b0;font-size:9px}.sl.p{color:var(--hint)}
-.legend{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:12px}
-.leg{display:flex;align-items:center;gap:5px;font-size:11px;color:var(--muted)}
-.lsq{width:11px;height:11px;border-radius:2px;flex-shrink:0}
+.sc.adm-e{background:var(--s2);cursor:pointer;border:1px dashed var(--bdr2);color:var(--hint)}
+.sc.adm-e:hover{background:var(--s3);color:var(--gold)}
+.sl{font-size:10px;font-weight:700;text-align:center;line-height:1.35;letter-spacing:.01em}
+.sl.f{color:var(--green)}.sl.t{color:var(--red)}.sl.m{color:var(--amber)}.sl.h{color:var(--purple);display:flex;align-items:center;justify-content:center}.sl.a{display:flex;align-items:center;justify-content:center}.sl.p{color:var(--hint)}
+.legend{display:flex;gap:12px;flex-wrap:wrap;margin-bottom:14px}
+.leg{display:flex;align-items:center;gap:6px;font-size:11.5px;color:var(--muted);font-weight:500}
+.lsq{width:9px;height:9px;border-radius:50%;flex-shrink:0}
 
 /* MODALS */
-.ov{display:none;position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:500;align-items:flex-end;justify-content:center}
+.ov{display:none;position:fixed;inset:0;background:rgba(24,22,14,.42);backdrop-filter:blur(3px);z-index:500;align-items:flex-end;justify-content:center}
 @media(min-width:480px){.ov{align-items:center}}
 .ov.on{display:flex}
-.modal{background:var(--surface);border-radius:20px 20px 0 0;padding:26px 22px 32px;width:100%;max-width:400px;position:relative;animation:su .22s ease;max-height:90vh;overflow-y:auto}
-@media(min-width:480px){.modal{border-radius:20px;padding-bottom:26px;animation:pi .18s ease}}
-@keyframes su{from{transform:translateY(50px);opacity:0}to{transform:translateY(0);opacity:1}}
-@keyframes pi{from{transform:scale(.94);opacity:0}to{transform:scale(1);opacity:1}}
-.modal h3{font-family:'Playfair Display',serif;font-size:18px;margin-bottom:4px}
-.modal .ms{font-size:13px;color:var(--muted);margin-bottom:18px;line-height:1.5}
-.modal-acts{display:flex;flex-direction:column;gap:7px}
-.mx{position:absolute;top:13px;right:14px;background:var(--s2);border:none;border-radius:50%;width:28px;height:28px;font-size:15px;cursor:pointer;display:flex;align-items:center;justify-content:center;color:var(--muted)}
-.alert-modal{background:var(--surface);border-radius:20px 20px 0 0;padding:26px 22px 32px;width:100%;max-width:370px;position:relative;animation:su .22s ease;text-align:center}
-@media(min-width:480px){.alert-modal{border-radius:20px;padding-bottom:26px;animation:pi .18s ease}}
-.alert-icon{font-size:40px;margin-bottom:12px}
-.alert-modal h3{font-family:'Playfair Display',serif;font-size:18px;margin-bottom:8px}
-.alert-modal p{font-size:13px;color:var(--muted);margin-bottom:20px;line-height:1.6}
+.modal{background:var(--surface);border-radius:24px 24px 0 0;padding:28px 24px 34px;width:100%;max-width:410px;position:relative;animation:su .3s var(--ease-out);max-height:90vh;overflow-y:auto;transform-origin:center}
+@media(min-width:480px){.modal{border-radius:22px;padding-bottom:28px;animation:pi .22s var(--ease-out)}}
+@keyframes su{from{transform:translateY(60px);opacity:0}to{transform:translateY(0);opacity:1}}
+@keyframes pi{from{transform:scale(.95);opacity:0}to{transform:scale(1);opacity:1}}
+.modal h3{font-size:19px;margin-bottom:5px;letter-spacing:-.01em}
+.modal .ms{font-size:13px;color:var(--muted);margin-bottom:20px;line-height:1.55}
+.modal-acts{display:flex;flex-direction:column;gap:8px}
+.mx{position:absolute;top:14px;right:15px;background:var(--s2);border:none;border-radius:50%;width:30px;height:30px;cursor:pointer;display:flex;align-items:center;justify-content:center;color:var(--muted)}
+.alert-modal{background:var(--surface);border-radius:24px 24px 0 0;padding:30px 24px 34px;width:100%;max-width:380px;position:relative;animation:su .3s var(--ease-out);text-align:center;transform-origin:center}
+@media(min-width:480px){.alert-modal{border-radius:22px;padding-bottom:28px;animation:pi .22s var(--ease-out)}}
+.alert-icon{width:52px;height:52px;border-radius:50%;background:var(--s2);color:var(--gold);display:flex;align-items:center;justify-content:center;margin:0 auto 14px}
+.alert-modal h3{font-size:19px;margin-bottom:8px;letter-spacing:-.01em}
+.alert-modal p{font-size:13px;color:var(--muted);margin-bottom:22px;line-height:1.6}
 
 /* ANNONCE POPUP */
-.ann-popup{background:var(--surface);border-radius:20px 20px 0 0;padding:26px 22px 32px;width:100%;max-width:420px;position:relative;animation:su .22s ease;max-height:85vh;overflow-y:auto}
-@media(min-width:480px){.ann-popup{border-radius:20px;padding-bottom:26px;animation:pi .18s ease}}
-.ann-header{display:flex;align-items:center;gap:10px;margin-bottom:16px}
-.ann-header-icon{font-size:22px}
-.ann-header h3{font-family:'Playfair Display',serif;font-size:18px;flex:1}
-.ann-item{background:var(--gold-l);border:1px solid var(--amber-b);border-radius:var(--r-sm);padding:14px;margin-bottom:10px}
+.ann-popup{background:var(--surface);border-radius:24px 24px 0 0;padding:28px 24px 34px;width:100%;max-width:430px;position:relative;animation:su .3s var(--ease-out);max-height:85vh;overflow-y:auto;transform-origin:center}
+@media(min-width:480px){.ann-popup{border-radius:22px;padding-bottom:28px;animation:pi .22s var(--ease-out)}}
+.ann-header{display:flex;align-items:center;gap:11px;margin-bottom:18px}
+.ann-header-icon{width:36px;height:36px;border-radius:50%;background:var(--gold-l);color:var(--gold);display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.ann-header h3{font-size:19px;flex:1;letter-spacing:-.01em}
+.ann-item{background:var(--gold-l);border:1px solid var(--gold-b);border-radius:var(--r-sm);padding:15px;margin-bottom:10px;animation:riseIn .3s var(--ease-out) both}
 .ann-item:last-child{margin-bottom:0}
-.ann-item-title{font-weight:600;font-size:14px;color:var(--acc);margin-bottom:6px}
+.ann-item-title{font-weight:700;font-size:14px;color:var(--acc);margin-bottom:6px;display:flex;align-items:center;gap:7px}
 .ann-item-msg{font-size:13px;color:var(--muted);line-height:1.6;white-space:pre-wrap}
-.ann-item-exp{font-size:11px;color:var(--hint);margin-top:8px}
+.ann-item-exp{font-size:11px;color:var(--hint);margin-top:9px;font-weight:600}
 .ann-item-admin{display:flex;align-items:flex-start;justify-content:space-between;gap:8px}
 
 /* ADMIN */
-.pg-title{font-family:'Playfair Display',serif;font-size:22px;margin-bottom:18px}
-.card{background:var(--surface);border:1px solid var(--bdr);border-radius:var(--r);padding:18px;margin-bottom:14px}
-.card h3{font-size:11px;font-weight:600;color:var(--muted);text-transform:uppercase;letter-spacing:.5px;margin-bottom:13px}
-.a-tabs{display:flex;gap:3px;margin-bottom:18px;background:var(--s2);padding:3px;border-radius:var(--r-sm);overflow-x:auto}
-.a-tab{flex:1;padding:8px 4px;border:none;background:none;border-radius:6px;cursor:pointer;font-size:12px;font-weight:500;color:var(--muted);font-family:'DM Sans',sans-serif;transition:all .15s;white-space:nowrap;min-width:fit-content}
-.a-tab.on{background:var(--surface);color:var(--tx);box-shadow:var(--sh)}
-.a-row{display:flex;gap:8px;flex-wrap:wrap;align-items:flex-end;margin-bottom:10px}
-.a-row .fld{margin:0;flex:1;min-width:100px}
-.a-row .fld input,.a-row .fld select{width:100%;padding:9px 11px;border:1px solid var(--bdr);border-radius:var(--r-sm);font-size:13px;font-family:'DM Sans',sans-serif;outline:none;background:var(--surface);color:var(--tx);-webkit-appearance:none}
-.a-row .fld input:focus,.a-row .fld select:focus{border-color:var(--acc)}
-.sli{display:flex;align-items:center;justify-content:space-between;padding:9px 11px;background:var(--s2);border-radius:var(--r-sm);margin-bottom:5px;font-size:13px;gap:6px;flex-wrap:wrap}
-.sli .si{flex:1;font-size:13px;min-width:100px}
+.pg-title{font-size:25px;margin-bottom:20px;letter-spacing:-.02em;font-weight:600}
+.card{background:var(--surface);border:1px solid var(--bdr);border-radius:var(--r);padding:20px;margin-bottom:14px;box-shadow:var(--sh)}
+.card h3{font-size:11px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.07em;margin-bottom:14px;display:flex;align-items:center;gap:7px}
+.a-tabs{display:flex;gap:3px;margin-bottom:20px;background:var(--s2);padding:4px;border-radius:var(--r-sm);overflow-x:auto}
+.a-tab{flex:1;padding:9px 10px;border:none;background:none;border-radius:8px;cursor:pointer;font-size:12px;font-weight:700;color:var(--muted);white-space:nowrap;min-width:fit-content;display:flex;align-items:center;gap:5px;justify-content:center}
+.a-tab.on{background:var(--surface);color:var(--acc);box-shadow:var(--sh)}
+.a-row{display:flex;gap:9px;flex-wrap:wrap;align-items:flex-end;margin-bottom:11px}
+.a-row .fld{margin:0;flex:1;min-width:110px}
+.a-row .fld input,.a-row .fld select{width:100%;padding:10px 12px;border:1px solid var(--bdr);border-radius:var(--r-sm);font-size:13px;outline:none;background:var(--surface);color:var(--tx);-webkit-appearance:none}
+.a-row .fld input:focus,.a-row .fld select:focus{border-color:var(--gold)}
+.sli{display:flex;align-items:center;justify-content:space-between;padding:10px 12px;background:var(--s2);border-radius:var(--r-sm);margin-bottom:6px;font-size:13px;gap:8px;flex-wrap:wrap;animation:riseIn .3s var(--ease-out) both}
+.sli .si{flex:1;font-size:13px;min-width:110px}
 .sli-actions{display:flex;gap:5px;align-items:center;flex-shrink:0}
-.st{font-size:10px;font-weight:600;padding:2px 7px;border-radius:10px;white-space:nowrap}
+.st{font-size:10px;font-weight:700;padding:3px 9px;border-radius:10px;white-space:nowrap;letter-spacing:.01em}
 .st-f{background:var(--green-l);color:var(--green)}
 .st-t{background:var(--amber-l);color:var(--amber)}
 .st-h{background:var(--purple-l);color:var(--purple)}
 .st-p{background:var(--s2);color:var(--hint)}
-.inv-box{background:var(--s2);border:1px dashed var(--bdr2);border-radius:var(--r-sm);padding:12px 13px;font-size:12px;color:var(--muted);word-break:break-all;line-height:1.8;margin-bottom:10px}
-.inv-code{font-size:26px;font-weight:700;color:var(--acc);letter-spacing:3px;display:block;margin-bottom:6px;font-family:'Playfair Display',serif}
-.inv-link{font-family:monospace;font-size:11px;color:var(--hint)}
-.cp-row{display:flex;gap:7px;flex-wrap:wrap}
-.vis-banner{background:var(--purple-l);border:1px solid var(--purple-b);border-radius:var(--r-sm);padding:12px 14px;margin-bottom:14px;display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap}
-.vis-banner p{font-size:13px;color:var(--purple);flex:1}
-.vis-banner strong{display:block;font-size:12px;margin-bottom:2px}
-.toggle-wrap{display:flex;align-items:center;gap:8px;font-size:13px;color:var(--muted)}
+.inv-box{background:var(--s2);border:1px dashed var(--bdr2);border-radius:var(--r-sm);padding:14px 15px;font-size:12px;color:var(--muted);word-break:break-all;line-height:1.9;margin-bottom:11px}
+.inv-code{font-size:28px;font-weight:600;color:var(--acc);letter-spacing:4px;display:block;margin-bottom:7px;font-family:'Fraunces',serif}
+.inv-link{font-family:ui-monospace,monospace;font-size:11px;color:var(--hint)}
+.cp-row{display:flex;gap:8px;flex-wrap:wrap}
+.vis-banner{background:var(--purple-l);border:1px solid var(--purple-b);border-radius:var(--r-sm);padding:14px 16px;margin-bottom:16px;display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap}
+.vis-banner p{font-size:13px;color:var(--purple);flex:1;display:flex;align-items:center;gap:9px;flex-wrap:wrap}
+.vis-banner strong{display:inline-flex;align-items:center;gap:6px;font-size:12px;font-weight:700}
+.toggle-wrap{display:flex;align-items:center;gap:9px;font-size:13px;color:var(--muted)}
 .toggle{position:relative;width:42px;height:24px;flex-shrink:0}
 .toggle input{opacity:0;width:0;height:0;position:absolute}
-.toggle-track{position:absolute;inset:0;background:var(--bdr2);border-radius:12px;cursor:pointer;transition:background .2s}
-.toggle input:checked+.toggle-track{background:var(--green)}
-.toggle-thumb{position:absolute;top:3px;left:3px;width:18px;height:18px;background:#fff;border-radius:50%;transition:transform .2s;pointer-events:none;box-shadow:0 1px 4px rgba(0,0,0,.2)}
+.toggle-track{position:absolute;inset:0;background:var(--bdr2);border-radius:12px;cursor:pointer;transition:background .2s var(--ease-out)}
+.toggle input:checked+.toggle-track{background:var(--gold)}
+.toggle-thumb{position:absolute;top:3px;left:3px;width:18px;height:18px;background:#fffcf5;border-radius:50%;transition:transform .2s var(--ease-out);pointer-events:none;box-shadow:0 1px 4px rgba(0,0,0,.2)}
 .toggle input:checked~.toggle-thumb{transform:translateX(18px)}
 
-/* SERVICES / STATS */
-.seg{display:flex;gap:3px;background:var(--s2);padding:3px;border-radius:var(--r-sm);margin-bottom:14px;width:fit-content}
-.seg button{border:none;background:none;padding:6px 14px;border-radius:6px;font-size:12px;font-weight:500;color:var(--muted);cursor:pointer;font-family:'DM Sans',sans-serif}
-.seg button.on{background:var(--surface);color:var(--tx);box-shadow:var(--sh)}
-.stat-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:10px;margin-bottom:14px}
+/* SERVICES / STATS / PAIEMENT */
+.seg{display:flex;gap:3px;background:var(--s2);padding:4px;border-radius:var(--r-sm);margin-bottom:16px;width:fit-content}
+.seg button{border:none;background:none;padding:7px 15px;border-radius:7px;font-size:12px;font-weight:700;color:var(--muted);cursor:pointer}
+.seg button.on{background:var(--surface);color:var(--acc);box-shadow:var(--sh)}
+.stat-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:11px;margin-bottom:14px}
 @media(min-width:480px){.stat-grid{grid-template-columns:repeat(4,1fr)}}
-.stat-card{background:var(--s2);border-radius:var(--r-sm);padding:14px}
-.stat-card .sc-label{font-size:11px;color:var(--muted);text-transform:uppercase;letter-spacing:.4px;margin-bottom:6px}
-.stat-card .sc-val{font-family:'Playfair Display',serif;font-size:22px}
-.stat-card .sc-delta{font-size:11px;margin-top:4px;font-weight:600}
+.stat-card{background:var(--s2);border-radius:var(--r-sm);padding:15px}
+.stat-card .sc-label{font-size:11px;color:var(--muted);text-transform:uppercase;letter-spacing:.05em;margin-bottom:7px;font-weight:600}
+.stat-card .sc-val{font-family:'Fraunces',serif;font-size:24px;letter-spacing:-.01em}
+.stat-card .sc-delta{font-size:11px;margin-top:5px;font-weight:700}
 .stat-card .sc-delta.up{color:var(--green)}
 .stat-card .sc-delta.down{color:var(--red)}
-.bar-row{display:flex;align-items:flex-end;gap:8px;height:84px;margin-bottom:8px}
-.bar-col{flex:1;display:flex;flex-direction:column;align-items:center;gap:4px;height:100%;justify-content:flex-end}
-.bar-col .bv{font-size:10px;color:var(--muted)}
-.bar-col .bb{width:100%;background:var(--gold);border-radius:4px 4px 0 0;min-height:3px}
+.bar-row{display:flex;align-items:flex-end;gap:8px;height:88px;margin-bottom:8px}
+.bar-col{flex:1;display:flex;flex-direction:column;align-items:center;gap:5px;height:100%;justify-content:flex-end}
+.bar-col .bv{font-size:10px;color:var(--muted);font-weight:600}
+.bar-col .bb{width:100%;background:var(--gold);border-radius:5px 5px 0 0;min-height:3px;transition:height .5s var(--ease-out)}
 .bar-col .bd{font-size:10px;color:var(--hint)}
-.svc-row{display:flex;align-items:center;justify-content:space-between;padding:10px 12px;background:var(--s2);border-radius:var(--r-sm);margin-bottom:6px;gap:8px;flex-wrap:wrap}
-.svc-row .sv-name{font-weight:600;font-size:13px}
-.svc-row .sv-price{font-size:13px;color:var(--gold);font-weight:600}
-.svc-bar{display:flex;align-items:center;gap:8px;margin-bottom:8px}
+.svc-row{display:flex;align-items:center;justify-content:space-between;padding:11px 13px;background:var(--s2);border-radius:var(--r-sm);margin-bottom:6px;gap:8px;flex-wrap:wrap;animation:riseIn .3s var(--ease-out) both}
+.svc-row .sv-name{font-weight:700;font-size:13px}
+.svc-row .sv-price{font-size:13px;color:var(--gold);font-weight:700}
+.svc-bar{display:flex;align-items:center;gap:9px;margin-bottom:9px}
 .svc-bar .sb-track{flex:1;height:8px;background:var(--s2);border-radius:4px;overflow:hidden}
-.svc-bar .sb-fill{height:100%;background:var(--gold)}
-.svc-bar .sb-label{font-size:12px;color:var(--muted);min-width:110px}
-.svc-bar .sb-val{font-size:12px;color:var(--tx);font-weight:600;min-width:50px;text-align:right}
+.svc-bar .sb-fill{height:100%;background:var(--gold);transition:width .5s var(--ease-out)}
+.svc-bar .sb-label{font-size:12px;color:var(--muted);min-width:110px;font-weight:500}
+.svc-bar .sb-val{font-size:12px;color:var(--tx);font-weight:700;min-width:50px;text-align:right}
+.pay-card{background:var(--surface);border:1px solid var(--bdr);border-radius:var(--r);padding:18px;margin-bottom:12px;box-shadow:var(--sh);animation:riseIn .32s var(--ease-out) both}
+.pay-card-top{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:9px}
+.pay-card-title{font-family:'Fraunces',serif;font-size:17px;letter-spacing:-.01em}
+.pay-card-desc{font-size:13.5px;color:var(--muted);line-height:1.65;white-space:pre-wrap}
+.pay-copy{flex-shrink:0}
 
 /* PROFIL */
-.profil-avatar{width:72px;height:72px;border-radius:50%;background:linear-gradient(135deg,var(--gold),var(--amber));display:flex;align-items:center;justify-content:center;font-size:28px;font-weight:700;color:#fff;margin:0 auto 16px;font-family:'Playfair Display',serif}
-.profil-name{text-align:center;font-family:'Playfair Display',serif;font-size:20px;margin-bottom:4px}
-.profil-username{text-align:center;font-size:13px;color:var(--muted);margin-bottom:24px}
-.hist-item{display:flex;align-items:center;justify-content:space-between;padding:10px 12px;background:var(--s2);border-radius:var(--r-sm);margin-bottom:6px;font-size:13px;gap:8px}
-.hist-item .date{flex:1;font-weight:500}
+.profil-avatar{width:76px;height:76px;border-radius:50%;background:linear-gradient(135deg,var(--gold),var(--acc));display:flex;align-items:center;justify-content:center;font-size:27px;font-weight:600;color:#fdf9ef;margin:0 auto 18px;font-family:'Fraunces',serif}
+.profil-name{text-align:center;font-family:'Fraunces',serif;font-size:22px;margin-bottom:5px;letter-spacing:-.01em}
+.profil-username{text-align:center;font-size:13px;color:var(--muted);margin-bottom:26px}
+.hist-item{display:flex;align-items:center;justify-content:space-between;padding:11px 13px;background:var(--s2);border-radius:var(--r-sm);margin-bottom:7px;font-size:13px;gap:8px;animation:riseIn .3s var(--ease-out) both}
+.hist-item .date{flex:1;font-weight:600}
 .hist-item .time{color:var(--muted);font-size:12px}
-.hist-item .status{font-size:11px;font-weight:600;padding:2px 7px;border-radius:10px}
+.hist-item .status{font-size:11px;font-weight:700;padding:3px 9px;border-radius:10px}
 .hist-future{background:var(--green-l);color:var(--green)}
 .hist-past{background:var(--s2);color:var(--hint)}
-.notif-row{display:flex;align-items:center;justify-content:space-between;padding:12px 0;border-bottom:1px solid var(--bdr);gap:12px}
+.notif-row{display:flex;align-items:center;justify-content:space-between;padding:13px 0;border-bottom:1px solid var(--bdr);gap:12px}
 .notif-row:last-child{border-bottom:none}
 .notif-info{flex:1}
-.notif-info strong{display:block;font-size:14px;margin-bottom:2px}
+.notif-info strong{display:block;font-size:14px;margin-bottom:2px;font-weight:700}
 .notif-info span{font-size:12px;color:var(--muted)}
 
 /* TOAST */
-.toast{position:fixed;bottom:30px;left:50%;transform:translateX(-50%) translateY(80px);background:var(--acc);color:#fff;padding:11px 22px;border-radius:30px;font-size:13px;font-weight:500;z-index:999;transition:transform .28s ease;pointer-events:none;white-space:nowrap;box-shadow:var(--sh-lg)}
+.toast{position:fixed;bottom:30px;left:50%;transform:translateX(-50%) translateY(90px);background:var(--acc);color:#fdf9ef;padding:12px 24px;border-radius:30px;font-size:13px;font-weight:600;z-index:999;transition:transform .32s var(--ease-out);pointer-events:none;white-space:nowrap;box-shadow:var(--sh-lg);display:flex;align-items:center;gap:8px}
 .toast.on{transform:translateX(-50%) translateY(0)}
 
+@keyframes riseIn{from{opacity:0;transform:translateY(7px)}to{opacity:1;transform:translateY(0)}}
+.sli,.svc-row,.ann-item,.pay-card,.hist-item{animation-fill-mode:both}
+.sli:nth-child(1),.svc-row:nth-child(1),.ann-item:nth-child(1),.pay-card:nth-child(1),.hist-item:nth-child(1){animation-delay:0ms}
+.sli:nth-child(2),.svc-row:nth-child(2),.ann-item:nth-child(2),.pay-card:nth-child(2),.hist-item:nth-child(2){animation-delay:40ms}
+.sli:nth-child(3),.svc-row:nth-child(3),.ann-item:nth-child(3),.pay-card:nth-child(3),.hist-item:nth-child(3){animation-delay:80ms}
+.sli:nth-child(4),.svc-row:nth-child(4),.ann-item:nth-child(4),.pay-card:nth-child(4),.hist-item:nth-child(4){animation-delay:120ms}
+.sli:nth-child(5),.svc-row:nth-child(5),.ann-item:nth-child(5),.pay-card:nth-child(5),.hist-item:nth-child(5){animation-delay:160ms}
+.sli:nth-child(n+6),.svc-row:nth-child(n+6),.ann-item:nth-child(n+6),.pay-card:nth-child(n+6),.hist-item:nth-child(n+6){animation-delay:200ms}
+
 @supports(padding-bottom:env(safe-area-inset-bottom)){
-  .modal,.alert-modal,.ann-popup{padding-bottom:calc(26px + env(safe-area-inset-bottom))}
-  @media(min-width:480px){.modal,.alert-modal,.ann-popup{padding-bottom:26px}}
+  .modal,.alert-modal,.ann-popup{padding-bottom:calc(28px + env(safe-area-inset-bottom))}
+  @media(min-width:480px){.modal,.alert-modal,.ann-popup{padding-bottom:28px}}
 }
 @media(max-width:480px){
-  .scr{padding:16px 12px}.hdr{padding:0 12px;height:52px}
-  .auth-card{padding:24px 16px;border-radius:16px}
-  .cal th .dn{font-size:13px}.wk-title{font-size:14px}.sc{min-height:36px}
-  .htab{padding:6px 7px;font-size:12px}
+  .scr{padding:18px 14px}.hdr{padding:0 14px;height:54px}
+  .auth-card{padding:26px 18px;border-radius:18px}
+  .cal th .dn{font-size:14px}.wk-title{font-size:15px}.sc{min-height:40px}
+  .htab{padding:6px 8px}
+}
+@media(prefers-reduced-motion:reduce){
+  .scr.on{animation:none}
+  .modal,.alert-modal,.ann-popup{animation:none!important}
+  .sli,.svc-row,.ann-item,.pay-card,.hist-item,.msg.on{animation:none!important}
 }
 </style>
 </head>
 <body>
 
 <div class="loader-wrap" id="loader">
-  <div class="spinner"></div>
-  <div class="loader-txt" id="loader-txt">Chargement…</div>
+  <div class="loader-illustration">
+    <svg class="loader-svg" viewBox="0 0 280 220" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+      <ellipse cx="140" cy="204" rx="104" ry="8" fill="#e3ebe0"/>
+      <rect x="86" y="176" width="9" height="26" rx="3" fill="#20301f"/>
+      <rect x="121" y="176" width="9" height="26" rx="3" fill="#20301f"/>
+      <rect x="80" y="163" width="56" height="17" rx="7" fill="#20301f"/>
+      <path d="M64 200 C64 158 71 134 85 123 C94 115 128 115 137 123 C151 134 158 158 158 200 Z" fill="#20301f"/>
+      <circle cx="111" cy="88" r="28" fill="#20301f"/>
+      <path d="M83 78 C83 55 96 42 111 42 C126 42 139 55 139 78 C139 69 132 63 124 63 C119 63 117 67 111 67 C105 67 103 63 98 63 C90 63 83 69 83 78Z" fill="#20301f"/>
+      <path d="M172 204 C167 144 176 100 198 84 C209 76 226 77 235 90 C247 107 249 146 243 204 Z" fill="#20301f"/>
+      <circle cx="206" cy="58" r="25" fill="#20301f"/>
+      <path d="M183 54C183 35 193 26 206 26C219 26 229 35 229 54C226 43 217 41 211 46C208 40 201 40 198 46C192 41 186 43 183 54Z" fill="#20301f"/>
+      <path class="loader-arm" d="M198 96 C178 92 158 86 144 80" stroke="#20301f" stroke-width="14" stroke-linecap="round" fill="none"/>
+      <g class="loader-scissors" transform="translate(138,76)">
+        <circle cx="0" cy="9" r="3.4" fill="none" stroke="#2f5138" stroke-width="2.2"/>
+        <circle cx="0" cy="-9" r="3.4" fill="none" stroke="#2f5138" stroke-width="2.2"/>
+        <path d="M0 7 L17 -13 M0 -7 L17 13" stroke="#2f5138" stroke-width="2.2" stroke-linecap="round"/>
+      </g>
+      <circle class="loader-clip c1" cx="94" cy="112" r="2.2" fill="#a8813a"/>
+      <circle class="loader-clip c2" cx="102" cy="119" r="1.7" fill="#a8813a"/>
+      <circle class="loader-clip c3" cx="88" cy="122" r="1.9" fill="#a8813a"/>
+    </svg>
+  </div>
+  <div class="loader-brand">AlBarber</div>
+  <div class="loader-txt" id="loader-txt">Préparation de votre expérience…</div>
 </div>
 
 <div class="hdr">
-  <div class="logo">AlBarber<em>✦ RÉSA</em></div>
+  <div class="logo">
+    <svg class="logo-mark" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="6" cy="6" r="2.6"/><circle cx="6" cy="18" r="2.6"/><path d="M8 8l11 11M20 4 8 16"/></svg>
+    <span>AlBarber</span><em>Résa</em>
+  </div>
   <div class="hdr-r">
     <div class="hdr-tabs" id="hdr-tabs" style="display:none">
-      <button class="htab on" id="tab-cal" onclick="goTab('cal')">📅</button>
-      <button class="htab" id="tab-profil" onclick="goTab('profil')">👤</button>
-      <button class="htab" id="tab-adm" onclick="goTab('adm')" style="display:none">⚙️</button>
+      <button class="htab on" id="tab-cal" onclick="goTab('cal')" title="Calendrier"><svg class="ico" width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="5" width="18" height="16" rx="3.5"/><path d="M3 9.5h18M8 3v4M16 3v4"/></svg></button>
+      <button class="htab" id="tab-paiement" onclick="goTab('paiement')" title="Paiement"><svg class="ico" width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="6" width="18" height="13" rx="3"/><path d="M3 10.2h18"/><circle cx="16.5" cy="14.3" r="1" fill="currentColor" stroke="none"/></svg></button>
+      <button class="htab" id="tab-profil" onclick="goTab('profil')" title="Profil"><svg class="ico" width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="3.6"/><path d="M4.8 20c1.3-4.1 4-6.2 7.2-6.2s5.9 2.1 7.2 6.2"/></svg></button>
+      <button class="htab" id="tab-adm" onclick="goTab('adm')" style="display:none" title="Administration"><svg class="ico" width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 13a1.7 1.7 0 0 0 .3 1.9l.1.1a2 2 0 1 1-2.8 2.8l-.1-.1a1.7 1.7 0 0 0-1.9-.3 1.7 1.7 0 0 0-1 1.5V19a2 2 0 1 1-4 0v-.1a1.7 1.7 0 0 0-1-1.6 1.7 1.7 0 0 0-1.9.3l-.1.1a2 2 0 1 1-2.8-2.8l.1-.1a1.7 1.7 0 0 0 .3-1.9 1.7 1.7 0 0 0-1.5-1H3a2 2 0 1 1 0-4h.1a1.7 1.7 0 0 0 1.6-1 1.7 1.7 0 0 0-.3-1.9l-.1-.1a2 2 0 1 1 2.8-2.8l.1.1a1.7 1.7 0 0 0 1.9.3H9a1.7 1.7 0 0 0 1-1.5V3a2 2 0 1 1 4 0v.1a1.7 1.7 0 0 0 1 1.6 1.7 1.7 0 0 0 1.9-.3l.1-.1a2 2 0 1 1 2.8 2.8l-.1.1a1.7 1.7 0 0 0-.3 1.9V9a1.7 1.7 0 0 0 1.5 1H21a2 2 0 1 1 0 4h-.1a1.7 1.7 0 0 0-1.6 1z"/></svg></button>
     </div>
     <button class="bell-btn" id="bell-btn" style="display:none" onclick="openAnnonces()" title="Annonces">
-      🔔<span class="bell-badge" id="bell-badge"></span>
+      <svg class="ico" width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M6 8a6 6 0 1 1 12 0c0 4 1.4 5.5 2 6.5H4c.6-1 2-2.5 2-6.5Z"/><path d="M9.5 18a2.5 2.5 0 0 0 5 0"/></svg>
+      <span class="bell-badge" id="bell-badge"></span>
     </button>
     <span class="badge" id="ubadge" style="display:none"></span>
     <button class="i-btn" id="logout-btn" style="display:none" onclick="doLogout()">Déco.</button>
@@ -274,13 +346,13 @@ table.cal{width:100%;min-width:390px;border-collapse:collapse;table-layout:fixed
   <div class="auth-wrap">
     <div class="auth-card">
       <div id="v-land">
-        <h1>Bonjour 👋</h1>
-        <p class="sub">Réservez votre créneau coiffure facilement.</p>
+        <h1>Bonjour</h1>
+        <p class="sub">Réservez votre créneau coiffure en quelques secondes.</p>
         <button class="btn btn-dark" onclick="sv('v-login')">Se connecter</button>
         <button class="btn btn-out" onclick="sv('v-inv')">J'ai un lien d'invitation</button>
       </div>
       <div id="v-inv" style="display:none">
-        <h1>Invitation ✉️</h1>
+        <h1>Invitation</h1>
         <p class="sub">Entrez le code reçu dans votre invitation.</p>
         <div id="inv-msg" class="msg"></div>
         <div class="fld"><label class="lbl">Code d'invitation</label>
@@ -290,7 +362,7 @@ table.cal{width:100%;min-width:390px;border-collapse:collapse;table-layout:fixed
         <div class="auth-ft"><button class="link" onclick="sv('v-land')">← Retour</button></div>
       </div>
       <div id="v-reg" style="display:none">
-        <h1>Créer un compte 🎉</h1>
+        <h1>Créer un compte</h1>
         <p class="sub">Renseignez vos informations.</p>
         <div id="reg-msg" class="msg"></div>
         <div class="fld"><label class="lbl">Prénom</label><input class="inp" id="r-first" placeholder="Jean" autocomplete="given-name"></div>
@@ -298,7 +370,7 @@ table.cal{width:100%;min-width:390px;border-collapse:collapse;table-layout:fixed
         <div class="fld"><label class="lbl">Email</label><input class="inp" id="r-email" placeholder="jean@email.com" type="email" autocomplete="email"></div>
         <div class="fld"><label class="lbl">Pseudo</label>
           <input class="inp" id="r-user" placeholder="jean_dupont" autocomplete="username" autocapitalize="none" spellcheck="false">
-          <p style="font-size:11px;color:var(--hint);margin-top:4px">Lettres, chiffres et _ uniquement.</p>
+          <p style="font-size:11px;color:var(--hint);margin-top:5px">Lettres, chiffres et _ uniquement.</p>
         </div>
         <button class="btn btn-dark" id="reg-btn" onclick="doReg()">Créer mon compte →</button>
       </div>
@@ -319,19 +391,26 @@ table.cal{width:100%;min-width:390px;border-collapse:collapse;table-layout:fixed
 <!-- CALENDAR -->
 <div id="s-cal" class="scr">
   <div class="wk-bar">
-    <button class="wk-btn" id="prev-wk" onclick="prevW()">‹</button>
+    <button class="wk-btn" id="prev-wk" onclick="prevW()"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14.5 5 8 12l6.5 7"/></svg></button>
     <div class="wk-title" id="wk-lbl"></div>
-    <button class="wk-btn" id="next-wk" onclick="nextW()">›</button>
+    <button class="wk-btn" id="next-wk" onclick="nextW()"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9.5 5 16 12l-6.5 7"/></svg></button>
   </div>
   <div class="rt-bar"><span class="rt-dot" id="rt-dot"></span><span id="rt-txt">Connexion…</span></div>
   <div class="legend">
-    <div class="leg"><div class="lsq" style="background:var(--green-l);border:1px solid var(--green-b)"></div>Disponible</div>
-    <div class="leg"><div class="lsq" style="background:var(--red-l);border:1px solid var(--red-b)"></div>Réservé</div>
-    <div class="leg"><div class="lsq" style="background:var(--amber-l);border:1px solid var(--amber-b)"></div>Ma réservation</div>
-    <div class="leg" id="leg-hidden" style="display:none"><div class="lsq" style="background:var(--purple-l);border:1px dashed var(--purple-b)"></div>Caché</div>
+    <div class="leg"><div class="lsq" style="background:var(--green)"></div>Disponible</div>
+    <div class="leg"><div class="lsq" style="background:var(--red)"></div>Réservé</div>
+    <div class="leg"><div class="lsq" style="background:var(--amber)"></div>Ma réservation</div>
+    <div class="leg" id="leg-hidden" style="display:none"><div class="lsq" style="background:var(--purple)"></div>Caché</div>
   </div>
   <div class="cal-scroll"><table class="cal" id="cal-tbl"></table></div>
-  <p id="cal-hint" style="margin-top:12px;font-size:11px;color:var(--hint);text-align:center"></p>
+  <p id="cal-hint" style="margin-top:14px;font-size:11.5px;color:var(--hint);text-align:center"></p>
+</div>
+
+<!-- PAIEMENT -->
+<div id="s-paiement" class="scr">
+  <div class="pg-title">Moyens de paiement</div>
+  <p style="font-size:13.5px;color:var(--muted);margin-bottom:20px;line-height:1.6">Voici comment vous pouvez régler votre prestation.</p>
+  <div id="pay-list"></div>
 </div>
 
 <!-- PROFIL -->
@@ -341,11 +420,11 @@ table.cal{width:100%;min-width:390px;border-collapse:collapse;table-layout:fixed
     <div class="profil-avatar" id="profil-avatar"></div>
     <div class="profil-name" id="profil-name"></div>
     <div class="profil-username" id="profil-username"></div>
-    <div id="profil-email" style="text-align:center;font-size:12px;color:var(--hint);margin-bottom:16px"></div>
-    <button class="btn btn-out btn-sm" style="margin:0 auto;display:block" onclick="openEditProfil()">✏️ Modifier</button>
+    <div id="profil-email" style="text-align:center;font-size:12px;color:var(--hint);margin-bottom:18px"></div>
+    <button class="btn btn-out btn-sm" style="margin:0 auto;display:flex" onclick="openEditProfil()"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M4 20l.9-4L17 3.9a1.5 1.5 0 0 1 2.1 0l1 1a1.5 1.5 0 0 1 0 2.1L8 19.1z"/><path d="M14.5 6.5l3 3"/></svg> Modifier</button>
   </div>
   <div class="card">
-    <h3>🔔 Notifications</h3>
+    <h3><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M6 8a6 6 0 1 1 12 0c0 4 1.4 5.5 2 6.5H4c.6-1 2-2.5 2-6.5Z"/><path d="M9.5 18a2.5 2.5 0 0 0 5 0"/></svg> Notifications</h3>
     <div class="notif-row">
       <div class="notif-info"><strong>Nouveau créneau disponible</strong><span>Notification quand un créneau est rendu visible</span></div>
       <label class="toggle"><input type="checkbox" id="n-available" onchange="saveNotifPref()"><div class="toggle-track"></div><div class="toggle-thumb"></div></label>
@@ -364,7 +443,7 @@ table.cal{width:100%;min-width:390px;border-collapse:collapse;table-layout:fixed
     </div>
   </div>
   <div class="card">
-    <h3>📋 Mes réservations</h3>
+    <h3><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M8 6h13M8 12h13M8 18h13M3 6h.01M3 12h.01M3 18h.01"/></svg> Mes réservations</h3>
     <div id="hist-list"></div>
   </div>
 </div>
@@ -373,18 +452,19 @@ table.cal{width:100%;min-width:390px;border-collapse:collapse;table-layout:fixed
 <div id="s-adm" class="scr">
   <div class="pg-title">Administration</div>
   <div class="a-tabs">
-    <button class="a-tab on" id="at-slots" onclick="atab('slots')">Créneaux</button>
-    <button class="a-tab" id="at-services" onclick="atab('services')">💇 Prestations</button>
-    <button class="a-tab" id="at-stats" onclick="atab('stats')">📊 Stats</button>
-    <button class="a-tab" id="at-annonces" onclick="atab('annonces')">📢 Annonces</button>
-    <button class="a-tab" id="at-membres" onclick="atab('membres')">Membres</button>
-    <button class="a-tab" id="at-invite" onclick="atab('invite')">Invitation</button>
+    <button class="a-tab on" id="at-slots" onclick="atab('slots')"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="5" width="18" height="16" rx="3.5"/><path d="M3 9.5h18M8 3v4M16 3v4"/></svg> Créneaux</button>
+    <button class="a-tab" id="at-services" onclick="atab('services')"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><circle cx="6" cy="6" r="2.6"/><circle cx="6" cy="18" r="2.6"/><path d="M8 8l11 11M20 4 8 16"/></svg> Prestations</button>
+    <button class="a-tab" id="at-stats" onclick="atab('stats')"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M4 20V10M12 20V4M20 20v-7"/></svg> Stats</button>
+    <button class="a-tab" id="at-paiement" onclick="atab('paiement')"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="6" width="18" height="13" rx="3"/><path d="M3 10.2h18"/><circle cx="16.5" cy="14.3" r="1" fill="currentColor" stroke="none"/></svg> Paiement</button>
+    <button class="a-tab" id="at-annonces" onclick="atab('annonces')"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M3 10v4a1 1 0 0 0 1 1h2l3.5 4.5a1 1 0 0 0 1.8-.6V5.1a1 1 0 0 0-1.8-.6L6 9H4a1 1 0 0 0-1 1Z"/><path d="M17 8a5 5 0 0 1 0 8M20 5.5a9 9 0 0 1 0 13"/></svg> Annonces</button>
+    <button class="a-tab" id="at-membres" onclick="atab('membres')"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><circle cx="9" cy="8" r="3.2"/><path d="M2.7 19c1-3.3 3.3-5 6.3-5s5.3 1.7 6.3 5"/><circle cx="17.5" cy="8.5" r="2.6"/><path d="M16 13.3c2.2.4 3.7 1.9 4.4 4.2"/></svg> Membres</button>
+    <button class="a-tab" id="at-invite" onclick="atab('invite')"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M9.5 14.5 14.5 9.5"/><path d="M11 6.5 12.7 4.8a3.5 3.5 0 1 1 5 5L15.9 11.5"/><path d="M13 17.5 11.3 19.2a3.5 3.5 0 1 1-5-5L8.1 12.5"/></svg> Invitation</button>
   </div>
 
   <!-- SLOTS -->
   <div id="ap-slots">
     <div class="vis-banner">
-      <div><p><strong>🙈 Visibilité globale</strong>Rendez tous vos créneaux visibles en un clic.</p></div>
+      <div><p><strong><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M3 3l18 18M10.6 5.2A10.6 10.6 0 0 1 12 5c6.5 0 10 7 10 7a15 15 0 0 1-3.1 4M6.5 6.6A15.6 15.6 0 0 0 2 12s3.5 7 10 7c1.4 0 2.6-.3 3.7-.7M9.9 9.9a3 3 0 0 0 4.2 4.2"/></svg> Visibilité globale</strong>Rendez tous vos créneaux visibles en un clic.</p></div>
       <label class="toggle-wrap">
         <span>Cachés</span>
         <label class="toggle"><input type="checkbox" id="vis-toggle" onchange="toggleAllVisibility(this.checked)"><div class="toggle-track"></div><div class="toggle-thumb"></div></label>
@@ -403,7 +483,7 @@ table.cal{width:100%;min-width:390px;border-collapse:collapse;table-layout:fixed
         <div class="fld"><label class="lbl">Heure début</label><select id="adm-time-start" class="inp"></select></div>
         <div class="fld"><label class="lbl">Heure fin (optionnel)</label><select id="adm-time-end" class="inp"><option value="">Une seule heure</option></select></div>
       </div>
-      <div style="margin-bottom:10px">
+      <div style="margin-bottom:11px">
         <label class="toggle-wrap" style="font-size:13px">
           <label class="toggle"><input type="checkbox" id="slot-visible-inp" checked><div class="toggle-track"></div><div class="toggle-thumb"></div></label>
           <span>Visible immédiatement</span>
@@ -412,15 +492,15 @@ table.cal{width:100%;min-width:390px;border-collapse:collapse;table-layout:fixed
       <div class="fld">
         <label class="lbl">Ou publier automatiquement à (optionnel)</label>
         <input type="datetime-local" id="adm-publish-at" class="inp">
-        <p style="font-size:11px;color:var(--hint);margin-top:4px">Si renseigné, le créneau reste caché puis devient visible tout seul à cette heure, avec notification automatique envoyée à tous.</p>
+        <p style="font-size:11px;color:var(--hint);margin-top:5px">Si renseigné, le créneau reste caché puis devient visible tout seul à cette heure, avec notification automatique envoyée à tous.</p>
       </div>
-      <p style="font-size:11px;color:var(--hint);margin-bottom:10px">La prestation sera choisie par le client juste après sa réservation.</p>
-      <button class="btn btn-dark btn-sm" onclick="addSlot()">+ Ajouter</button>
-      <div id="as-msg" class="msg" style="margin-top:10px"></div>
+      <p style="font-size:11px;color:var(--hint);margin-bottom:11px">La prestation sera choisie par le client juste après sa réservation.</p>
+      <button class="btn btn-dark btn-sm" onclick="addSlot()"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 5v14M5 12h14"/></svg> Ajouter</button>
+      <div id="as-msg" class="msg" style="margin-top:11px"></div>
     </div>
     <div class="card">
       <h3>Rendez-vous manuel (client de passage)</h3>
-      <p style="font-size:13px;color:var(--muted);margin-bottom:14px">Ajoute une coupe hors réservation en ligne. Toujours masquée du calendrier public, mais comptée dans les statistiques.</p>
+      <p style="font-size:13px;color:var(--muted);margin-bottom:15px">Ajoute une coupe hors réservation en ligne. Toujours masquée du calendrier public, mais comptée dans les statistiques.</p>
       <div class="a-row">
         <div class="fld"><label class="lbl">Date</label><input type="date" id="man-date"></div>
         <div class="fld"><label class="lbl">Heure</label><select id="man-time" class="inp"></select></div>
@@ -429,8 +509,8 @@ table.cal{width:100%;min-width:390px;border-collapse:collapse;table-layout:fixed
         <div class="fld"><label class="lbl">Prestation</label><select id="man-service" class="inp"></select></div>
         <div class="fld"><label class="lbl">Client</label><input class="inp" id="man-client" placeholder="Nom du client"></div>
       </div>
-      <button class="btn btn-out btn-sm" onclick="addManualSlot()">+ Ajouter (masqué)</button>
-      <div id="man-msg" class="msg" style="margin-top:10px"></div>
+      <button class="btn btn-out btn-sm" onclick="addManualSlot()"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 5v14M5 12h14"/></svg> Ajouter (masqué)</button>
+      <div id="man-msg" class="msg" style="margin-top:11px"></div>
     </div>
     <div class="card">
       <h3>Tous les créneaux</h3>
@@ -438,9 +518,9 @@ table.cal{width:100%;min-width:390px;border-collapse:collapse;table-layout:fixed
         <button class="on" id="sf-upcoming" onclick="setSlotFilter('upcoming')">À venir</button>
         <button id="sf-past" onclick="setSlotFilter('past')">Historique</button>
       </div>
-      <div style="display:flex;gap:7px;flex-wrap:wrap;margin-bottom:12px">
-        <button class="btn btn-out btn-sm" onclick="showAllSlots(true)">👁 Tout visible</button>
-        <button class="btn btn-out btn-sm" onclick="showAllSlots(false)">🙈 Tout cacher</button>
+      <div style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:13px">
+        <button class="btn btn-out btn-sm" onclick="showAllSlots(true)"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M2 12s3.5-7 10-7 10 7 10 7-3.5 7-10 7-10-7-10-7Z"/><circle cx="12" cy="12" r="3"/></svg> Tout visible</button>
+        <button class="btn btn-out btn-sm" onclick="showAllSlots(false)"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M3 3l18 18M10.6 5.2A10.6 10.6 0 0 1 12 5c6.5 0 10 7 10 7a15 15 0 0 1-3.1 4M6.5 6.6A15.6 15.6 0 0 0 2 12s3.5 7 10 7c1.4 0 2.6-.3 3.7-.7M9.9 9.9a3 3 0 0 0 4.2 4.2"/></svg> Tout cacher</button>
       </div>
       <div id="slot-list"></div>
     </div>
@@ -454,8 +534,8 @@ table.cal{width:100%;min-width:390px;border-collapse:collapse;table-layout:fixed
         <div class="fld"><label class="lbl">Nom</label><input class="inp" id="svc-name" placeholder="Ex : Coupe simple"></div>
         <div class="fld"><label class="lbl">Prix (€)</label><input class="inp" id="svc-price" type="number" min="0" step="0.5" placeholder="12"></div>
       </div>
-      <button class="btn btn-dark btn-sm" onclick="addService()">+ Ajouter</button>
-      <div id="svc-msg" class="msg" style="margin-top:10px"></div>
+      <button class="btn btn-dark btn-sm" onclick="addService()"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 5v14M5 12h14"/></svg> Ajouter</button>
+      <div id="svc-msg" class="msg" style="margin-top:11px"></div>
     </div>
     <div class="card">
       <h3>Prestations existantes</h3>
@@ -472,16 +552,40 @@ table.cal{width:100%;min-width:390px;border-collapse:collapse;table-layout:fixed
     <div id="stats-content"></div>
   </div>
 
+  <!-- PAIEMENT (admin) -->
+  <div id="ap-paiement" style="display:none">
+    <div class="card">
+      <h3 id="pay-form-title">Ajouter un moyen de paiement</h3>
+      <div class="fld"><label class="lbl">Titre</label><input class="inp" id="pay-title" placeholder="Ex : Lydia, Virement, Espèces..."></div>
+      <div class="fld"><label class="lbl">Description (infos pour payer)</label><textarea class="inp" id="pay-desc" placeholder="Ex : IBAN FR76 XXXX XXXX XXXX... ou numéro Lydia 06 XX XX XX XX"></textarea></div>
+      <div style="margin-bottom:15px">
+        <label class="toggle-wrap" style="font-size:13px">
+          <label class="toggle"><input type="checkbox" id="pay-allow-copy"><div class="toggle-track"></div><div class="toggle-thumb"></div></label>
+          <span>Autoriser les clients à copier cette description</span>
+        </label>
+      </div>
+      <div style="display:flex;gap:9px;flex-wrap:wrap">
+        <button class="btn btn-dark btn-sm" id="pay-save-btn" onclick="savePayment()"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 5v14M5 12h14"/></svg> Ajouter</button>
+        <button class="btn btn-out btn-sm" id="pay-cancel-btn" style="display:none" onclick="cancelEditPayment()">Annuler</button>
+      </div>
+      <div id="pay-msg" class="msg" style="margin-top:11px"></div>
+    </div>
+    <div class="card">
+      <h3>Moyens de paiement configurés</h3>
+      <div id="pay-admin-list"></div>
+    </div>
+  </div>
+
   <!-- ANNONCES -->
   <div id="ap-annonces" style="display:none">
     <div class="card">
       <h3>Créer une annonce</h3>
-      <p style="font-size:13px;color:var(--muted);margin-bottom:14px">L'annonce apparaîtra en pop-up à chaque ouverture de l'app et sera accessible via la 🔔 cloche.</p>
+      <p style="font-size:13px;color:var(--muted);margin-bottom:15px">L'annonce apparaîtra en pop-up à chaque ouverture de l'app et sera accessible via la cloche.</p>
       <div class="fld"><label class="lbl">Titre</label><input class="inp" id="ann-title" placeholder="Ex : Mise en ligne des créneaux ce soir à 18h"></div>
       <div class="fld"><label class="lbl">Message</label><textarea class="inp" id="ann-msg" placeholder="Ex : Les créneaux de la semaine prochaine seront disponibles ce soir à 18h. Soyez prêts !"></textarea></div>
       <div class="fld"><label class="lbl">Visible jusqu'au</label><input type="date" id="ann-expires" class="inp"></div>
-      <button class="btn btn-dark btn-sm" onclick="addAnnonce()" style="margin-top:4px">📢 Publier l'annonce</button>
-      <div id="ann-msg-status" class="msg" style="margin-top:10px"></div>
+      <button class="btn btn-dark btn-sm" onclick="addAnnonce()" style="margin-top:5px"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M3 10v4a1 1 0 0 0 1 1h2l3.5 4.5a1 1 0 0 0 1.8-.6V5.1a1 1 0 0 0-1.8-.6L6 9H4a1 1 0 0 0-1 1Z"/><path d="M17 8a5 5 0 0 1 0 8M20 5.5a9 9 0 0 1 0 13"/></svg> Publier l'annonce</button>
+      <div id="ann-msg-status" class="msg" style="margin-top:11px"></div>
     </div>
     <div class="card">
       <h3>Annonces actives</h3>
@@ -498,11 +602,11 @@ table.cal{width:100%;min-width:390px;border-collapse:collapse;table-layout:fixed
   <div id="ap-invite" style="display:none">
     <div class="card">
       <h3>Lien d'invitation</h3>
-      <p style="font-size:13px;color:var(--muted);margin-bottom:14px">Partagez ce lien avec vos clients.</p>
+      <p style="font-size:13px;color:var(--muted);margin-bottom:15px">Partagez ce lien avec vos clients.</p>
       <div class="inv-box" id="inv-disp"></div>
       <div class="cp-row">
-        <button class="btn btn-dark btn-sm" onclick="cpInvite()">📋 Copier</button>
-        <button class="btn btn-out btn-sm" onclick="regenInvite()">🔄 Nouveau code</button>
+        <button class="btn btn-dark btn-sm" onclick="cpInvite()"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="12" height="12" rx="2.5"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg> Copier</button>
+        <button class="btn btn-out btn-sm" onclick="regenInvite()"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4v5h5M20 20v-5h-5"/><path d="M4.6 15a8 8 0 0 0 14.5 2.3M19.4 9A8 8 0 0 0 4.9 6.7"/></svg> Nouveau code</button>
       </div>
     </div>
   </div>
@@ -511,7 +615,7 @@ table.cal{width:100%;min-width:390px;border-collapse:collapse;table-layout:fixed
 <!-- MODAL SLOT -->
 <div class="ov" id="ov" onclick="ovClick(event)">
   <div class="modal">
-    <button class="mx" onclick="closeM()">✕</button>
+    <button class="mx" onclick="closeM()"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 6l12 12M18 6 6 18"/></svg></button>
     <h3 id="m-title"></h3>
     <p class="ms" id="m-sub"></p>
     <div class="modal-acts" id="m-acts"></div>
@@ -521,9 +625,9 @@ table.cal{width:100%;min-width:390px;border-collapse:collapse;table-layout:fixed
 <!-- MODAL ANNONCES (cloche) -->
 <div class="ov" id="ov-ann" onclick="if(event.target===this)closeAnnonces()">
   <div class="ann-popup">
-    <button class="mx" onclick="closeAnnonces()">✕</button>
+    <button class="mx" onclick="closeAnnonces()"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 6l12 12M18 6 6 18"/></svg></button>
     <div class="ann-header">
-      <span class="ann-header-icon">🔔</span>
+      <span class="ann-header-icon"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M6 8a6 6 0 1 1 12 0c0 4 1.4 5.5 2 6.5H4c.6-1 2-2.5 2-6.5Z"/><path d="M9.5 18a2.5 2.5 0 0 0 5 0"/></svg></span>
       <h3>Annonces</h3>
     </div>
     <div id="ann-popup-content"></div>
@@ -533,7 +637,7 @@ table.cal{width:100%;min-width:390px;border-collapse:collapse;table-layout:fixed
 <!-- MODAL EDIT PROFIL -->
 <div class="ov" id="ov-profil" onclick="if(event.target===this)closeEditProfil()">
   <div class="modal">
-    <button class="mx" onclick="closeEditProfil()">✕</button>
+    <button class="mx" onclick="closeEditProfil()"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 6l12 12M18 6 6 18"/></svg></button>
     <h3>Modifier mon profil</h3>
     <p class="ms">Mettez à jour vos informations.</p>
     <div id="edit-msg" class="msg"></div>
@@ -541,7 +645,7 @@ table.cal{width:100%;min-width:390px;border-collapse:collapse;table-layout:fixed
     <div class="fld"><label class="lbl">Nom</label><input class="inp" id="e-last"></div>
     <div class="fld"><label class="lbl">Email</label><input class="inp" id="e-email" type="email"></div>
     <div class="fld"><label class="lbl">Pseudo</label><input class="inp" id="e-user" autocapitalize="none" spellcheck="false"></div>
-    <div class="modal-acts" style="margin-top:8px">
+    <div class="modal-acts" style="margin-top:9px">
       <button class="btn btn-dark" onclick="saveProfil()">Enregistrer</button>
       <button class="btn btn-out" onclick="closeEditProfil()">Annuler</button>
     </div>
@@ -575,9 +679,25 @@ const SUPA_KEY='sb_publishable_V0gO0wwMcxsV-GIiFgFKeQ_n6Gz0JU3';
 const sb=supabase.createClient(SUPA_URL,SUPA_KEY,{realtime:{params:{eventsPerSecond:20}}});
 const ONESIGNAL_APP_ID='b68eced9-8ced-4193-bc25-7ccda7670e21';
 
+// ── ICONS ──
+const ICON_PATHS={
+  trash:'<path d="M4 7h16M9 7V5a2 2 0 0 1 2-2h2a2 2 0 0 1 2 2v2m-9 0 1 13a2 2 0 0 0 2 2h6a2 2 0 0 0 2-2l1-13"/>',
+  eye:'<path d="M2 12s3.5-7 10-7 10 7 10 7-3.5 7-10 7-10-7-10-7Z"/><circle cx="12" cy="12" r="3"/>',
+  eyeOff:'<path d="M3 3l18 18M10.6 5.2A10.6 10.6 0 0 1 12 5c6.5 0 10 7 10 7a15 15 0 0 1-3.1 4M6.5 6.6A15.6 15.6 0 0 0 2 12s3.5 7 10 7c1.4 0 2.6-.3 3.7-.7M9.9 9.9a3 3 0 0 0 4.2 4.2"/>',
+  zap:'<path d="M13 2 4 14h7l-1 8 9-12h-7z"/>',
+  tag:'<path d="M3 12 12 3h6a3 3 0 0 1 3 3v6l-9 9a2 2 0 0 1-2.8 0L3 14.8a2 2 0 0 1 0-2.8Z"/><circle cx="16" cy="8" r="1.4" fill="currentColor" stroke="none"/>',
+  pencil:'<path d="M4 20l.9-4L17 3.9a1.5 1.5 0 0 1 2.1 0l1 1a1.5 1.5 0 0 1 0 2.1L8 19.1z"/><path d="M14.5 6.5l3 3"/>',
+  copy:'<rect x="9" y="9" width="12" height="12" rx="2.5"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/>',
+  megaphone:'<path d="M3 10v4a1 1 0 0 0 1 1h2l3.5 4.5a1 1 0 0 0 1.8-.6V5.1a1 1 0 0 0-1.8-.6L6 9H4a1 1 0 0 0-1 1Z"/><path d="M17 8a5 5 0 0 1 0 8M20 5.5a9 9 0 0 1 0 13"/>',
+  crown:'<path d="M4 18h16l-1.3-8-4 3-2.7-5-2.7 5-4-3z"/>',
+  check:'<path d="M5 13l4.5 4.5L19 7"/>'
+};
+function ic(name,size){size=size||16;return '<svg class="ico" width="'+size+'" height="'+size+'" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round">'+(ICON_PATHS[name]||'')+'</svg>';}
+function escapeHtml(s){return (s||'').replace(/[&<>"']/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c];});}
+
 let CU=null,WS=null,pendSlot=null,admTab='slots';
-let allSlots=[],allUsers=[],allAnnonces=[],allServices=[],inviteCode=null,rtChannel=null;
-let slotFilter='upcoming',statsPeriod='week';
+let allSlots=[],allUsers=[],allAnnonces=[],allServices=[],allPayments=[],inviteCode=null,rtChannel=null;
+let slotFilter='upcoming',statsPeriod='week',editingPaymentId=null;
 const MAX_FUTURE_WEEKS=2;
 
 (()=>{
@@ -589,7 +709,7 @@ const dk=d=>d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+Strin
 function getMonday(offset=0){const d=new Date();d.setHours(0,0,0,0);const day=d.getDay();const diff=day===0?-6:1-day;d.setDate(d.getDate()+diff+offset*7);return d;}
 
 async function boot(){
-  showLoader(true,'Chargement…');
+  showLoader(true,'Préparation de votre expérience…');
   fillTimeDropdowns();
   try{
     const sessId=localStorage.getItem('cb_session');
@@ -637,7 +757,7 @@ function setupRealtime(){
     })
     .on('postgres_changes',{event:'DELETE',schema:'public',table:'slots'},({old:row})=>{
       allSlots=allSlots.filter(s=>s.id!==row.id);
-      if(pendSlot===row.id){closeM();showAlert('🗑️','Supprimé','Ce créneau a été supprimé.');}
+      if(pendSlot===row.id){closeM();showAlert('trash','Supprimé','Ce créneau a été supprimé.');}
       flashAndRender();
     })
     .on('postgres_changes',{event:'*',schema:'public',table:'announcements'},async()=>{
@@ -653,6 +773,11 @@ function setupRealtime(){
       await loadServices();
       populateServiceSelects();
       if(document.getElementById('s-adm').classList.contains('on')&&admTab==='services')renderServices();
+    })
+    .on('postgres_changes',{event:'*',schema:'public',table:'payment_methods'},async()=>{
+      await loadPayments();
+      if(document.getElementById('s-paiement').classList.contains('on'))renderPaiement();
+      if(document.getElementById('s-adm').classList.contains('on')&&admTab==='paiement')renderAdminPayments();
     })
     .subscribe(status=>{
       if(status==='SUBSCRIBED')setRtStatus(true);
@@ -675,13 +800,14 @@ function flashAndRender(){
 }
 function checkOpenModal(row){
   if(!pendSlot||pendSlot!==row.id)return;
-  if(row.visible===false&&!CU?.is_admin){closeM();showAlert('🙈','Masqué','Ce créneau vient d\'être masqué.');return;}
-  if(row.booked_by&&row.booked_by!==CU?.id&&!CU?.is_admin){closeM();showAlert('⚡','Déjà réservé','Ce créneau vient d\'être réservé par quelqu\'un d\'autre.');}
+  if(row.visible===false&&!CU?.is_admin){closeM();showAlert('eyeOff','Masqué','Ce créneau vient d\'être masqué.');return;}
+  if(row.booked_by&&row.booked_by!==CU?.id&&!CU?.is_admin){closeM();showAlert('zap','Déjà réservé','Ce créneau vient d\'être réservé par quelqu\'un d\'autre.');}
 }
 function showLoader(v,txt){document.getElementById('loader').classList.toggle('hide',!v);if(txt)document.getElementById('loader-txt').textContent=txt;}
 async function loadSlots(){const{data}=await sb.from('slots').select('*');allSlots=data||[];}
 async function loadUsers(){const{data}=await sb.from('users').select('*');allUsers=data||[];}
 async function loadServices(){const{data}=await sb.from('services').select('*').order('sort_order');allServices=data||[];}
+async function loadPayments(){const{data}=await sb.from('payment_methods').select('*').order('sort_order');allPayments=data||[];}
 async function loadAnnonces(){
   const today=dk(new Date());
   const{data}=await sb.from('announcements').select('*').gte('expires_at',today).order('created_at',{ascending:false});
@@ -726,8 +852,93 @@ function renderServices(){
       <div><div class="sv-name">${s.name}${s.active===false?' <span class="st st-p">Inactive</span>':''}</div></div>
       <div style="display:flex;align-items:center;gap:8px">
         <span class="sv-price">${(s.price_cents/100).toFixed(2)}€</span>
-        <button class="btn btn-out btn-sm" style="font-size:11px;padding:3px 8px" onclick="toggleServiceActive('${s.id}',${s.active===false})">${s.active===false?'Réactiver':'Désactiver'}</button>
-        <button class="btn btn-out btn-sm" style="color:var(--red);border-color:var(--red-b);font-size:11px;padding:3px 8px" onclick="deleteService('${s.id}')">✕</button>
+        <button class="btn btn-out btn-sm" style="font-size:11px;padding:4px 9px" onclick="toggleServiceActive('${s.id}',${s.active===false})">${s.active===false?'Réactiver':'Désactiver'}</button>
+        <button class="btn btn-out btn-sm" style="color:var(--red);border-color:var(--red-b);font-size:11px;padding:4px 9px" onclick="deleteService('${s.id}')">${ic('trash',13)}</button>
+      </div>
+    </div>`).join('');
+}
+
+// ── PAIEMENT ──
+function renderPaiement(){
+  const list=document.getElementById('pay-list');
+  const active=allPayments.filter(p=>p.active!==false);
+  if(!active.length){list.innerHTML='<p style="color:var(--hint);font-size:13px">Aucun moyen de paiement renseigné pour le moment.</p>';return;}
+  list.innerHTML=active.map(p=>`
+    <div class="pay-card">
+      <div class="pay-card-top">
+        <div class="pay-card-title">${escapeHtml(p.title)}</div>
+        ${p.allow_copy?`<button class="btn btn-out btn-sm pay-copy" onclick="copyPayment('${p.id}')">${ic('copy',13)} Copier</button>`:''}
+      </div>
+      <div class="pay-card-desc">${escapeHtml(p.description)}</div>
+    </div>`).join('');
+}
+function copyPayment(id){
+  const p=allPayments.find(x=>x.id===id);if(!p||!p.allow_copy)return;
+  navigator.clipboard.writeText(p.description).then(()=>showToast('✓ Copié !')).catch(()=>showToast('Copie impossible sur cet appareil'));
+}
+async function savePayment(){
+  const title=document.getElementById('pay-title').value.trim();
+  const description=document.getElementById('pay-desc').value.trim();
+  const allow_copy=document.getElementById('pay-allow-copy').checked;
+  const m=document.getElementById('pay-msg');
+  if(!title||!description){showMsg(m,'err','Titre et description sont obligatoires.');return;}
+  if(editingPaymentId){
+    const{error}=await sb.from('payment_methods').update({title,description,allow_copy}).eq('id',editingPaymentId);
+    if(error){showMsg(m,'err','Erreur lors de la mise à jour.');return;}
+    showMsg(m,'ok','✓ Moyen de paiement mis à jour.');
+  }else{
+    const sort_order=allPayments.length;
+    const{error}=await sb.from('payment_methods').insert({title,description,allow_copy,sort_order});
+    if(error){showMsg(m,'err','Erreur lors de l\'ajout.');return;}
+    showMsg(m,'ok','✓ Moyen de paiement ajouté.');
+  }
+  cancelEditPayment();
+  await loadPayments();renderAdminPayments();
+}
+function editPayment(id){
+  const p=allPayments.find(x=>x.id===id);if(!p)return;
+  editingPaymentId=id;
+  document.getElementById('pay-title').value=p.title;
+  document.getElementById('pay-desc').value=p.description;
+  document.getElementById('pay-allow-copy').checked=!!p.allow_copy;
+  document.getElementById('pay-form-title').textContent='Modifier le moyen de paiement';
+  document.getElementById('pay-save-btn').innerHTML=ic('check',14)+' Enregistrer';
+  document.getElementById('pay-cancel-btn').style.display='';
+  document.getElementById('pay-title').scrollIntoView({behavior:'smooth',block:'center'});
+}
+function cancelEditPayment(){
+  editingPaymentId=null;
+  document.getElementById('pay-title').value='';
+  document.getElementById('pay-desc').value='';
+  document.getElementById('pay-allow-copy').checked=false;
+  document.getElementById('pay-form-title').textContent='Ajouter un moyen de paiement';
+  document.getElementById('pay-save-btn').innerHTML=ic('crown',0)===''?'':'';
+  document.getElementById('pay-save-btn').innerHTML='<svg class="ico" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 5v14M5 12h14"/></svg> Ajouter';
+  document.getElementById('pay-cancel-btn').style.display='none';
+}
+async function deletePayment(id){
+  if(!confirm('Supprimer ce moyen de paiement ?'))return;
+  await sb.from('payment_methods').delete().eq('id',id);
+  await loadPayments();renderAdminPayments();
+  showToast('Moyen de paiement supprimé.');
+}
+async function togglePaymentActive(id,active){
+  await sb.from('payment_methods').update({active}).eq('id',id);
+  await loadPayments();renderAdminPayments();
+}
+function renderAdminPayments(){
+  const list=document.getElementById('pay-admin-list');
+  if(!allPayments.length){list.innerHTML='<p style="color:var(--hint);font-size:13px">Aucun moyen de paiement.</p>';return;}
+  list.innerHTML=allPayments.map(p=>`
+    <div class="sli">
+      <div class="si">
+        <div style="font-weight:700">${escapeHtml(p.title)}${p.active===false?' <span class="st st-p">Inactif</span>':''}</div>
+        <div style="font-size:12px;color:var(--muted);margin-top:3px">${p.allow_copy?'Copie autorisée':'Copie non autorisée'}</div>
+      </div>
+      <div class="sli-actions">
+        <button class="btn btn-out btn-sm" style="font-size:11px;padding:4px 9px" onclick="editPayment('${p.id}')">${ic('pencil',13)}</button>
+        <button class="btn btn-out btn-sm" style="font-size:11px;padding:4px 9px" onclick="togglePaymentActive('${p.id}',${p.active===false})">${p.active===false?'Réactiver':'Désactiver'}</button>
+        <button class="btn btn-out btn-sm" style="color:var(--red);border-color:var(--red-b);font-size:11px;padding:4px 9px" onclick="deletePayment('${p.id}')">${ic('trash',13)}</button>
       </div>
     </div>`).join('');
 }
@@ -790,8 +1001,8 @@ function openAnnonces(){
     content.innerHTML=active.map(a=>{
       const exp=new Date(a.expires_at+'T12:00').toLocaleDateString('fr-FR',{day:'numeric',month:'long'});
       return`<div class="ann-item">
-        <div class="ann-item-title">📢 ${a.title}</div>
-        <div class="ann-item-msg">${a.message}</div>
+        <div class="ann-item-title">${ic('megaphone',14)} ${escapeHtml(a.title)}</div>
+        <div class="ann-item-msg">${escapeHtml(a.message)}</div>
         <div class="ann-item-exp">Visible jusqu'au ${exp}</div>
       </div>`;
     }).join('');
@@ -803,13 +1014,12 @@ function closeAnnonces(){document.getElementById('ov-ann').classList.remove('on'
 async function showAnnoncePopup(){
   const active=getActiveAnnonces();
   if(!active.length)return;
-  // Afficher toutes les annonces actives dans un seul popup
   const content=document.getElementById('ann-popup-content');
   content.innerHTML=active.map(a=>{
     const exp=new Date(a.expires_at+'T12:00').toLocaleDateString('fr-FR',{day:'numeric',month:'long'});
     return`<div class="ann-item">
-      <div class="ann-item-title">📢 ${a.title}</div>
-      <div class="ann-item-msg">${a.message}</div>
+      <div class="ann-item-title">${ic('megaphone',14)} ${escapeHtml(a.title)}</div>
+      <div class="ann-item-msg">${escapeHtml(a.message)}</div>
       <div class="ann-item-exp">Visible jusqu'au ${exp}</div>
     </div>`;
   }).join('');
@@ -847,7 +1057,7 @@ async function doReg(){
   }).select().single();
   if(error||!u){showMsg(m,'err','Erreur. Réessayez.');setBtnLoading('reg-btn',false);return;}
   CU=u;localStorage.setItem('cb_session',u.id);
-  showMsg(m,'ok','Bienvenue '+first+' 🎉');setTimeout(enterApp,700);
+  showMsg(m,'ok','Bienvenue '+first+' !');setTimeout(enterApp,700);
 }
 
 async function doLogin(){
@@ -875,12 +1085,12 @@ function doLogout(){
 }
 
 async function enterApp(){
-  showLoader(true,'Chargement…');
-  await loadSlots();await loadUsers();await loadAnnonces();await loadServices();
+  showLoader(true,'Préparation de votre expérience…');
+  await loadSlots();await loadUsers();await loadAnnonces();await loadServices();await loadPayments();
   populateServiceSelects();
   showLoader(false);
   const badge=document.getElementById('ubadge');
-  badge.textContent=CU.is_admin?'★ Admin':'@'+CU.username;
+  badge.innerHTML=CU.is_admin?(ic('crown',12)+' Admin'):'@'+CU.username;
   badge.className='badge '+(CU.is_admin?'admin':'user');
   badge.style.display='';
   document.getElementById('logout-btn').style.display='';
@@ -891,14 +1101,14 @@ async function enterApp(){
   updateBellBadge();
   goTab('cal');
   initOneSignal();
-  // Afficher le popup d'annonces à l'ouverture
   setTimeout(()=>showAnnoncePopup(),800);
 }
 
 function showScr(id){document.querySelectorAll('.scr').forEach(s=>s.classList.remove('on'));document.getElementById(id).classList.add('on');}
 function goTab(tab){
-  ['cal','profil','adm'].forEach(t=>{const btn=document.getElementById('tab-'+t);if(btn)btn.classList.toggle('on',t===tab);});
+  ['cal','paiement','profil','adm'].forEach(t=>{const btn=document.getElementById('tab-'+t);if(btn)btn.classList.toggle('on',t===tab);});
   if(tab==='cal'){showScr('s-cal');renderCal();}
+  else if(tab==='paiement'){showScr('s-paiement');renderPaiement();}
   else if(tab==='profil'){showScr('s-profil');renderProfil();}
   else{showScr('s-adm');renderAdm();}
 }
@@ -939,14 +1149,14 @@ function renderCal(){
   if(isAdm&&document.getElementById('vis-toggle'))
     document.getElementById('vis-toggle').checked=allSlots.length>0&&allSlots.every(s=>s.visible!==false);
   const tbl=document.getElementById('cal-tbl');
-  let html='<thead><tr><th style="width:38px"></th>';
+  let html='<thead><tr><th style="width:40px"></th>';
   wdays.forEach((d,i)=>{
     const isT=d.getTime()===today.getTime();const isPast=d<today;
     html+=`<th class="${isT?'td-col':isPast?'past-col':''}">${DAY[i]}<span class="dn ${isT?'td-n':''}">${d.getDate()}</span></th>`;
   });
   html+='</tr></thead><tbody>';
   if(times.length===0){
-    html+=`<tr><td colspan="8" style="text-align:center;padding:40px;color:var(--hint);font-size:13px">Aucun créneau cette semaine</td></tr>`;
+    html+=`<tr><td colspan="8" style="text-align:center;padding:44px;color:var(--hint);font-size:13px">Aucun créneau cette semaine</td></tr>`;
   }else{
     times.forEach(t=>{
       html+=`<tr><td class="tc">${t}</td>`;
@@ -955,11 +1165,11 @@ function renderCal(){
         const pool=isAdm?allSlots:allSlots.filter(s=>s.visible!==false);
         const slot=pool.find(s=>s.date===dkey&&s.time===t);
         if(!slot){
-          html+=isAdm?`<td><div class="sc adm-e" onclick="quickAdd('${dkey}','${t}')"><span class="sl a">+</span></div></td>`:`<td><div class="sc empty"></div></td>`;
+          html+=isAdm?`<td><div class="sc adm-e" onclick="quickAdd('${dkey}','${t}')"><span class="sl a">${ic('tag',13)}</span></div></td>`:`<td><div class="sc empty"></div></td>`;
         }else{
           const isMine=slot.booked_by===CU?.id;const isTaken=!!slot.booked_by;const isHidden=slot.visible===false;
           if(isHidden&&isAdm){
-            const label=slot.is_manual?('✂ '+(slot.manual_client_name||'Manuel')):'🙈';
+            const label=slot.is_manual?('✂ '+(slot.manual_client_name||'Manuel')):ic('eyeOff',13);
             html+=`<td><div class="sc hidden-slot" onclick="openM('${slot.id}')"><span class="sl h">${label}</span></div></td>`;
           }
           else if(isPastDay&&!isAdm){html+=`<td><div class="sc past-slot"><span class="sl p">—</span></div></td>`;}
@@ -970,10 +1180,10 @@ function renderCal(){
       });
       html+='</tr>';
     });
-    if(isAdm)html+=`<tr><td colspan="8" style="text-align:center;padding:10px"><button class="btn btn-out btn-sm" onclick="goTab('adm')">+ Gérer</button></td></tr>`;
+    if(isAdm)html+=`<tr><td colspan="8" style="text-align:center;padding:11px"><button class="btn btn-out btn-sm" onclick="goTab('adm')">+ Gérer</button></td></tr>`;
   }
   tbl.innerHTML=html+'</tbody>';
-  document.getElementById('cal-hint').textContent=isAdm?'Admin : + pour ajouter · 🙈 = caché':'Appuyez sur un créneau vert pour le réserver.';
+  document.getElementById('cal-hint').textContent=isAdm?'Admin : appuyez sur + pour ajouter un créneau':'Appuyez sur un créneau vert pour le réserver.';
 }
 
 // ── MODAL SLOT ──
@@ -985,36 +1195,36 @@ function openM(sid){
   const dur=slot.duration_minutes||30;
   const svc=allServices.find(s=>s.id===slot.service_id);
   document.getElementById('m-title').textContent=dStr;
-  document.getElementById('m-sub').textContent=`Créneau ${dur} min — ${slot.time}`+(svc?' — '+svc.name+' ('+(svc.price_cents/100).toFixed(2)+'€)':'')+(isHidden?' · 🙈 Caché':'')+(slot.is_manual&&slot.manual_client_name?' · Client : '+slot.manual_client_name:'');
+  document.getElementById('m-sub').textContent=`Créneau ${dur} min — ${slot.time}`+(svc?' — '+svc.name+' ('+(svc.price_cents/100).toFixed(2)+'€)':'')+(isHidden?' · Caché':'')+(slot.is_manual&&slot.manual_client_name?' · Client : '+slot.manual_client_name:'');
   const acts=document.getElementById('m-acts');
   if(isHidden&&CU?.is_admin){
-    acts.innerHTML=`<button class="btn btn-green" onclick="toggleSlotVis('${slot.id}',true)">👁 Rendre visible</button>
+    acts.innerHTML=`<button class="btn btn-green" onclick="toggleSlotVis('${slot.id}',true)">${ic('eye',15)} Rendre visible</button>
     <button class="btn btn-out" style="color:var(--red);border-color:var(--red-b)" onclick="admDelSlot()">Supprimer</button>
-    <button class="btn btn-out" onclick="closeM()">Fermer ✕</button>`;
+    <button class="btn btn-out" onclick="closeM()">Fermer</button>`;
   }else if(isMine){
-    acts.innerHTML=`<button class="btn btn-out" onclick="openServicePicker('${slot.id}',false)">🏷 ${svc?'Changer la prestation':'Choisir la prestation'}</button>
+    acts.innerHTML=`<button class="btn btn-out" onclick="openServicePicker('${slot.id}',false)">${ic('tag',15)} ${svc?'Changer la prestation':'Choisir la prestation'}</button>
     <button class="btn btn-red" onclick="cancelBook()">Annuler ma réservation</button>
-    <button class="btn btn-out" onclick="closeM()">Fermer ✕</button>`;
+    <button class="btn btn-out" onclick="closeM()">Fermer</button>`;
   }else if(!isTaken){
     let b=`<button class="btn btn-dark" onclick="confirmBook()">Réserver ✓</button>
     <button class="btn btn-out" onclick="closeM()">Annuler</button>`;
-    if(CU?.is_admin)b+=`<button class="btn btn-out btn-sm" style="margin-top:4px" onclick="toggleSlotVis('${slot.id}',false)">🙈 Cacher</button>
+    if(CU?.is_admin)b+=`<button class="btn btn-out btn-sm" style="margin-top:5px" onclick="toggleSlotVis('${slot.id}',false)">${ic('eyeOff',14)} Cacher</button>
     <button class="btn btn-out btn-sm" style="color:var(--red);border-color:var(--red-b)" onclick="admDelSlot()">Supprimer</button>`;
     acts.innerHTML=b;
   }else if(CU?.is_admin){
     const bkr=allUsers.find(u=>u.id===slot.booked_by);
     document.getElementById('m-sub').textContent+=` · @${bkr?.username||'?'}`;
-    acts.innerHTML=`<button class="btn btn-out" onclick="openServicePicker('${slot.id}',false)">🏷 ${svc?'Changer la prestation':'Choisir la prestation'}</button>
+    acts.innerHTML=`<button class="btn btn-out" onclick="openServicePicker('${slot.id}',false)">${ic('tag',15)} ${svc?'Changer la prestation':'Choisir la prestation'}</button>
     <button class="btn btn-red" onclick="admCancelBook()">Annuler la réservation</button>
     <button class="btn btn-out" style="color:var(--red);border-color:var(--red-b)" onclick="admDelSlot()">Supprimer</button>
-    <button class="btn btn-out" onclick="closeM()">Fermer ✕</button>`;
-  }else{acts.innerHTML=`<button class="btn btn-out" onclick="closeM()">Fermer ✕</button>`;}
+    <button class="btn btn-out" onclick="closeM()">Fermer</button>`;
+  }else{acts.innerHTML=`<button class="btn btn-out" onclick="closeM()">Fermer</button>`;}
   document.getElementById('ov').classList.add('on');
 }
 function closeM(){document.getElementById('ov').classList.remove('on');pendSlot=null;}
 function ovClick(e){if(e.target===document.getElementById('ov'))closeM();}
 function showAlert(icon,title,msg){
-  document.getElementById('alert-icon').textContent=icon;
+  document.getElementById('alert-icon').innerHTML=ic(icon,24);
   document.getElementById('alert-title').textContent=title;
   document.getElementById('alert-msg').textContent=msg;
   document.getElementById('ov-alert').classList.add('on');
@@ -1024,12 +1234,12 @@ function closeAlert(){document.getElementById('ov-alert').classList.remove('on')
 // ── BOOK ──
 async function confirmBook(){
   const{data:fresh}=await sb.from('slots').select('*').eq('id',pendSlot).single();
-  if(!fresh){closeM();showAlert('🗑️','Supprimé','Ce créneau n\'existe plus.');return;}
-  if(fresh.visible===false){closeM();showAlert('🙈','Masqué','Ce créneau a été masqué.');return;}
-  if(fresh.booked_by){closeM();showAlert('⚡','Déjà réservé','Ce créneau vient d\'être réservé.');return;}
+  if(!fresh){closeM();showAlert('trash','Supprimé','Ce créneau n\'existe plus.');return;}
+  if(fresh.visible===false){closeM();showAlert('eyeOff','Masqué','Ce créneau a été masqué.');return;}
+  if(fresh.booked_by){closeM();showAlert('zap','Déjà réservé','Ce créneau vient d\'être réservé.');return;}
   await sb.from('slots').update({booked_by:CU.id}).eq('id',pendSlot).is('booked_by',null);
   const{data:check}=await sb.from('slots').select('booked_by').eq('id',pendSlot).single();
-  if(check?.booked_by!==CU.id){closeM();showAlert('⚡','Déjà réservé','Réservé au même moment.');return;}
+  if(check?.booked_by!==CU.id){closeM();showAlert('zap','Déjà réservé','Réservé au même moment.');return;}
   allSlots=allSlots.map(s=>s.id===pendSlot?{...s,booked_by:CU.id}:s);
   const bookedId=pendSlot;
   closeM();showToast('✓ Créneau réservé !');renderCal();
@@ -1040,8 +1250,8 @@ function openServicePicker(sid,allowSkip){
   const active=allServices.filter(s=>s.active!==false);
   let html=active.map(s=>`<button class="btn btn-out" onclick="chooseService('${sid}','${s.id}')">${s.name} — ${(s.price_cents/100).toFixed(2)}€</button>`).join('');
   if(!active.length)html='<p style="font-size:13px;color:var(--hint)">Aucune prestation disponible pour le moment.</p>';
-  if(allowSkip)html+=`<button class="btn btn-out btn-sm" style="margin-top:6px;color:var(--muted)" onclick="closeSvcPicker()">Choisir plus tard</button>`;
-  else html+=`<button class="btn btn-out btn-sm" style="margin-top:6px" onclick="closeSvcPicker()">Annuler</button>`;
+  if(allowSkip)html+=`<button class="btn btn-out btn-sm" style="margin-top:7px;color:var(--muted)" onclick="closeSvcPicker()">Choisir plus tard</button>`;
+  else html+=`<button class="btn btn-out btn-sm" style="margin-top:7px" onclick="closeSvcPicker()">Annuler</button>`;
   acts.innerHTML=html;
   document.getElementById('ov-svc').classList.add('on');
 }
@@ -1083,7 +1293,7 @@ async function quickAdd(date,time){
 async function toggleSlotVis(id,visible){
   await sb.from('slots').update({visible}).eq('id',id);
   allSlots=allSlots.map(s=>s.id===id?{...s,visible}:s);
-  closeM();showToast(visible?'👁 Visible':'🙈 Caché');
+  closeM();showToast(visible?'Visible':'Caché');
   renderCal();
   if(document.getElementById('s-adm').classList.contains('on'))renderAdm();
 }
@@ -1091,7 +1301,7 @@ async function toggleSlotVis(id,visible){
 // ── ADMIN ──
 function atab(tab){
   admTab=tab;
-  ['slots','services','stats','annonces','membres','invite'].forEach(t=>{
+  ['slots','services','stats','paiement','annonces','membres','invite'].forEach(t=>{
     document.getElementById('at-'+t).classList.toggle('on',t===tab);
     document.getElementById('ap-'+t).style.display=t===tab?'':'none';
   });
@@ -1101,6 +1311,7 @@ function renderAdm(){
   if(admTab==='slots')renderASlots();
   else if(admTab==='services')renderServices();
   else if(admTab==='stats')renderStats();
+  else if(admTab==='paiement')renderAdminPayments();
   else if(admTab==='annonces')renderAdmAnnonces();
   else if(admTab==='membres')renderMembres();
   else renderAInvite();
@@ -1137,11 +1348,11 @@ function renderAdmAnnonces(){
     return`<div class="ann-item" style="${isExpired?'opacity:.5':''}">
       <div class="ann-item-admin">
         <div style="flex:1">
-          <div class="ann-item-title">📢 ${a.title}</div>
-          <div class="ann-item-msg">${a.message}</div>
-          <div class="ann-item-exp">${isExpired?'⚠️ Expirée':'Visible jusqu\'au'} ${exp}</div>
+          <div class="ann-item-title">${ic('megaphone',14)} ${escapeHtml(a.title)}</div>
+          <div class="ann-item-msg">${escapeHtml(a.message)}</div>
+          <div class="ann-item-exp">${isExpired?'Expirée le':'Visible jusqu\'au'} ${exp}</div>
         </div>
-        <button class="btn btn-out btn-sm" style="color:var(--red);border-color:var(--red-b);padding:4px 9px;font-size:12px;flex-shrink:0" onclick="delAnnonce('${a.id}')">✕</button>
+        <button class="btn btn-out btn-sm" style="color:var(--red);border-color:var(--red-b);padding:5px 10px;font-size:12px;flex-shrink:0" onclick="delAnnonce('${a.id}')">${ic('trash',13)}</button>
       </div>
     </div>`;
   }).join('');
@@ -1205,13 +1416,13 @@ async function addManualSlot(){
 async function toggleAllVisibility(v){
   await sb.from('slots').update({visible:v}).neq('id','00000000-0000-0000-0000-000000000000');
   allSlots=allSlots.map(s=>({...s,visible:v}));
-  showToast(v?'👁 Tous visibles':'🙈 Tous cachés');
+  showToast(v?'Tous visibles':'Tous cachés');
   renderCal();renderASlots();
 }
 async function showAllSlots(v){
   await sb.from('slots').update({visible:v}).neq('id','00000000-0000-0000-0000-000000000000');
   allSlots=allSlots.map(s=>({...s,visible:v}));
-  showToast(v?'👁 Tous visibles':'🙈 Tous cachés');
+  showToast(v?'Tous visibles':'Tous cachés');
   renderCal();renderASlots();
 }
 
@@ -1238,10 +1449,10 @@ function renderASlots(){
     const svc=allServices.find(sv=>sv.id===s.service_id);
     const isHidden=s.visible===false;const isPast=new Date(s.date+'T23:59')<new Date();
     const who=s.is_manual?(s.manual_client_name||'Manuel'):(bkr?'@'+bkr.username:null);
-    const st=who?`<span class="st st-t">${s.is_manual?'✂ ':'@'}${s.is_manual?who:bkr.username}</span>`:isHidden?`<span class="st st-h">🙈</span>`:isPast?`<span class="st st-p">Passé</span>`:`<span class="st st-f">Libre</span>`;
-    const vb=isHidden?`<button class="btn btn-out btn-sm" style="font-size:11px;padding:3px 8px" onclick="toggleSlotVis('${s.id}',true)">👁</button>`:`<button class="btn btn-out btn-sm" style="font-size:11px;padding:3px 8px" onclick="toggleSlotVis('${s.id}',false)">🙈</button>`;
+    const st=who?`<span class="st st-t">${s.is_manual?'✂ ':'@'}${s.is_manual?who:bkr.username}</span>`:isHidden?`<span class="st st-h">${ic('eyeOff',11)}</span>`:isPast?`<span class="st st-p">Passé</span>`:`<span class="st st-f">Libre</span>`;
+    const vb=isHidden?`<button class="btn btn-out btn-sm" style="font-size:11px;padding:4px 9px" onclick="toggleSlotVis('${s.id}',true)">${ic('eye',13)}</button>`:`<button class="btn btn-out btn-sm" style="font-size:11px;padding:4px 9px" onclick="toggleSlotVis('${s.id}',false)">${ic('eyeOff',13)}</button>`;
     return`<div class="sli"><div class="si">${d} · ${s.time} (${s.duration_minutes||30}min)${svc?' · '+svc.name:''}</div>${st}
-    <div class="sli-actions">${vb}<button class="btn btn-out btn-sm" style="color:var(--red);border-color:var(--red-b);padding:3px 9px;font-size:12px" onclick="delSlot('${s.id}')">✕</button></div></div>`;
+    <div class="sli-actions">${vb}<button class="btn btn-out btn-sm" style="color:var(--red);border-color:var(--red-b);padding:4px 9px;font-size:12px" onclick="delSlot('${s.id}')">${ic('trash',13)}</button></div></div>`;
   }).join('');
 }
 async function delSlot(id){
@@ -1283,8 +1494,8 @@ function renderWeekStats(){
     <div class="stat-grid">
       <div class="stat-card"><div class="sc-label">Clients</div><div class="sc-val">${week.length}</div><div class="sc-delta ${delta>=0?'up':'down'}">${delta>=0?'+':''}${delta}% vs sem. dernière</div></div>
       <div class="stat-card"><div class="sc-label">CA de la semaine</div><div class="sc-val">${(revenue/100).toFixed(2)}€</div></div>
-      <div class="stat-card"><div class="sc-label">Semaine du</div><div class="sc-val" style="font-size:15px">${start.toLocaleDateString('fr-FR',{day:'numeric',month:'short'})}</div></div>
-      <div class="stat-card"><div class="sc-label">Sem. précédente</div><div class="sc-val" style="font-size:15px">${prevWeek.length} client(s)</div></div>
+      <div class="stat-card"><div class="sc-label">Semaine du</div><div class="sc-val" style="font-size:16px">${start.toLocaleDateString('fr-FR',{day:'numeric',month:'short'})}</div></div>
+      <div class="stat-card"><div class="sc-label">Sem. précédente</div><div class="sc-val" style="font-size:16px">${prevWeek.length} client(s)</div></div>
     </div>
     <div class="card">
       <h3>Chiffre d'affaires par jour</h3>
@@ -1316,8 +1527,8 @@ function renderMonthStats(){
     <div class="stat-grid">
       <div class="stat-card"><div class="sc-label">Clients ce mois</div><div class="sc-val">${month.length}</div></div>
       <div class="stat-card"><div class="sc-label">CA du mois</div><div class="sc-val">${(revenue/100).toFixed(2)}€</div></div>
-      <div class="stat-card"><div class="sc-label">Mois</div><div class="sc-val" style="font-size:15px">${monthStart.toLocaleDateString('fr-FR',{month:'long'})}</div></div>
-      <div class="stat-card"><div class="sc-label">Semaines</div><div class="sc-val" style="font-size:15px">${weeks.length}</div></div>
+      <div class="stat-card"><div class="sc-label">Mois</div><div class="sc-val" style="font-size:16px">${monthStart.toLocaleDateString('fr-FR',{month:'long'})}</div></div>
+      <div class="stat-card"><div class="sc-label">Semaines</div><div class="sc-val" style="font-size:16px">${weeks.length}</div></div>
     </div>
     <div class="card">
       <h3>Chiffre d'affaires par semaine</h3>
@@ -1339,14 +1550,14 @@ function renderMembres(){
     const past=reservations.filter(s=>new Date(s.date+'T23:59')<new Date());
     const initials=((u.first||'')[0]+(u.last||'')[0]).toUpperCase();
     let resHtml='';
-    if(future.length){resHtml+='<div style="font-size:11px;color:var(--green);font-weight:600;margin:6px 0 3px">À venir</div>';resHtml+=future.map(s=>{const d=new Date(s.date+'T12:00').toLocaleDateString('fr-FR',{weekday:'short',day:'numeric',month:'short'});return`<div style="font-size:12px;color:var(--muted);padding:2px 0">📅 ${d} à ${s.time}</div>`;}).join('');}
-    if(past.length){resHtml+='<div style="font-size:11px;color:var(--hint);font-weight:600;margin:6px 0 3px">Historique</div>';resHtml+=past.slice(-3).map(s=>{const d=new Date(s.date+'T12:00').toLocaleDateString('fr-FR',{weekday:'short',day:'numeric',month:'short'});return`<div style="font-size:12px;color:var(--hint);padding:2px 0">✓ ${d} à ${s.time}</div>`;}).join('');}
-    return`<div style="background:var(--s2);border-radius:var(--r-sm);padding:12px;margin-bottom:8px">
-      <div style="display:flex;align-items:center;gap:10px;margin-bottom:${reservations.length?'8':'0'}px">
-        <div style="width:36px;height:36px;border-radius:50%;background:linear-gradient(135deg,var(--gold),var(--amber));display:flex;align-items:center;justify-content:center;color:#fff;font-weight:700;font-size:13px;flex-shrink:0">${initials}</div>
-        <div style="flex:1"><div style="font-weight:600;font-size:14px">${u.first} ${u.last}</div>
-        <div style="font-size:12px;color:var(--muted)">@${u.username} · ${u.email||''} · ${reservations.length} résa</div></div>
-        <button class="btn btn-out btn-sm" style="color:var(--red);border-color:var(--red-b);padding:4px 9px;font-size:12px" onclick="delUser('${u.id}')">✕</button>
+    if(future.length){resHtml+='<div style="font-size:11px;color:var(--green);font-weight:700;margin:7px 0 3px">À venir</div>';resHtml+=future.map(s=>{const d=new Date(s.date+'T12:00').toLocaleDateString('fr-FR',{weekday:'short',day:'numeric',month:'short'});return`<div style="font-size:12px;color:var(--muted);padding:2px 0">${d} à ${s.time}</div>`;}).join('');}
+    if(past.length){resHtml+='<div style="font-size:11px;color:var(--hint);font-weight:700;margin:7px 0 3px">Historique</div>';resHtml+=past.slice(-3).map(s=>{const d=new Date(s.date+'T12:00').toLocaleDateString('fr-FR',{weekday:'short',day:'numeric',month:'short'});return`<div style="font-size:12px;color:var(--hint);padding:2px 0">${d} à ${s.time}</div>`;}).join('');}
+    return`<div style="background:var(--s2);border-radius:var(--r-sm);padding:13px;margin-bottom:9px">
+      <div style="display:flex;align-items:center;gap:11px;margin-bottom:${reservations.length?'9':'0'}px">
+        <div style="width:38px;height:38px;border-radius:50%;background:linear-gradient(135deg,var(--gold),var(--acc));display:flex;align-items:center;justify-content:center;color:#fdf9ef;font-weight:700;font-size:13px;flex-shrink:0;font-family:'Fraunces',serif">${initials}</div>
+        <div style="flex:1"><div style="font-weight:700;font-size:14px">${escapeHtml(u.first)} ${escapeHtml(u.last)}</div>
+        <div style="font-size:12px;color:var(--muted)">@${escapeHtml(u.username)} · ${escapeHtml(u.email||'')} · ${reservations.length} résa</div></div>
+        <button class="btn btn-out btn-sm" style="color:var(--red);border-color:var(--red-b);padding:5px 10px;font-size:12px" onclick="delUser('${u.id}')">${ic('trash',13)}</button>
       </div>${resHtml}</div>`;
   }).join('');
 }
@@ -1414,7 +1625,7 @@ async function saveProfil(){
   if(error){showMsg(m,'err','Erreur. Réessayez.');return;}
   CU={...CU,first,last,email,username};
   closeEditProfil();renderProfil();
-  document.getElementById('ubadge').textContent=CU.is_admin?'★ Admin':'@'+CU.username;
+  document.getElementById('ubadge').innerHTML=CU.is_admin?(ic('crown',12)+' Admin'):'@'+CU.username;
   showToast('✓ Profil mis à jour !');
 }
 async function saveNotifPref(){
