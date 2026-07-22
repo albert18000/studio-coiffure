@@ -239,9 +239,29 @@ table.cal{width:100%;min-width:420px;border-collapse:collapse;table-layout:fixed
 .pay-copy{flex-shrink:0}
 
 /* PROFIL */
-.profil-avatar{width:76px;height:76px;border-radius:50%;background:linear-gradient(135deg,var(--gold),var(--acc));display:flex;align-items:center;justify-content:center;font-size:27px;font-weight:600;color:#fbf7fd;margin:0 auto 18px;font-family:'Fraunces',serif}
+.profil-avatar{width:76px;height:76px;border-radius:50%;background:linear-gradient(135deg,var(--gold),var(--acc));display:flex;align-items:center;justify-content:center;font-size:27px;font-weight:600;color:#fbf7fd;margin:0 auto 18px;font-family:'Fraunces',serif;overflow:hidden}
+.profil-avatar img{width:100%;height:100%;object-fit:cover;border-radius:50%}
 .profil-name{text-align:center;font-family:'Fraunces',serif;font-size:22px;margin-bottom:5px;letter-spacing:-.01em}
 .profil-username{text-align:center;font-size:13px;color:var(--muted);margin-bottom:26px}
+
+/* AVATAR UPLOAD (édition profil) */
+.avatar-edit{display:flex;align-items:center;gap:14px;margin-bottom:18px}
+.avatar-edit-pic{width:60px;height:60px;border-radius:50%;background:var(--s2);display:flex;align-items:center;justify-content:center;font-size:20px;font-weight:600;color:var(--muted);flex-shrink:0;overflow:hidden;font-family:'Fraunces',serif}
+.avatar-edit-pic img{width:100%;height:100%;object-fit:cover;border-radius:50%}
+.avatar-edit-acts{display:flex;flex-direction:column;gap:6px}
+
+/* DETAIL RESERVATION (modal créneau) */
+.booking-detail{background:var(--s2);border-radius:var(--r-sm);padding:14px;margin-bottom:16px}
+.bd-who{display:flex;align-items:center;gap:11px;margin-bottom:12px}
+.bd-avatar{width:44px;height:44px;border-radius:50%;background:linear-gradient(135deg,var(--gold),var(--acc));display:flex;align-items:center;justify-content:center;font-size:15px;font-weight:600;color:#fbf7fd;flex-shrink:0;overflow:hidden;font-family:'Fraunces',serif}
+.bd-avatar img{width:100%;height:100%;object-fit:cover;border-radius:50%}
+.bd-name{font-weight:700;font-size:14.5px}
+.bd-username{font-size:12px;color:var(--muted)}
+.bd-line{display:flex;align-items:center;justify-content:space-between;padding:7px 0;border-top:1px solid var(--bdr)}
+.bd-label{font-size:11px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.05em}
+.bd-val{font-size:13.5px;font-weight:600;text-align:right}
+
+.mb-lastseen{font-size:11px;color:var(--hint);white-space:nowrap;flex-shrink:0}
 .hist-item{display:flex;align-items:center;justify-content:space-between;padding:11px 13px;background:var(--s2);border-radius:var(--r-sm);margin-bottom:7px;font-size:13px;gap:8px;animation:riseIn .3s var(--ease-out) both}
 .hist-item .date{flex:1;font-weight:600}
 .hist-item .time{color:var(--muted);font-size:12px}
@@ -456,18 +476,7 @@ table.cal{width:100%;min-width:420px;border-collapse:collapse;table-layout:fixed
         <div class="fld"><label class="lbl">Heure début</label><select id="adm-time-start" class="inp"></select></div>
         <div class="fld"><label class="lbl">Heure fin (optionnel)</label><select id="adm-time-end" class="inp"><option value="">Une seule heure</option></select></div>
       </div>
-      <div style="margin-bottom:11px">
-        <label class="toggle-wrap" style="font-size:13px">
-          <label class="toggle"><input type="checkbox" id="slot-visible-inp" checked><div class="toggle-track"></div><div class="toggle-thumb"></div></label>
-          <span>Visible immédiatement</span>
-        </label>
-      </div>
-      <div class="fld">
-        <label class="lbl">Ou publier automatiquement à (optionnel)</label>
-        <input type="datetime-local" id="adm-publish-at" class="inp">
-        <p style="font-size:11px;color:var(--hint);margin-top:5px">Si renseigné, le créneau reste caché puis devient visible tout seul à cette heure, avec notification automatique envoyée à tous.</p>
-      </div>
-      <p style="font-size:11px;color:var(--hint);margin-bottom:11px">La prestation sera choisie par le client juste après sa réservation.</p>
+      <p style="font-size:11px;color:var(--hint);margin-bottom:11px">Le créneau est publié automatiquement et visible par tous les clients. La prestation sera choisie par le client juste après sa réservation.</p>
       <button class="btn btn-dark btn-sm" onclick="addSlot()"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 5v14M5 12h14"/></svg> Ajouter</button>
       <div id="as-msg" class="msg" style="margin-top:11px"></div>
     </div>
@@ -568,7 +577,7 @@ table.cal{width:100%;min-width:420px;border-collapse:collapse;table-layout:fixed
 
   <!-- MEMBRES -->
   <div id="ap-membres" style="display:none">
-    <div class="card"><h3>Membres inscrits</h3><div id="membres-list"></div></div>
+    <div class="card"><h3>Membres inscrits</h3><p style="font-size:12px;color:var(--muted);margin:-6px 0 13px">Triés par dernière connexion, la plus récente en premier.</p><div id="membres-list"></div></div>
   </div>
 
   <!-- INVITE -->
@@ -591,6 +600,15 @@ table.cal{width:100%;min-width:420px;border-collapse:collapse;table-layout:fixed
     <button class="mx" onclick="closeM()"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 6l12 12M18 6 6 18"/></svg></button>
     <h3 id="m-title"></h3>
     <p class="ms" id="m-sub"></p>
+    <div class="booking-detail" id="m-detail" style="display:none">
+      <div class="bd-who">
+        <div class="bd-avatar" id="bd-avatar"></div>
+        <div><div class="bd-name" id="bd-name"></div><div class="bd-username" id="bd-username"></div></div>
+      </div>
+      <div class="bd-line"><span class="bd-label">Date</span><span class="bd-val" id="bd-date"></span></div>
+      <div class="bd-line"><span class="bd-label">Heure</span><span class="bd-val" id="bd-time"></span></div>
+      <div class="bd-line"><span class="bd-label">Prestation</span><span class="bd-val" id="bd-service"></span></div>
+    </div>
     <div class="modal-acts" id="m-acts"></div>
   </div>
 </div>
@@ -614,6 +632,14 @@ table.cal{width:100%;min-width:420px;border-collapse:collapse;table-layout:fixed
     <h3>Modifier mon profil</h3>
     <p class="ms">Mettez à jour vos informations.</p>
     <div id="edit-msg" class="msg"></div>
+    <div class="avatar-edit">
+      <div class="avatar-edit-pic" id="e-avatar-pic"></div>
+      <div class="avatar-edit-acts">
+        <label class="link" style="cursor:pointer">Choisir une photo<input type="file" id="e-avatar-file" accept="image/*" style="display:none" onchange="onAvatarFileChosen(event)"></label>
+        <button class="link" id="e-avatar-remove" style="display:none;color:var(--red)" onclick="removeAvatar()">Supprimer la photo</button>
+      </div>
+    </div>
+    <p style="font-size:11px;color:var(--hint);margin:-10px 0 14px">Optionnel.</p>
     <div class="fld"><label class="lbl">Prénom</label><input class="inp" id="e-first"></div>
     <div class="fld"><label class="lbl">Nom</label><input class="inp" id="e-last"></div>
     <div class="fld"><label class="lbl">Email</label><input class="inp" id="e-email" type="email"></div>
@@ -680,7 +706,7 @@ const ICON_PATHS={
 function ic(name,size){size=size||16;return '<svg class="ico" width="'+size+'" height="'+size+'" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round">'+(ICON_PATHS[name]||'')+'</svg>';}
 function escapeHtml(s){return (s||'').replace(/[&<>"']/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c];});}
 
-let CU=null,WS=null,pendSlot=null,admTab='slots';
+let CU=null,WS=null,pendSlot=null,admTab='slots',pendingAvatarDataUrl;
 let allSlots=[],allUsers=[],allAnnonces=[],allServices=[],allPayments=[],inviteCode=null,rtChannel=null;
 let slotFilter='upcoming',statsPeriod='week',editingPaymentId=null,pendingCalPromptSlot=null;
 const MAX_FUTURE_WEEKS=2;
@@ -1128,8 +1154,15 @@ function doLogout(){
   showScr('s-auth');sv('v-land');
 }
 
+async function touchLastSeen(){
+  if(!CU)return;
+  const now=new Date().toISOString();
+  CU.last_seen_at=now;
+  await sb.from('users').update({last_seen_at:now}).eq('id',CU.id);
+}
 async function enterApp(){
   showLoader(true,'Préparation de votre expérience…');
+  await touchLastSeen();
   await loadSlots();await loadUsers();await loadAnnonces();await loadServices();await loadPayments();
   populateServiceSelects();
   showLoader(false);
@@ -1190,8 +1223,10 @@ function renderCal(){
   const wSl=visibleSlots.filter(s=>wkeys.includes(s.date));
   let times=[...new Set(wSl.map(s=>s.time))].sort();
   if(times.length===0&&isAdm)times=['09:00','09:30','10:00','10:30','11:00','11:30','14:00','14:30','15:00','15:30','16:00','16:30'];
-  if(isAdm&&document.getElementById('vis-toggle'))
-    document.getElementById('vis-toggle').checked=allSlots.length>0&&allSlots.every(s=>s.visible!==false);
+  if(isAdm&&document.getElementById('vis-toggle')){
+    const publicSlots=allSlots.filter(s=>!s.is_manual);
+    document.getElementById('vis-toggle').checked=publicSlots.length>0&&publicSlots.every(s=>s.visible!==false);
+  }
   const tbl=document.getElementById('cal-tbl');
   let html='<thead><tr><th style="width:40px"></th>';
   wdays.forEach((d,i)=>{
@@ -1211,7 +1246,7 @@ function renderCal(){
         if(!slot){
           html+=isAdm?`<td><div class="sc adm-e" onclick="quickAdd('${dkey}','${t}')"><span class="sl a">${ic('tag',13)}</span></div></td>`:`<td><div class="sc empty"></div></td>`;
         }else{
-          const isMine=slot.booked_by===CU?.id;const isTaken=!!slot.booked_by;const isHidden=slot.visible===false;
+          const isMine=slot.booked_by===CU?.id;const isTaken=!!slot.booked_by||slot.is_manual===true;const isHidden=slot.visible===false;
           if(isHidden&&isAdm){
             const label=slot.is_manual?('✂ '+(slot.manual_client_name||'Manuel')):ic('eyeOff',13);
             html+=`<td><div class="sc hidden-slot" onclick="openM('${slot.id}')"><span class="sl h">${label}</span></div></td>`;
@@ -1219,7 +1254,7 @@ function renderCal(){
           else if(isPastDay&&!isAdm){html+=`<td><div class="sc past-slot"><span class="sl p">—</span></div></td>`;}
           else if(isMine){html+=`<td><div class="sc mine" onclick="openM('${slot.id}')"><span class="sl m">Moi ✓</span></div></td>`;}
           else if(isTaken){const bkr=allUsers.find(u=>u.id===slot.booked_by);html+=`<td><div class="sc taken"${isAdm?` onclick="openM('${slot.id}')"`:''}><span class="sl t">${isAdm?'@'+(bkr?.username||'?'):'Réservé'}</span></div></td>`;}
-          else{html+=`<td><div class="sc free" onclick="openM('${slot.id}')"><span class="sl f">Libre</span></div></td>`;}
+          else{html+=`<td><div class="sc free" onclick="openM('${slot.id}')"><span class="sl f">${t}</span></div></td>`;}
         }
       });
       html+='</tr>';
@@ -1230,20 +1265,46 @@ function renderCal(){
   document.getElementById('cal-hint').textContent=isAdm?'Admin : appuyez sur + pour ajouter un créneau':'Appuyez sur un créneau vert pour le réserver.';
 }
 
+// ── MODAL SLOT : DETAIL RESERVATION ──
+function initialsOf(first,last){return (((first||'')[0]||'')+((last||'')[0]||'')).toUpperCase();}
+function avatarHtml(url,initials){return url?`<img src="${escapeHtml(url)}" alt="">`:escapeHtml(initials||'');}
+function showBookingDetail(o){
+  document.getElementById('bd-avatar').innerHTML=avatarHtml(o.avatarUrl,o.initials);
+  document.getElementById('bd-name').textContent=o.name;
+  const un=document.getElementById('bd-username');un.textContent=o.username||'';un.style.display=o.username?'':'none';
+  document.getElementById('bd-date').textContent=o.date;
+  document.getElementById('bd-time').textContent=o.time;
+  document.getElementById('bd-service').textContent=o.service;
+  document.getElementById('m-detail').style.display='';
+}
+function hideBookingDetail(){document.getElementById('m-detail').style.display='none';}
+
 // ── MODAL SLOT ──
 function openM(sid){
   const slot=allSlots.find(s=>s.id===sid);if(!slot)return;
   pendSlot=sid;
-  const isMine=slot.booked_by===CU?.id;const isTaken=!!slot.booked_by;const isHidden=slot.visible===false;
+  const isMine=slot.booked_by===CU?.id;const isTaken=!!slot.booked_by||slot.is_manual===true;const isHidden=slot.visible===false;
   const dStr=new Date(slot.date+'T12:00').toLocaleDateString('fr-FR',{weekday:'long',day:'numeric',month:'long'});
   const dur=slot.duration_minutes||30;
   const svc=allServices.find(s=>s.id===slot.service_id);
+  const svcLabel=svc?(svc.name+' — '+(svc.price_cents/100).toFixed(2)+'€'):'Non choisie';
   document.getElementById('m-title').textContent=dStr;
-  document.getElementById('m-sub').textContent=`Créneau ${dur} min — ${slot.time}`+(svc?' — '+svc.name+' ('+(svc.price_cents/100).toFixed(2)+'€)':'')+(isHidden?' · Caché':'')+(slot.is_manual&&slot.manual_client_name?' · Client : '+slot.manual_client_name:'');
+  document.getElementById('m-sub').textContent=`Créneau ${dur} min — ${slot.time}`+(isHidden?' · Caché':'');
+  if(isTaken){
+    if(slot.is_manual){
+      showBookingDetail({avatarUrl:null,initials:'✂',name:slot.manual_client_name||'Client de passage',username:'Rendez-vous manuel (privé)',date:dStr,time:slot.time,service:svcLabel});
+    }else{
+      const bkr=allUsers.find(u=>u.id===slot.booked_by);
+      showBookingDetail({avatarUrl:bkr?.avatar_url,initials:initialsOf(bkr?.first,bkr?.last),name:bkr?(bkr.first+' '+bkr.last):'Client',username:bkr?'@'+bkr.username:'',date:dStr,time:slot.time,service:svcLabel});
+    }
+  }else{
+    hideBookingDetail();
+  }
   const acts=document.getElementById('m-acts');
   if(isHidden&&CU?.is_admin){
     const calBtn=slot.is_manual?`<button class="btn btn-out" onclick="addSlotToCalendarIcs('${slot.id}',true)">${ic('download',15)} Ajouter à mon agenda</button>`:'';
-    acts.innerHTML=`<button class="btn btn-green" onclick="toggleSlotVis('${slot.id}',true)">${ic('eye',15)} Rendre visible</button>
+    const visBtn=slot.is_manual?'':`<button class="btn btn-green" onclick="toggleSlotVis('${slot.id}',true)">${ic('eye',15)} Rendre visible</button>`;
+    acts.innerHTML=`${visBtn}
     ${calBtn}
     <button class="btn btn-out" style="color:var(--red);border-color:var(--red-b)" onclick="admDelSlot()">Supprimer</button>
     <button class="btn btn-out" onclick="closeM()">Fermer</button>`;
@@ -1258,8 +1319,6 @@ function openM(sid){
     <button class="btn btn-out btn-sm" style="color:var(--red);border-color:var(--red-b)" onclick="admDelSlot()">Supprimer</button>`;
     acts.innerHTML=b;
   }else if(CU?.is_admin){
-    const bkr=allUsers.find(u=>u.id===slot.booked_by);
-    document.getElementById('m-sub').textContent+=` · @${bkr?.username||'?'}`;
     acts.innerHTML=`<button class="btn btn-out" onclick="openServicePicker('${slot.id}',false)">${ic('tag',15)} ${svc?'Changer la prestation':'Choisir la prestation'}</button>
     <button class="btn btn-out" onclick="addSlotToCalendarIcs('${slot.id}',true)">${ic('download',15)} Ajouter à mon agenda</button>
     <button class="btn btn-red" onclick="admCancelBook()">Annuler la réservation</button>
@@ -1343,6 +1402,8 @@ async function quickAdd(date,time){
   showToast('Créneau ajouté');
 }
 async function toggleSlotVis(id,visible){
+  const slot=allSlots.find(s=>s.id===id);
+  if(slot?.is_manual&&visible){showToast('Un rendez-vous manuel reste toujours privé.');return;}
   await sb.from('slots').update({visible}).eq('id',id);
   allSlots=allSlots.map(s=>s.id===id?{...s,visible}:s);
   closeM();showToast(visible?'Visible':'Caché');
@@ -1422,14 +1483,11 @@ async function addSlot(){
   const date=document.getElementById('adm-date').value;
   const timeStart=document.getElementById('adm-time-start').value;
   const timeEnd=document.getElementById('adm-time-end').value;
-  const publishAtRaw=document.getElementById('adm-publish-at').value;
-  const visibleChecked=document.getElementById('slot-visible-inp').checked;
   const dur=parseInt(document.getElementById('adm-dur').value);
   const service_id=null;
   const m=document.getElementById('as-msg');
   if(!date||!timeStart){showMsg(m,'err','Sélectionnez une date et une heure.');return;}
-  const publish_at=publishAtRaw?new Date(publishAtRaw).toISOString():null;
-  const visible=publish_at?false:visibleChecked;
+  const visible=true;
   const timesToAdd=[];
   if(!timeEnd){timesToAdd.push(timeStart);}
   else{
@@ -1439,13 +1497,12 @@ async function addSlot(){
   let added=0;
   for(const t of timesToAdd){
     if(!allSlots.find(s=>s.date===date&&s.time===t)){
-      const{data:ns}=await sb.from('slots').insert({date,time:t,booked_by:null,visible,duration_minutes:dur,service_id,price_charged_cents:serviceCents(service_id),publish_at}).select().single();
+      const{data:ns}=await sb.from('slots').insert({date,time:t,booked_by:null,visible,duration_minutes:dur,service_id,price_charged_cents:serviceCents(service_id)}).select().single();
       if(ns){allSlots=[...allSlots,ns];added++;}
     }
   }
   const dl=new Date(date+'T12:00').toLocaleDateString('fr-FR',{weekday:'short',day:'numeric',month:'short'});
-  showMsg(m,'ok',`✓ ${added} créneau(x) ajouté(s) le ${dl}`+(publish_at?' (publication programmée)':visible?'':' (cachés)'));
-  document.getElementById('adm-publish-at').value='';
+  showMsg(m,'ok',`✓ ${added} créneau(x) ajouté(s) le ${dl} et publié(s) automatiquement.`);
   renderASlots();renderCal();
 }
 
@@ -1465,16 +1522,18 @@ async function addManualSlot(){
   renderASlots();renderCal();
 }
 
+// Ces actions globales ne doivent JAMAIS toucher les créneaux manuels/privés (is_manual=true) :
+// ils restent toujours cachés du calendrier public, quel que soit l'état demandé ici.
 async function toggleAllVisibility(v){
-  await sb.from('slots').update({visible:v}).neq('id','00000000-0000-0000-0000-000000000000');
-  allSlots=allSlots.map(s=>({...s,visible:v}));
-  showToast(v?'Tous visibles':'Tous cachés');
+  await sb.from('slots').update({visible:v}).eq('is_manual',false);
+  allSlots=allSlots.map(s=>s.is_manual?s:{...s,visible:v});
+  showToast(v?'Tous les créneaux publics visibles':'Tous les créneaux publics cachés');
   renderCal();renderASlots();
 }
 async function showAllSlots(v){
-  await sb.from('slots').update({visible:v}).neq('id','00000000-0000-0000-0000-000000000000');
-  allSlots=allSlots.map(s=>({...s,visible:v}));
-  showToast(v?'Tous visibles':'Tous cachés');
+  await sb.from('slots').update({visible:v}).eq('is_manual',false);
+  allSlots=allSlots.map(s=>s.is_manual?s:{...s,visible:v});
+  showToast(v?'Tous les créneaux publics visibles':'Tous les créneaux publics cachés');
   renderCal();renderASlots();
 }
 
@@ -1494,7 +1553,10 @@ function renderASlots(){
   });
   const list=document.getElementById('slot-list');
   if(!sorted.length){list.innerHTML=`<p style="color:var(--hint);font-size:13px">Aucun créneau ${slotFilter==='past'?'passé':'à venir'}.</p>`;return;}
-  if(document.getElementById('vis-toggle'))document.getElementById('vis-toggle').checked=allSlots.every(s=>s.visible!==false);
+  if(document.getElementById('vis-toggle')){
+    const publicSlots=allSlots.filter(s=>!s.is_manual);
+    document.getElementById('vis-toggle').checked=publicSlots.length>0&&publicSlots.every(s=>s.visible!==false);
+  }
   list.innerHTML=sorted.map(s=>{
     const d=new Date(s.date+'T12:00').toLocaleDateString('fr-FR',{weekday:'short',day:'numeric',month:'short'});
     const bkr=s.booked_by?allUsers.find(u=>u.id===s.booked_by):null;
@@ -1502,7 +1564,7 @@ function renderASlots(){
     const isHidden=s.visible===false;const isPast=new Date(s.date+'T23:59')<new Date();
     const who=s.is_manual?(s.manual_client_name||'Manuel'):(bkr?'@'+bkr.username:null);
     const st=who?`<span class="st st-t">${s.is_manual?'✂ ':'@'}${s.is_manual?who:bkr.username}</span>`:isHidden?`<span class="st st-h">${ic('eyeOff',11)}</span>`:isPast?`<span class="st st-p">Passé</span>`:`<span class="st st-f">Libre</span>`;
-    const vb=isHidden?`<button class="btn btn-out btn-sm" style="font-size:11px;padding:4px 9px" onclick="toggleSlotVis('${s.id}',true)">${ic('eye',13)}</button>`:`<button class="btn btn-out btn-sm" style="font-size:11px;padding:4px 9px" onclick="toggleSlotVis('${s.id}',false)">${ic('eyeOff',13)}</button>`;
+    const vb=s.is_manual?`<span class="st st-h" title="Toujours privé">${ic('eyeOff',11)} Privé</span>`:(isHidden?`<button class="btn btn-out btn-sm" style="font-size:11px;padding:4px 9px" onclick="toggleSlotVis('${s.id}',true)">${ic('eye',13)}</button>`:`<button class="btn btn-out btn-sm" style="font-size:11px;padding:4px 9px" onclick="toggleSlotVis('${s.id}',false)">${ic('eyeOff',13)}</button>`);
     return`<div class="sli"><div class="si">${d} · ${s.time} (${s.duration_minutes||30}min)${svc?' · '+svc.name:''}</div>${st}
     <div class="sli-actions">${vb}<button class="btn btn-out btn-sm" style="color:var(--red);border-color:var(--red-b);padding:4px 9px;font-size:12px" onclick="delSlot('${s.id}')">${ic('trash',13)}</button></div></div>`;
   }).join('');
@@ -1592,8 +1654,24 @@ function renderMonthStats(){
     </div>`;
 }
 
+// ── TEMPS RELATIF (dernière connexion) ──
+function relTime(iso){
+  if(!iso)return 'Jamais connecté';
+  const diff=Math.max(0,(Date.now()-new Date(iso).getTime())/1000);
+  if(diff<60)return 'à l\'instant';
+  const units=[[31536000,'an','ans'],[2592000,'mois','mois'],[86400,'jour','jours'],[3600,'heure','heures'],[60,'min','min']];
+  for(const[secs,sing,plur]of units){
+    if(diff>=secs){const n=Math.floor(diff/secs);return 'il y a '+n+' '+(n>1?plur:sing);}
+  }
+  return 'à l\'instant';
+}
+
 function renderMembres(){
-  const us=allUsers.filter(u=>!u.is_admin);
+  const us=[...allUsers.filter(u=>!u.is_admin)].sort((a,b)=>{
+    if(!a.last_seen_at&&!b.last_seen_at)return 0;
+    if(!a.last_seen_at)return 1;if(!b.last_seen_at)return -1;
+    return b.last_seen_at.localeCompare(a.last_seen_at);
+  });
   const list=document.getElementById('membres-list');
   if(!us.length){list.innerHTML='<p style="color:var(--hint);font-size:13px">Aucun membre inscrit.</p>';return;}
   list.innerHTML=us.map(u=>{
@@ -1601,14 +1679,16 @@ function renderMembres(){
     const future=reservations.filter(s=>new Date(s.date+'T23:59')>=new Date());
     const past=reservations.filter(s=>new Date(s.date+'T23:59')<new Date());
     const initials=((u.first||'')[0]+(u.last||'')[0]).toUpperCase();
+    const pic=u.avatar_url?`<img src="${escapeHtml(u.avatar_url)}" alt="" style="width:100%;height:100%;object-fit:cover;border-radius:50%">`:initials;
     let resHtml='';
     if(future.length){resHtml+='<div style="font-size:11px;color:var(--green);font-weight:700;margin:7px 0 3px">À venir</div>';resHtml+=future.map(s=>{const d=new Date(s.date+'T12:00').toLocaleDateString('fr-FR',{weekday:'short',day:'numeric',month:'short'});return`<div style="font-size:12px;color:var(--muted);padding:2px 0">${d} à ${s.time}</div>`;}).join('');}
     if(past.length){resHtml+='<div style="font-size:11px;color:var(--hint);font-weight:700;margin:7px 0 3px">Historique</div>';resHtml+=past.slice(-3).map(s=>{const d=new Date(s.date+'T12:00').toLocaleDateString('fr-FR',{weekday:'short',day:'numeric',month:'short'});return`<div style="font-size:12px;color:var(--hint);padding:2px 0">${d} à ${s.time}</div>`;}).join('');}
     return`<div style="background:var(--s2);border-radius:var(--r-sm);padding:13px;margin-bottom:9px">
       <div style="display:flex;align-items:center;gap:11px;margin-bottom:${reservations.length?'9':'0'}px">
-        <div style="width:38px;height:38px;border-radius:50%;background:linear-gradient(135deg,var(--gold),var(--acc));display:flex;align-items:center;justify-content:center;color:#fbf7fd;font-weight:700;font-size:13px;flex-shrink:0;font-family:'Fraunces',serif">${initials}</div>
+        <div style="width:38px;height:38px;border-radius:50%;background:linear-gradient(135deg,var(--gold),var(--acc));display:flex;align-items:center;justify-content:center;color:#fbf7fd;font-weight:700;font-size:13px;flex-shrink:0;font-family:'Fraunces',serif;overflow:hidden">${pic}</div>
         <div style="flex:1"><div style="font-weight:700;font-size:14px">${escapeHtml(u.first)} ${escapeHtml(u.last)}</div>
         <div style="font-size:12px;color:var(--muted)">@${escapeHtml(u.username)} · ${escapeHtml(u.email||'')} · ${reservations.length} résa</div></div>
+        <span class="mb-lastseen">${relTime(u.last_seen_at)}</span>
         <button class="btn btn-out btn-sm" style="color:var(--red);border-color:var(--red-b);padding:5px 10px;font-size:12px" onclick="delUser('${u.id}')">${ic('trash',13)}</button>
       </div>${resHtml}</div>`;
   }).join('');
@@ -1636,8 +1716,8 @@ async function delUser(id){
 // ── PROFIL ──
 function renderProfil(){
   if(!CU)return;
-  const initials=((CU.first||'')[0]+(CU.last||'')[0]).toUpperCase();
-  document.getElementById('profil-avatar').textContent=initials;
+  const initials=initialsOf(CU.first,CU.last);
+  document.getElementById('profil-avatar').innerHTML=CU.avatar_url?`<img src="${escapeHtml(CU.avatar_url)}" alt="">`:escapeHtml(initials);
   document.getElementById('profil-name').textContent=CU.first+' '+CU.last;
   document.getElementById('profil-username').textContent='@'+CU.username;
   document.getElementById('profil-email').textContent=CU.email||'';
@@ -1655,12 +1735,53 @@ function renderProfil(){
     return`<div class="hist-item"><div class="date">${d}</div><div class="time">${s.time}</div>${calBtn}<span class="status ${isFuture?'hist-future':'hist-past'}">${isFuture?'À venir':'Passé'}</span></div>`;
   }).join('');
 }
+// ── PHOTO DE PROFIL (optionnelle) ──
+function resizeImageToDataUrl(file,maxDim){
+  return new Promise((resolve,reject)=>{
+    const reader=new FileReader();
+    reader.onerror=()=>reject(new Error('read error'));
+    reader.onload=()=>{
+      const img=new Image();
+      img.onerror=()=>reject(new Error('image error'));
+      img.onload=()=>{
+        let w=img.width,h=img.height;
+        const scale=Math.min(1,maxDim/Math.max(w,h));
+        w=Math.max(1,Math.round(w*scale));h=Math.max(1,Math.round(h*scale));
+        const canvas=document.createElement('canvas');canvas.width=w;canvas.height=h;
+        canvas.getContext('2d').drawImage(img,0,0,w,h);
+        resolve(canvas.toDataURL('image/jpeg',0.82));
+      };
+      img.src=reader.result;
+    };
+    reader.readAsDataURL(file);
+  });
+}
+async function onAvatarFileChosen(e){
+  const file=e.target.files&&e.target.files[0];
+  e.target.value='';
+  if(!file)return;
+  const m=document.getElementById('edit-msg');
+  if(!file.type.startsWith('image/')){showMsg(m,'err','Choisissez un fichier image.');return;}
+  try{
+    pendingAvatarDataUrl=await resizeImageToDataUrl(file,240);
+    document.getElementById('e-avatar-pic').innerHTML=`<img src="${pendingAvatarDataUrl}" alt="">`;
+    document.getElementById('e-avatar-remove').style.display='';
+  }catch(err){showMsg(m,'err','Impossible de lire cette image.');}
+}
+function removeAvatar(){
+  pendingAvatarDataUrl=null;
+  document.getElementById('e-avatar-pic').innerHTML=escapeHtml(initialsOf(document.getElementById('e-first').value,document.getElementById('e-last').value));
+  document.getElementById('e-avatar-remove').style.display='none';
+}
 function openEditProfil(){
   document.getElementById('e-first').value=CU.first||'';
   document.getElementById('e-last').value=CU.last||'';
   document.getElementById('e-email').value=CU.email||'';
   document.getElementById('e-user').value=CU.username||'';
   document.getElementById('edit-msg').classList.remove('on');
+  pendingAvatarDataUrl=undefined;
+  document.getElementById('e-avatar-pic').innerHTML=CU.avatar_url?`<img src="${escapeHtml(CU.avatar_url)}" alt="">`:escapeHtml(initialsOf(CU.first,CU.last));
+  document.getElementById('e-avatar-remove').style.display=CU.avatar_url?'':'none';
   document.getElementById('ov-profil').classList.add('on');
 }
 function closeEditProfil(){document.getElementById('ov-profil').classList.remove('on');}
@@ -1674,9 +1795,11 @@ async function saveProfil(){
   if(!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)){showMsg(m,'err','Email invalide.');return;}
   if(!/^[a-z0-9_]{2,20}$/.test(username)){showMsg(m,'err','Pseudo invalide.');return;}
   if(username!==CU.username){const{data:exist}=await sb.from('users').select('id').eq('username',username).single();if(exist){showMsg(m,'err','Ce pseudo est déjà utilisé.');return;}}
-  const{error}=await sb.from('users').update({first,last,email,username}).eq('id',CU.id);
+  const updateObj={first,last,email,username};
+  if(pendingAvatarDataUrl!==undefined)updateObj.avatar_url=pendingAvatarDataUrl;
+  const{error}=await sb.from('users').update(updateObj).eq('id',CU.id);
   if(error){showMsg(m,'err','Erreur. Réessayez.');return;}
-  CU={...CU,first,last,email,username};
+  CU={...CU,...updateObj};
   closeEditProfil();renderProfil();
   document.getElementById('ubadge').innerHTML=CU.is_admin?(ic('crown',12)+' Admin'):'@'+CU.username;
   showToast('✓ Profil mis à jour !');
