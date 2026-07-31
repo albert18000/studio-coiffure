@@ -39,14 +39,17 @@ button,input,select,textarea{font-family:inherit}
 .btn:active,.i-btn:active,.wk-btn:active:not(:disabled),.a-tab:active,.htab:active,.seg button:active,.mx:active,.bell-btn:active,.sc:active{transform:scale(.97)}
 
 /* LOADER */
-.loader-wrap{position:fixed;inset:0;background:var(--bg);display:flex;flex-direction:column;align-items:center;justify-content:center;z-index:999;gap:14px;transition:opacity .45s var(--ease-in-out)}
+.loader-wrap{position:fixed;inset:0;background:#14101c;display:flex;flex-direction:column;align-items:center;justify-content:center;z-index:999;gap:20px;transition:opacity .45s var(--ease-in-out)}
 .loader-wrap.hide{opacity:0;pointer-events:none}
-.loader-mark{color:var(--acc)}
-.loader-brand{font-family:'Fraunces',serif;font-size:23px;letter-spacing:-.01em;color:var(--tx)}
-.loader-ring{width:26px;height:26px;border:2.5px solid var(--s3);border-top-color:var(--acc);border-radius:50%;animation:loaderSpin .8s linear infinite}
-.loader-txt{font-size:13px;color:var(--muted);letter-spacing:.02em}
-@keyframes loaderSpin{to{transform:rotate(360deg)}}
-@media(prefers-reduced-motion:reduce){.loader-ring{animation:none}}
+.loader-glow{position:relative;width:84px;height:84px;display:flex;align-items:center;justify-content:center;animation:loaderIn .7s var(--ease-spring) both}
+.loader-glow::before{content:'';position:absolute;inset:-14px;border-radius:50%;background:radial-gradient(circle,rgba(181,140,245,.4),transparent 70%);animation:loaderBreathe 2.6s ease-in-out infinite}
+.loader-mark{width:56px;height:56px;position:relative;z-index:1;color:transparent}
+.loader-mark svg{width:100%;height:100%;display:block;fill:none;stroke:#b58cf5;stroke-width:1.4}
+.loader-brand{font-family:'Fraunces',serif;font-weight:500;font-size:22px;letter-spacing:.14em;text-transform:uppercase;color:#c3a8f7;animation:loaderIn .7s var(--ease-spring) .12s both}
+.loader-txt{font-size:11.5px;color:#8a8090;letter-spacing:.05em;animation:loaderIn .7s var(--ease-spring) .22s both}
+@keyframes loaderIn{from{opacity:0;transform:scale(.92)}to{opacity:1;transform:scale(1)}}
+@keyframes loaderBreathe{0%,100%{opacity:.5;transform:scale(1)}50%{opacity:1;transform:scale(1.12)}}
+@media(prefers-reduced-motion:reduce){.loader-glow,.loader-brand,.loader-txt{animation:none;opacity:1;transform:none}.loader-glow::before{animation:none}}
 
 .rt-dot{width:7px;height:7px;border-radius:50%;background:var(--green);display:inline-block;margin-right:4px;animation:pulse 2s infinite}
 .rt-dot.off{background:var(--hint);animation:none}
@@ -312,9 +315,10 @@ table.cal{width:100%;min-width:420px;border-collapse:collapse;table-layout:fixed
 <body>
 
 <div class="loader-wrap" id="loader">
-  <svg class="loader-mark" width="34" height="34" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="6" cy="6" r="2.6"/><circle cx="6" cy="18" r="2.6"/><path d="M8 8l11 11M20 4 8 16"/></svg>
+  <div class="loader-glow">
+    <svg class="loader-mark" viewBox="0 0 100 100" aria-hidden="true"><path d="M50 8C36 8 26 19 26 33c0 10 5 18 13 23l-9 7c-16 6-24 19-24 34h88c0-15-8-28-24-34l-9-7c8-5 13-13 13-23C74 19 64 8 50 8z"/></svg>
+  </div>
   <div class="loader-brand">AlBarber</div>
-  <div class="loader-ring"></div>
   <div class="loader-txt" id="loader-txt">Préparation de votre expérience…</div>
 </div>
 
@@ -878,7 +882,7 @@ function checkOpenModal(row){
   if(row.visible===false&&!CU?.is_admin){closeM();showAlert('eyeOff','Masqué','Ce créneau vient d\'être masqué.');return;}
   if(row.booked_by&&row.booked_by!==CU?.id&&!CU?.is_admin){closeM();showAlert('zap','Déjà réservé','Ce créneau vient d\'être réservé par quelqu\'un d\'autre.');}
 }
-function showLoader(v,txt){document.getElementById('loader').classList.toggle('hide',!v);if(txt)document.getElementById('loader-txt').textContent=txt;}
+function showLoader(v,txt){document.getElementById('loader').classList.toggle('hide',!v);if(txt)document.getElementById('loader-txt').textContent=txt;const tc=document.querySelector('meta[name=\"theme-color\"]');if(tc)tc.setAttribute('content',v?'#14101c':'#f8f5fb');}
 async function loadSlots(){const{data}=await sb.from('slots').select('*');allSlots=data||[];}
 async function loadUsers(){const{data}=await sb.from('users').select('*');allUsers=data||[];}
 async function loadServices(){const{data}=await sb.from('services').select('*').order('sort_order');allServices=data||[];}
