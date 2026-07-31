@@ -1,6 +1,6 @@
 # 003 — Raccourcir l'animation de changement d'écran sous le budget 300ms
 
-- **Status**: TODO
+- **Status**: DONE
 - **Commit**: 2ed2960
 - **Severity**: MEDIUM
 - **Category**: Durée & fréquence (Catégories 1 et 2)

@@ -1,6 +1,6 @@
 # 005 — Animer les barres du CA via transform plutôt que height/width
 
-- **Status**: TODO
+- **Status**: DONE
 - **Commit**: 2ed2960
 - **Severity**: MEDIUM
 - **Category**: Performance (Catégorie 5)

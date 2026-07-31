@@ -4,12 +4,12 @@ Issus de l'audit `improve-animations` sur `index.html` au commit `2ed2960`. Aucu
 
 | # | Plan | Sévérité | Catégorie | Statut |
 |---|---|---|---|---|
-| 001 | [Arrêter le re-clignotement des listes admin à chaque événement realtime](001-list-flicker-on-realtime-rerender.md) | HIGH | Interruptibilité | TODO |
-| 002 | [Retirer l'easing à rebond du fondu du fond des popups](002-backdrop-overshoot-easing-misapplied.md) | MEDIUM | Cohésion / Easing | TODO |
-| 003 | [Raccourcir l'animation de changement d'écran sous 300ms](003-screen-switch-duration-budget.md) | MEDIUM | Durée & fréquence | TODO |
-| 004 | [Protéger les :hover contre le "hover collé" tactile](004-gate-hover-states-for-touch.md) | MEDIUM | Accessibilité | TODO |
-| 005 | [Animer les barres du CA via transform plutôt que height/width](005-stats-bars-transform-instead-of-layout.md) | MEDIUM | Performance | TODO |
-| 006 | [Remplacer les easings en dur par les tokens existants](006-consolidate-easing-tokens.md) | LOW | Cohésion | TODO |
+| 001 | [Arrêter le re-clignotement des listes admin à chaque événement realtime](001-list-flicker-on-realtime-rerender.md) | HIGH | Interruptibilité | DONE (partiel, voir note) |
+| 002 | [Retirer l'easing à rebond du fondu du fond des popups](002-backdrop-overshoot-easing-misapplied.md) | MEDIUM | Cohésion / Easing | DONE |
+| 003 | [Raccourcir l'animation de changement d'écran sous 300ms](003-screen-switch-duration-budget.md) | MEDIUM | Durée & fréquence | DONE |
+| 004 | [Protéger les :hover contre le "hover collé" tactile](004-gate-hover-states-for-touch.md) | MEDIUM | Accessibilité | DONE |
+| 005 | [Animer les barres du CA via transform plutôt que height/width](005-stats-bars-transform-instead-of-layout.md) | MEDIUM | Performance | DONE |
+| 006 | [Remplacer les easings en dur par les tokens existants](006-consolidate-easing-tokens.md) | LOW | Cohésion | DONE |
 
 ## Ordre d'exécution recommandé
 

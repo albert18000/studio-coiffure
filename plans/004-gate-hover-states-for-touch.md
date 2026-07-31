@@ -1,6 +1,6 @@
 # 004 — Protéger les états :hover contre le "hover collé" tactile
 
-- **Status**: TODO
+- **Status**: DONE
 - **Commit**: 2ed2960
 - **Severity**: MEDIUM
 - **Category**: Accessibilité (Catégorie 6)

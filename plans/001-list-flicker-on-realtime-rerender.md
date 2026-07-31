@@ -1,6 +1,6 @@
 # 001 — Arrêter le re-clignotement des listes admin à chaque événement realtime
 
-- **Status**: TODO
+- **Status**: DONE (renderMembres exclu — voir note ci-dessous)
 - **Commit**: 2ed2960
 - **Severity**: HIGH
 - **Category**: Interruptibilité (Catégorie 4)
@@ -109,6 +109,11 @@ Le flash global `cal-flash` sur le calendrier (index.html:119, `.cal-flash{anima
 - Ne pas changer les durées/courbes des animations `riseIn` elles-mêmes — seulement les neutraliser conditionnellement.
 - Ne pas ajouter de logique de diff DOM ligne par ligne (ce serait un chantier plus large) — la neutralisation par flag `silent` suffit pour ce fix.
 - Si le nom exact d'une classe de ligne dans `renderMembres()` ou `renderAdminPayments()` diffère de ce qui est cité ici (le code a pu bouger depuis le commit 2ed2960), STOP et signaler plutôt que d'improviser.
+
+## Note d'exécution (drift constaté vs plan)
+
+- `renderAdminPayments()` utilise en réalité la classe `.sli` (pas `.pay-card` comme indiqué) — `.pay-card` appartient à `renderPaiement()`, l'écran client (`s-paiement`), hors scope de ce plan. Corrigé sans ambiguïté : réutilise `.sli.no-anim` déjà en place pour `renderASlots()`.
+- `renderMembres()` : la ligne générée est un `<div style="...">` sans aucune classe CSS, donc sans animation `riseIn` à neutraliser — il n'y a rien à corriger dans cette fonction, elle ne clignote pas via keyframe. Conformément au boundary du plan ("STOP et signaler" en cas de classe différente), elle a été laissée intacte plutôt que d'improviser une classe/animation qui n'existe pas. Son appel realtime (`table:'users'`, index.html:853) reste donc un appel normal sans flag `silent`.
 
 ## Verification
 

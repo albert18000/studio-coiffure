@@ -1,6 +1,6 @@
 # 006 — Remplacer les easings en dur par les tokens existants
 
-- **Status**: TODO
+- **Status**: DONE
 - **Commit**: 2ed2960
 - **Severity**: LOW
 - **Category**: Cohésion (Catégorie 7)

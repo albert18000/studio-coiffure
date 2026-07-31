@@ -1,6 +1,6 @@
 # 002 — Retirer l'easing à rebond du fondu du fond des popups
 
-- **Status**: TODO
+- **Status**: DONE
 - **Commit**: 2ed2960
 - **Severity**: MEDIUM
 - **Category**: Cohésion / Easing (Catégories 2 et 7)
