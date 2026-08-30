@@ -320,6 +320,15 @@ table.cal{width:100%;min-width:420px;border-collapse:collapse;table-layout:fixed
 .chat-send{width:38px;height:38px;border-radius:50%;background:var(--acc);color:#fbf7fd;border:none;display:flex;align-items:center;justify-content:center;cursor:pointer;flex-shrink:0}
 .chat-send:disabled{opacity:.4;cursor:not-allowed}
 
+/* HAIR RECO */
+.hr-photo-row{display:flex;align-items:center;gap:12px;margin-bottom:12px}
+.hr-photo-row .lbl{flex:0 0 92px;margin:0}
+.hr-photo-pic{width:56px;height:56px;border-radius:var(--r-sm);background:var(--s2);display:flex;align-items:center;justify-content:center;color:var(--hint);flex-shrink:0;overflow:hidden}
+.hr-photo-pic img{width:100%;height:100%;object-fit:cover}
+.hr-style-card{background:var(--s2);border-radius:var(--r-sm);padding:13px;margin-bottom:10px}
+.hr-style-card h4{font-family:'Fraunces',serif;font-size:15px;margin-bottom:4px}
+.hr-style-card p{font-size:12.5px;color:var(--muted);line-height:1.5;margin-bottom:3px}
+
 @keyframes riseIn{from{opacity:0;transform:translateY(7px)}to{opacity:1;transform:translateY(0)}}
 .sli,.svc-row,.ann-item,.pay-card,.hist-item{animation-fill-mode:both}
 .sli:nth-child(1),.svc-row:nth-child(1),.ann-item:nth-child(1),.pay-card:nth-child(1),.hist-item:nth-child(1){animation-delay:0ms}
@@ -488,6 +497,11 @@ table.cal{width:100%;min-width:420px;border-collapse:collapse;table-layout:fixed
     <button class="btn btn-out btn-sm" style="margin:0 auto;display:flex" onclick="openEditProfil()"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M4 20l.9-4L17 3.9a1.5 1.5 0 0 1 2.1 0l1 1a1.5 1.5 0 0 1 0 2.1L8 19.1z"/><path d="M14.5 6.5l3 3"/></svg> Modifier</button>
   </div>
   <div class="card">
+    <h3><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M6 8a6 6 0 1 1 12 0c0 4 1.4 5.5 2 6.5H4c.6-1 2-2.5 2-6.5Z"/><path d="M9.5 18a2.5 2.5 0 0 0 5 0"/></svg> Ma coupe idéale</h3>
+    <p style="font-size:13px;color:var(--muted);margin-bottom:14px">Réponds à un court questionnaire et prends 3 photos pour recevoir des suggestions de coupes adaptées à ta morphologie.</p>
+    <button class="btn btn-dark btn-sm" onclick="openHairReco()">Découvrir ma coupe idéale</button>
+  </div>
+  <div class="card">
     <h3><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M6 8a6 6 0 1 1 12 0c0 4 1.4 5.5 2 6.5H4c.6-1 2-2.5 2-6.5Z"/><path d="M9.5 18a2.5 2.5 0 0 0 5 0"/></svg> Notifications</h3>
     <div class="notif-row">
       <div class="notif-info"><strong>Nouveau créneau disponible</strong><span>Notification quand un créneau est rendu visible</span></div>
@@ -509,6 +523,64 @@ table.cal{width:100%;min-width:420px;border-collapse:collapse;table-layout:fixed
   <div class="card">
     <h3><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M8 6h13M8 12h13M8 18h13M3 6h.01M3 12h.01M3 18h.01"/></svg> Mes réservations</h3>
     <div id="hist-list"></div>
+  </div>
+</div>
+
+<!-- COUPE IDEALE -->
+<div id="s-hairreco" class="scr">
+  <div class="pg-title">Coupe idéale</div>
+
+  <div id="hr-step-consent" class="card">
+    <h3>Avant de commencer</h3>
+    <p style="font-size:13px;color:var(--muted);line-height:1.6;margin-bottom:14px">Tes photos sont envoyées à notre assistant IA uniquement pour analyser ta morphologie et te proposer des styles adaptés. Elles ne sont <strong>jamais enregistrées</strong> sur nos serveurs ni partagées. Seul le résultat (type de visage, suggestions de coupes) est conservé, pour que tu puisses le retrouver plus tard.</p>
+    <label style="display:flex;align-items:flex-start;gap:9px;font-size:13px;color:var(--tx);margin-bottom:16px;cursor:pointer">
+      <input type="checkbox" id="hr-consent-chk" onchange="document.getElementById('hr-consent-btn').disabled=!this.checked" style="margin-top:2px">
+      <span>J'ai compris et j'accepte que mes photos soient analysées de cette façon.</span>
+    </label>
+    <div style="display:flex;gap:8px">
+      <button class="btn btn-out btn-sm" onclick="showScr('s-profil')">Annuler</button>
+      <button class="btn btn-dark" id="hr-consent-btn" disabled onclick="hrGoStep('questionnaire')">Continuer →</button>
+    </div>
+  </div>
+
+  <div id="hr-step-questionnaire" class="card" style="display:none">
+    <h3>Ton type de cheveux</h3>
+    <div class="fld"><label class="lbl">Texture</label>
+      <select class="inp" id="hr-q-texture"><option value="lisse">Lisse</option><option value="ondulé">Ondulé</option><option value="bouclé">Bouclé</option><option value="frisé / crépu">Frisé / crépu</option></select>
+    </div>
+    <div class="fld"><label class="lbl">Type de boucle (échelle)</label>
+      <select class="inp" id="hr-q-boucle"><option value="1A - lisse">1A - lisse</option><option value="2A">2A</option><option value="2B">2B</option><option value="2C">2C</option><option value="3A">3A</option><option value="3B">3B</option><option value="3C">3C</option><option value="4A">4A</option><option value="4B">4B</option><option value="4C">4C</option></select>
+    </div>
+    <div class="fld"><label class="lbl">Épaisseur</label>
+      <select class="inp" id="hr-q-epaisseur"><option value="fin">Fin</option><option value="moyen">Moyen</option><option value="épais">Épais</option></select>
+    </div>
+    <div class="fld"><label class="lbl">Densité</label>
+      <select class="inp" id="hr-q-densite"><option value="faible">Faible</option><option value="moyenne">Moyenne</option><option value="dense">Dense</option></select>
+    </div>
+    <div class="fld"><label class="lbl">Cuir chevelu</label>
+      <select class="inp" id="hr-q-cuirchevelu"><option value="normal">Normal</option><option value="gras">Gras</option><option value="sec">Sec</option><option value="sensible">Sensible</option></select>
+    </div>
+    <button class="btn btn-dark" onclick="hrGoStep('photos')">Continuer →</button>
+  </div>
+
+  <div id="hr-step-photos" class="card" style="display:none">
+    <h3>Trois photos de ton visage</h3>
+    <p style="font-size:12px;color:var(--muted);margin-bottom:14px">Face, profil gauche, profil droit — bonne lumière, cheveux dégagés du visage si possible.</p>
+    <div class="hr-photo-row"><span class="lbl">Face</span><div class="hr-photo-pic" id="hr-pic-face"></div><label class="link" style="cursor:pointer">Choisir<input type="file" accept="image/*" capture="user" style="display:none" onchange="hrPhotoChosen(event,'face')"></label></div>
+    <div class="hr-photo-row"><span class="lbl">Profil gauche</span><div class="hr-photo-pic" id="hr-pic-left"></div><label class="link" style="cursor:pointer">Choisir<input type="file" accept="image/*" capture="user" style="display:none" onchange="hrPhotoChosen(event,'left')"></label></div>
+    <div class="hr-photo-row"><span class="lbl">Profil droit</span><div class="hr-photo-pic" id="hr-pic-right"></div><label class="link" style="cursor:pointer">Choisir<input type="file" accept="image/*" capture="user" style="display:none" onchange="hrPhotoChosen(event,'right')"></label></div>
+    <div id="hr-photos-status" class="msg" style="margin-top:11px"></div>
+    <button class="btn btn-dark" id="hr-submit-btn" onclick="submitHairReco()" style="margin-top:8px" disabled>Obtenir ma recommandation</button>
+  </div>
+
+  <div id="hr-step-loading" class="card" style="display:none">
+    <p style="text-align:center;color:var(--muted);font-size:13px">Analyse en cours…</p>
+  </div>
+
+  <div id="hr-step-result" class="card" style="display:none">
+    <h3>Ta recommandation</h3>
+    <div id="hr-result-body"></div>
+    <button class="btn btn-out btn-sm" style="margin-top:12px" onclick="hrRestart()">Refaire</button>
   </div>
 </div>
 
@@ -705,6 +777,12 @@ table.cal{width:100%;min-width:420px;border-collapse:collapse;table-layout:fixed
       <div class="fld"><textarea class="inp" id="persona-inp" placeholder="Ex : Chaleureux mais direct, tutoiement, quelques emojis. Exemple de message : « Salut ! Ton créneau est bien noté, à demain 😊 »" style="min-height:120px"></textarea></div>
       <button class="btn btn-dark btn-sm" onclick="savePersona()">Enregistrer le ton</button>
       <div id="persona-status" class="msg" style="margin-top:11px"></div>
+    </div>
+    <div class="card">
+      <h3>Tendances coiffure</h3>
+      <p style="font-size:13px;color:var(--muted);margin-bottom:15px">Rafraîchit le résumé des tendances actuelles utilisé par la recommandation de coupe. À refaire environ une fois par mois.</p>
+      <button class="btn btn-dark btn-sm" id="trends-refresh-btn" onclick="refreshTrends()">Rafraîchir les tendances</button>
+      <div id="trends-status" class="msg" style="margin-top:11px"></div>
     </div>
   </div>
 </div>
@@ -1118,6 +1196,100 @@ function handleSlotRequestRealtime(row){
   }
   if(document.getElementById('s-adm').classList.contains('on')&&admTab==='requests')renderAdmRequests(true);
 }
+
+// ── RECOMMANDATION COIFFURE ──
+let hrPhotos={face:null,left:null,right:null};
+function hrGoStep(step){
+  ['consent','questionnaire','photos','loading','result'].forEach(s=>{
+    document.getElementById('hr-step-'+s).style.display=s===step?'':'none';
+  });
+}
+function openHairReco(){
+  hrPhotos={face:null,left:null,right:null};
+  document.getElementById('hr-consent-chk').checked=false;
+  document.getElementById('hr-consent-btn').disabled=true;
+  document.getElementById('hr-submit-btn').disabled=true;
+  ['face','left','right'].forEach(k=>document.getElementById('hr-pic-'+k).innerHTML='');
+  const status=document.getElementById('hr-photos-status');status.className='msg';status.textContent='';
+  hrGoStep('consent');
+  showScr('s-hairreco');
+}
+async function hrPhotoChosen(e,slot){
+  const file=e.target.files&&e.target.files[0];
+  e.target.value='';
+  if(!file||!file.type.startsWith('image/'))return;
+  try{
+    const dataUrl=await resizeImageToDataUrl(file,1024);
+    hrPhotos[slot]=dataUrl;
+    document.getElementById('hr-pic-'+slot).innerHTML=`<img src="${dataUrl}" alt="">`;
+    document.getElementById('hr-submit-btn').disabled=!(hrPhotos.face&&hrPhotos.left&&hrPhotos.right);
+  }catch(err){
+    const status=document.getElementById('hr-photos-status');
+    status.className='msg err on';status.textContent='Impossible de lire cette photo.';
+  }
+}
+function dataUrlToBase64(dataUrl){
+  const parts=dataUrl.split(',');
+  const mediaType=parts[0].match(/data:(.*?);/)[1];
+  return{media_type:mediaType,data:parts[1]};
+}
+async function submitHairReco(){
+  const status=document.getElementById('hr-photos-status');
+  status.className='msg';status.textContent='';
+  hrGoStep('loading');
+  const questionnaire={
+    texture:document.getElementById('hr-q-texture').value,
+    type_de_boucle:document.getElementById('hr-q-boucle').value,
+    epaisseur:document.getElementById('hr-q-epaisseur').value,
+    densite:document.getElementById('hr-q-densite').value,
+    cuir_chevelu:document.getElementById('hr-q-cuirchevelu').value
+  };
+  const images=[hrPhotos.face,hrPhotos.left,hrPhotos.right].map(dataUrlToBase64);
+  let trends='';
+  try{
+    const{data}=await sb.from('settings').select('value').eq('key','hair_trends').single();
+    if(data)trends=data.value;
+  }catch(e){}
+  try{
+    const res=await fetch('/.netlify/functions/recommend',{
+      method:'POST',headers:{'Content-Type':'application/json'},
+      body:JSON.stringify({questionnaire,images,trends})
+    });
+    const data=await res.json();
+    if(!res.ok||data.error){
+      console.error('recommend error',data);
+      hrGoStep('photos');
+      status.className='msg err on';status.textContent="Désolé, l'analyse a échoué. Réessaie dans un instant.";
+      return;
+    }
+    const jsonBlock=(data.content||[]).find(b=>b.type==='text');
+    let reco=null;
+    try{reco=jsonBlock?JSON.parse(jsonBlock.text):null;}catch(e){}
+    if(!reco||!reco.styles_recommandes){
+      hrGoStep('photos');
+      status.className='msg err on';status.textContent='Réponse inattendue, réessaie.';
+      return;
+    }
+    renderHairRecoResult(reco);
+    if(CU){
+      try{await sb.from('hair_profiles').insert({client_id:CU.id,questionnaire,recommendation:reco});}catch(e){console.error(e);}
+    }
+    hrGoStep('result');
+  }catch(e){
+    console.error(e);
+    hrGoStep('photos');
+    status.className='msg err on';status.textContent='Erreur réseau, réessaie.';
+  }finally{
+    hrPhotos={face:null,left:null,right:null};
+  }
+}
+function renderHairRecoResult(reco){
+  const body=document.getElementById('hr-result-body');
+  body.innerHTML=`<p style="font-size:13px;color:var(--muted);margin-bottom:14px">${escapeHtml(reco.morphologie)}</p>`
+    +reco.styles_recommandes.map(s=>`<div class="hr-style-card"><h4>${escapeHtml(s.nom)}</h4><p>${escapeHtml(s.description)}</p><p style="color:var(--tx);font-weight:600;margin-top:6px">${escapeHtml(s.pourquoi)}</p></div>`).join('')
+    +`<p style="font-size:12.5px;color:var(--muted);margin-top:10px">${escapeHtml(reco.conseils)}</p>`;
+}
+function hrRestart(){openHairReco();}
 
 async function boot(){
   showLoader(true,'Préparation de votre expérience…');
@@ -2333,6 +2505,28 @@ async function savePersona(){
   if(error){showMsg(m,'err','Erreur lors de l\'enregistrement.');return;}
   chatbotPersona=val;
   showMsg(m,'ok','✓ Ton enregistré.');
+}
+async function refreshTrends(){
+  const m=document.getElementById('trends-status');
+  const btn=document.getElementById('trends-refresh-btn');
+  btn.disabled=true;
+  showMsg(m,'ok','Recherche en cours…');
+  try{
+    const res=await fetch('/.netlify/functions/refresh-trends',{method:'POST'});
+    const data=await res.json();
+    if(!res.ok||data.error||!data.summary){
+      console.error('refresh-trends error',data);
+      showMsg(m,'err','Erreur lors de la recherche des tendances.');
+      return;
+    }
+    await sb.from('settings').upsert({key:'hair_trends',value:data.summary});
+    showMsg(m,'ok','✓ Tendances mises à jour.');
+  }catch(e){
+    console.error(e);
+    showMsg(m,'err','Erreur réseau.');
+  }finally{
+    btn.disabled=false;
+  }
 }
 function cpInvite(){
   const link=location.origin+location.pathname+'?inv='+inviteCode;
