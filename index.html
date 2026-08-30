@@ -185,6 +185,10 @@ table.cal{width:100%;min-width:420px;border-collapse:collapse;table-layout:fixed
 .a-row .fld input,.a-row .fld select{width:100%;padding:10px 12px;border:1px solid var(--bdr);border-radius:var(--r-sm);font-size:13px;outline:none;background:var(--surface);color:var(--tx);-webkit-appearance:none}
 .a-row .fld input:focus,.a-row .fld select:focus{border-color:var(--gold)}
 .sli{display:flex;align-items:center;justify-content:space-between;padding:10px 12px;background:var(--s2);border-radius:var(--r-sm);margin-bottom:6px;font-size:13px;gap:8px;flex-wrap:wrap;animation:riseIn .3s var(--ease-out) both}
+.hist-month-group{margin-bottom:18px}
+.hist-month-hd{font-family:'Fraunces',serif;font-size:16px;font-weight:600;color:var(--tx);margin-bottom:9px;padding-bottom:6px;border-bottom:1px solid var(--bdr)}
+.hist-week-group{margin-bottom:13px}
+.hist-week-hd{font-size:11px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.05em;margin-bottom:6px}
 .sli.no-anim,.svc-row.no-anim,.ann-item.no-anim,.pay-card.no-anim,.hist-item.no-anim{animation:none}
 .sli .si{flex:1;font-size:13px;min-width:110px}
 .sli-actions{display:flex;gap:5px;align-items:center;flex-shrink:0}
@@ -210,6 +214,10 @@ table.cal{width:100%;min-width:420px;border-collapse:collapse;table-layout:fixed
 
 /* SERVICES / STATS / PAIEMENT */
 .seg{display:flex;gap:3px;background:var(--s2);padding:4px;border-radius:var(--r-sm);margin-bottom:16px;width:fit-content}
+.stat-nav{display:flex;align-items:center;justify-content:center;gap:14px;margin-bottom:16px}
+.stat-nav .i-btn{padding:6px 14px;font-size:16px;line-height:1}
+.stat-nav .i-btn:disabled{opacity:.35;cursor:default}
+.stat-period-label{font-family:'Fraunces',serif;font-size:15px;min-width:150px;text-align:center}
 .seg button{border:none;background:none;padding:7px 15px;border-radius:7px;font-size:12px;font-weight:700;color:var(--muted);cursor:pointer}
 .seg button.on{background:var(--surface);color:var(--acc);box-shadow:var(--sh)}
 .stat-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:11px;margin-bottom:14px}
@@ -489,9 +497,30 @@ table.cal{width:100%;min-width:420px;border-collapse:collapse;table-layout:fixed
         <div class="fld"><label class="lbl">Heure début</label><select id="adm-time-start" class="inp"></select></div>
         <div class="fld"><label class="lbl">Heure fin (optionnel)</label><select id="adm-time-end" class="inp"><option value="">Une seule heure</option></select></div>
       </div>
-      <p style="font-size:11px;color:var(--hint);margin-bottom:11px">Le créneau est publié automatiquement et visible par tous les clients. La prestation sera choisie par le client juste après sa réservation.</p>
+      <p style="font-size:11px;color:var(--hint);margin-bottom:11px">Le créneau est créé masqué. La prestation sera choisie par le client juste après sa réservation. Utilisez « Publier des créneaux » ci-dessous pour le rendre visible, tout de suite ou à une date programmée.</p>
       <button class="btn btn-dark btn-sm" onclick="addSlot()"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 5v14M5 12h14"/></svg> Ajouter</button>
       <div id="as-msg" class="msg" style="margin-top:11px"></div>
+    </div>
+    <div class="card">
+      <h3><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M3 3l18 18M10.6 5.2A10.6 10.6 0 0 1 12 5c6.5 0 10 7 10 7a15 15 0 0 1-3.1 4M6.5 6.6A15.6 15.6 0 0 0 2 12s3.5 7 10 7c1.4 0 2.6-.3 3.7-.7M9.9 9.9a3 3 0 0 0 4.2 4.2"/></svg> Publier des créneaux</h3>
+      <p style="font-size:13px;color:var(--muted);margin-bottom:13px">Choisissez ce qu'il se passe pour les créneaux créés mais pas encore publiés : publication immédiate, ou programmée à un jour et une heure précis. Laissez les dates vides pour viser tous les créneaux en attente.</p>
+      <div id="pub-pending-info" style="margin-bottom:13px"></div>
+      <div class="a-row">
+        <div class="fld"><label class="lbl">Du (optionnel)</label><input type="date" id="pub-from" class="inp"></div>
+        <div class="fld"><label class="lbl">Au (optionnel)</label><input type="date" id="pub-to" class="inp"></div>
+      </div>
+      <div style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:11px">
+        <button class="btn btn-dark btn-sm" onclick="publishNow()"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M2 12s3.5-7 10-7 10 7 10 7-3.5 7-10 7-10-7-10-7Z"/><circle cx="12" cy="12" r="3"/></svg> Publier maintenant</button>
+        <button class="btn btn-out btn-sm" onclick="togglePubSched()"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3.5 2"/></svg> Programmer…</button>
+      </div>
+      <div id="pub-sched" style="display:none;margin-bottom:11px">
+        <div class="a-row">
+          <div class="fld"><label class="lbl">Date de mise en ligne</label><input type="date" id="pub-date" class="inp"></div>
+          <div class="fld"><label class="lbl">Heure</label><input type="time" id="pub-time" class="inp" value="09:00"></div>
+        </div>
+        <button class="btn btn-dark btn-sm" onclick="schedulePublish()"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg> Confirmer la programmation</button>
+      </div>
+      <div id="pub-msg" class="msg"></div>
     </div>
     <div class="card">
       <h3>Rendez-vous manuel (client de passage)</h3>
@@ -543,6 +572,12 @@ table.cal{width:100%;min-width:420px;border-collapse:collapse;table-layout:fixed
     <div class="seg">
       <button class="on" id="st-week" onclick="setStatsPeriod('week')">Semaine</button>
       <button id="st-month" onclick="setStatsPeriod('month')">Mois</button>
+      <button id="st-year" onclick="setStatsPeriod('year')">Année</button>
+    </div>
+    <div class="stat-nav">
+      <button class="i-btn" onclick="navStats(-1)" aria-label="Période précédente">‹</button>
+      <span id="stats-period-label" class="stat-period-label"></span>
+      <button class="i-btn" id="stats-next-btn" onclick="navStats(1)" aria-label="Période suivante">›</button>
     </div>
     <div id="stats-content"></div>
   </div>
@@ -721,7 +756,7 @@ function escapeHtml(s){return (s||'').replace(/[&<>"']/g,function(c){return {'&'
 
 let CU=null,WS=null,pendSlot=null,admTab='slots',pendingAvatarDataUrl;
 let allSlots=[],allUsers=[],allAnnonces=[],allServices=[],allPayments=[],inviteCode=null,rtChannel=null;
-let slotFilter='upcoming',statsPeriod='week',editingPaymentId=null,pendingCalPromptSlot=null;
+let slotFilter='upcoming',statsPeriod='week',statsOffset=0,editingPaymentId=null,pendingCalPromptSlot=null;
 const MAX_FUTURE_WEEKS=2;
 
 // ── CALENDRIER PERSONNEL (.ics / Google) ──
@@ -1422,8 +1457,8 @@ async function quickAdd(date,time){
 async function toggleSlotVis(id,visible){
   const slot=allSlots.find(s=>s.id===id);
   if(slot?.is_manual&&visible){showToast('Un rendez-vous manuel reste toujours privé.');return;}
-  await sb.from('slots').update({visible}).eq('id',id);
-  allSlots=allSlots.map(s=>s.id===id?{...s,visible}:s);
+  await sb.from('slots').update({visible,publish_at:null}).eq('id',id);
+  allSlots=allSlots.map(s=>s.id===id?{...s,visible,publish_at:null}:s);
   closeM();showToast(visible?'Visible':'Caché');
   renderCal();
   if(document.getElementById('s-adm').classList.contains('on'))renderAdm();
@@ -1506,7 +1541,7 @@ async function addSlot(){
   const service_id=null;
   const m=document.getElementById('as-msg');
   if(!date||!timeStart){showMsg(m,'err','Sélectionnez une date et une heure.');return;}
-  const visible=true;
+  const visible=false;
   const timesToAdd=[];
   if(!timeEnd){timesToAdd.push(timeStart);}
   else{
@@ -1521,8 +1556,89 @@ async function addSlot(){
     }
   }
   const dl=new Date(date+'T12:00').toLocaleDateString('fr-FR',{weekday:'short',day:'numeric',month:'short'});
-  showMsg(m,'ok',`✓ ${added} créneau(x) ajouté(s) le ${dl} et publié(s) automatiquement.`);
+  showMsg(m,'ok',`✓ ${added} créneau(x) ajouté(s) le ${dl}, masqué(s) en attente de publication.`);
   renderASlots();renderCal();
+}
+
+// ── PUBLICATION DES CRÉNEAUX (en deux temps : création puis publication) ──
+function pendingSlots(){
+  return allSlots.filter(s=>!s.is_manual&&s.visible===false);
+}
+function pendingSlotsInRange(){
+  const from=document.getElementById('pub-from').value;
+  const to=document.getElementById('pub-to').value;
+  return pendingSlots().filter(s=>(!from||s.date>=from)&&(!to||s.date<=to));
+}
+function togglePubSched(force){
+  const el=document.getElementById('pub-sched');
+  if(!el)return;
+  const show=force!==undefined?force:el.style.display==='none';
+  el.style.display=show?'':'none';
+}
+function renderPubInfo(){
+  const el=document.getElementById('pub-pending-info');
+  if(!el)return;
+  const all=pendingSlots();
+  const scheduled=all.filter(s=>s.publish_at);
+  const unscheduled=all.filter(s=>!s.publish_at);
+  let html='';
+  if(!all.length){
+    html='<p style="color:var(--hint);font-size:13px">Aucun créneau en attente de publication.</p>';
+  }else{
+    html+=`<p style="font-size:13px;color:var(--muted)">${all.length} créneau(x) masqué(s) en attente${unscheduled.length?`, dont ${unscheduled.length} sans programmation`:''}.</p>`;
+  }
+  if(scheduled.length){
+    const groups={};
+    scheduled.forEach(s=>{(groups[s.publish_at]=groups[s.publish_at]||[]).push(s);});
+    html+=Object.keys(groups).sort().map(k=>{
+      const dt=new Date(k);
+      const label=dt.toLocaleDateString('fr-FR',{weekday:'short',day:'numeric',month:'short'})+' à '+dt.toLocaleTimeString('fr-FR',{hour:'2-digit',minute:'2-digit'});
+      return`<div style="display:flex;align-items:center;justify-content:space-between;gap:9px;background:var(--s2);border-radius:var(--r-sm);padding:9px 12px;margin-top:7px">
+        <span style="font-size:12.5px">${ic('calendar',13)} ${groups[k].length} créneau(x) programmé(s) pour le ${label}</span>
+        <button class="btn btn-out btn-sm" style="font-size:11px;padding:4px 9px" onclick="cancelSchedule('${k}')">Annuler</button>
+      </div>`;
+    }).join('');
+  }
+  el.innerHTML=html;
+}
+async function publishNow(){
+  const m=document.getElementById('pub-msg');
+  const targets=pendingSlotsInRange();
+  if(!targets.length){showMsg(m,'err','Aucun créneau en attente sur cette période.');return;}
+  const ids=targets.map(s=>s.id);
+  const{error}=await sb.from('slots').update({visible:true,publish_at:null}).in('id',ids);
+  if(error){showMsg(m,'err','Erreur lors de la publication.');return;}
+  allSlots=allSlots.map(s=>ids.includes(s.id)?{...s,visible:true,publish_at:null}:s);
+  showMsg(m,'ok',`✓ ${ids.length} créneau(x) publié(s) immédiatement.`);
+  renderASlots();renderCal();
+}
+async function schedulePublish(){
+  const m=document.getElementById('pub-msg');
+  const date=document.getElementById('pub-date').value;
+  const time=document.getElementById('pub-time').value;
+  if(!date||!time){showMsg(m,'err','Choisissez une date et une heure de publication.');return;}
+  const publishAt=new Date(date+'T'+time+':00');
+  if(isNaN(publishAt.getTime())){showMsg(m,'err','Date/heure invalide.');return;}
+  const targets=pendingSlotsInRange();
+  if(!targets.length){showMsg(m,'err','Aucun créneau en attente sur cette période.');return;}
+  const iso=publishAt.toISOString();
+  const ids=targets.map(s=>s.id);
+  const{error}=await sb.from('slots').update({publish_at:iso}).in('id',ids);
+  if(error){showMsg(m,'err','Erreur lors de la programmation.');return;}
+  allSlots=allSlots.map(s=>ids.includes(s.id)?{...s,publish_at:iso}:s);
+  const dl=publishAt.toLocaleDateString('fr-FR',{weekday:'short',day:'numeric',month:'short'});
+  showMsg(m,'ok',`✓ ${ids.length} créneau(x) programmé(s) pour le ${dl} à ${time}.`);
+  togglePubSched(false);
+  renderASlots();
+}
+async function cancelSchedule(publishAtKey){
+  const targets=allSlots.filter(s=>!s.is_manual&&s.visible===false&&s.publish_at===publishAtKey);
+  const ids=targets.map(s=>s.id);
+  if(!ids.length)return;
+  await sb.from('slots').update({publish_at:null}).in('id',ids);
+  allSlots=allSlots.map(s=>ids.includes(s.id)?{...s,publish_at:null}:s);
+  showToast('Programmation annulée.');
+  renderASlots();
 }
 
 async function addManualSlot(){
@@ -1545,14 +1661,14 @@ async function addManualSlot(){
 // Ces actions globales ne doivent JAMAIS toucher les créneaux manuels/privés (is_manual=true) :
 // ils restent toujours cachés du calendrier public, quel que soit l'état demandé ici.
 async function toggleAllVisibility(v){
-  await sb.from('slots').update({visible:v}).eq('is_manual',false);
-  allSlots=allSlots.map(s=>s.is_manual?s:{...s,visible:v});
+  await sb.from('slots').update({visible:v,publish_at:null}).eq('is_manual',false);
+  allSlots=allSlots.map(s=>s.is_manual?s:{...s,visible:v,publish_at:null});
   showToast(v?'Tous les créneaux publics visibles':'Tous les créneaux publics cachés');
   renderCal();renderASlots();
 }
 async function showAllSlots(v){
-  await sb.from('slots').update({visible:v}).eq('is_manual',false);
-  allSlots=allSlots.map(s=>s.is_manual?s:{...s,visible:v});
+  await sb.from('slots').update({visible:v,publish_at:null}).eq('is_manual',false);
+  allSlots=allSlots.map(s=>s.is_manual?s:{...s,visible:v,publish_at:null});
   showToast(v?'Tous les créneaux publics visibles':'Tous les créneaux publics cachés');
   renderCal();renderASlots();
 }
@@ -1573,22 +1689,68 @@ function renderASlots(silent){
     return slotFilter==='past'?isPast:!isPast;
   });
   const list=document.getElementById('slot-list');
+  renderPubInfo();
   if(!sorted.length){list.innerHTML=`<p style="color:var(--hint);font-size:13px">Aucun créneau ${slotFilter==='past'?'passé':'à venir'}.</p>`;return;}
   if(document.getElementById('vis-toggle')){
     const publicSlots=allSlots.filter(s=>!s.is_manual);
     document.getElementById('vis-toggle').checked=publicSlots.length>0&&publicSlots.every(s=>s.visible!==false);
   }
+  if(slotFilter==='past'){list.innerHTML=renderGroupedByWeekMonth(sorted);return;}
   list.innerHTML=sorted.map(s=>{
     const d=new Date(s.date+'T12:00').toLocaleDateString('fr-FR',{weekday:'short',day:'numeric',month:'short'});
     const bkr=s.booked_by?allUsers.find(u=>u.id===s.booked_by):null;
     const svc=allServices.find(sv=>sv.id===s.service_id);
     const isHidden=s.visible===false;const isPast=new Date(s.date+'T23:59')<new Date();
     const who=s.is_manual?(s.manual_client_name||'Manuel'):(bkr?'@'+bkr.username:null);
-    const st=who?`<span class="st st-t">${s.is_manual?'✂ ':'@'}${s.is_manual?who:bkr.username}</span>`:isHidden?`<span class="st st-h">${ic('eyeOff',11)}</span>`:isPast?`<span class="st st-p">Passé</span>`:`<span class="st st-f">Libre</span>`;
+    const schedLabel=isHidden&&s.publish_at?` · programmé ${new Date(s.publish_at).toLocaleDateString('fr-FR',{day:'numeric',month:'short'})} ${new Date(s.publish_at).toLocaleTimeString('fr-FR',{hour:'2-digit',minute:'2-digit'})}`:'';
+    const st=who?`<span class="st st-t">${s.is_manual?'✂ ':'@'}${s.is_manual?who:bkr.username}</span>`:isHidden?`<span class="st st-h">${ic('eyeOff',11)} ${schedLabel||'En attente'}</span>`:isPast?`<span class="st st-p">Passé</span>`:`<span class="st st-f">Libre</span>`;
     const vb=s.is_manual?`<span class="st st-h" title="Toujours privé">${ic('eyeOff',11)} Privé</span>`:(isHidden?`<button class="btn btn-out btn-sm" style="font-size:11px;padding:4px 9px" onclick="toggleSlotVis('${s.id}',true)">${ic('eye',13)}</button>`:`<button class="btn btn-out btn-sm" style="font-size:11px;padding:4px 9px" onclick="toggleSlotVis('${s.id}',false)">${ic('eyeOff',13)}</button>`);
     return`<div class="${cls}"><div class="si">${d} · ${s.time} (${s.duration_minutes||30}min)${svc?' · '+svc.name:''}</div>${st}
     <div class="sli-actions">${vb}<button class="btn btn-out btn-sm" style="color:var(--red);border-color:var(--red-b);padding:4px 9px;font-size:12px" onclick="delSlot('${s.id}')">${ic('trash',13)}</button></div></div>`;
   }).join('');
+}
+
+// ── GROUPEMENT PAR SEMAINE / MOIS (historique admin + client) ──
+function weekRangeLabel(d){
+  const day=d.getDay();const diff=day===0?-6:1-day;
+  const mon=new Date(d);mon.setDate(d.getDate()+diff);
+  const sun=new Date(mon.getTime()+6*864e5);
+  return`Semaine du ${mon.toLocaleDateString('fr-FR',{day:'numeric',month:'short'})} au ${sun.toLocaleDateString('fr-FR',{day:'numeric',month:'short'})}`;
+}
+function monthLabel(d){const l=d.toLocaleDateString('fr-FR',{month:'long',year:'numeric'});return l.charAt(0).toUpperCase()+l.slice(1);}
+function renderGroupedByWeekMonth(slots,renderItem){
+  const render=renderItem||defaultSlotHistItem;
+  const desc=[...slots].sort((a,b)=>(b.date+b.time).localeCompare(a.date+a.time));
+  const monthGroups=[];
+  desc.forEach(s=>{
+    const d=new Date(s.date+'T00:00');
+    const mKey=d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0');
+    let mGroup=monthGroups.find(g=>g.key===mKey);
+    if(!mGroup){mGroup={key:mKey,label:monthLabel(d),weeks:[]};monthGroups.push(mGroup);}
+    const monday=new Date(d);const day=d.getDay();monday.setDate(d.getDate()+(day===0?-6:1-day));
+    const wKey=dk(monday);
+    let wGroup=mGroup.weeks.find(w=>w.key===wKey);
+    if(!wGroup){wGroup={key:wKey,label:weekRangeLabel(d),items:[]};mGroup.weeks.push(wGroup);}
+    wGroup.items.push(s);
+  });
+  return monthGroups.map(mg=>`
+    <div class="hist-month-group">
+      <div class="hist-month-hd">${mg.label}</div>
+      ${mg.weeks.map(wg=>`
+        <div class="hist-week-group">
+          <div class="hist-week-hd">${wg.label} · ${wg.items.length} créneau(x)</div>
+          ${wg.items.map(render).join('')}
+        </div>`).join('')}
+    </div>`).join('');
+}
+function defaultSlotHistItem(s){
+  const d=new Date(s.date+'T12:00').toLocaleDateString('fr-FR',{weekday:'short',day:'numeric',month:'short'});
+  const bkr=s.booked_by?allUsers.find(u=>u.id===s.booked_by):null;
+  const svc=allServices.find(sv=>sv.id===s.service_id);
+  const who=s.is_manual?(s.manual_client_name||'Manuel'):(bkr?'@'+bkr.username:null);
+  const st=who?`<span class="st st-t">${s.is_manual?'✂ ':'@'}${who}</span>`:`<span class="st st-h">${ic('eyeOff',11)}</span>`;
+  return`<div class="sli no-anim"><div class="si">${d} · ${s.time} (${s.duration_minutes||30}min)${svc?' · '+svc.name:''}</div>${st}
+  <div class="sli-actions"><button class="btn btn-out btn-sm" style="color:var(--red);border-color:var(--red-b);padding:4px 9px;font-size:12px" onclick="delSlot('${s.id}')">${ic('trash',13)}</button></div></div>`;
 }
 async function delSlot(id){
   await sb.from('slots').delete().eq('id',id);
@@ -1597,21 +1759,44 @@ async function delSlot(id){
 
 // ── STATS ──
 function setStatsPeriod(p){
-  statsPeriod=p;
+  statsPeriod=p;statsOffset=0;
   document.getElementById('st-week').classList.toggle('on',p==='week');
   document.getElementById('st-month').classList.toggle('on',p==='month');
+  document.getElementById('st-year').classList.toggle('on',p==='year');
   renderStats();
+}
+function navStats(dir){
+  if(statsOffset+dir>0)return;
+  statsOffset+=dir;
+  renderStats();
+}
+function monthWithOffset(offset){const now=new Date();return new Date(now.getFullYear(),now.getMonth()+offset,1);}
+function statsPeriodLabel(){
+  if(statsPeriod==='week'){
+    const s=getMonday(statsOffset);const e=new Date(s.getTime()+6*864e5);
+    return`${s.toLocaleDateString('fr-FR',{day:'numeric',month:'short'})} – ${e.toLocaleDateString('fr-FR',{day:'numeric',month:'short'})}`+(statsOffset===0?' (en cours)':'');
+  }
+  if(statsPeriod==='month'){
+    const l=monthWithOffset(statsOffset).toLocaleDateString('fr-FR',{month:'long',year:'numeric'});
+    return(l.charAt(0).toUpperCase()+l.slice(1))+(statsOffset===0?' (en cours)':'');
+  }
+  const y=new Date().getFullYear()+statsOffset;
+  return String(y)+(statsOffset===0?' (en cours)':'');
 }
 function isOccupied(s){return !!s.booked_by||s.is_manual===true;}
 function slotRevenueCents(s){return s.price_charged_cents!=null?s.price_charged_cents:(allServices.find(sv=>sv.id===s.service_id)?.price_cents||0);}
 function renderStats(){
   const el=document.getElementById('stats-content');
-  if(statsPeriod==='week')el.innerHTML=renderWeekStats();
-  else el.innerHTML=renderMonthStats();
+  document.getElementById('stats-period-label').textContent=statsPeriodLabel();
+  document.getElementById('stats-next-btn').disabled=statsOffset>=0;
+  if(statsPeriod==='week')el.innerHTML=renderWeekStats(statsOffset);
+  else if(statsPeriod==='month')el.innerHTML=renderMonthStats(statsOffset);
+  else el.innerHTML=renderYearStats(statsOffset);
 }
-function renderWeekStats(){
-  const start=getMonday(0);const end=new Date(start.getTime()+7*864e5);
-  const prevStart=getMonday(-1);const prevEnd=start;
+function renderWeekStats(offset){
+  offset=offset||0;
+  const start=getMonday(offset);const end=new Date(start.getTime()+7*864e5);
+  const prevStart=getMonday(offset-1);const prevEnd=start;
   const inRange=(s,a,b)=>{const d=new Date(s.date+'T00:00');return d>=a&&d<b;};
   const week=allSlots.filter(s=>isOccupied(s)&&inRange(s,start,end));
   const prevWeek=allSlots.filter(s=>isOccupied(s)&&inRange(s,prevStart,prevEnd));
@@ -1641,8 +1826,9 @@ function renderWeekStats(){
       ${bySvc.length?bySvc.map(s=>`<div class="svc-bar"><span class="sb-label">${s.name}</span><div class="sb-track"><div class="sb-fill" style="--pct:${s.count/maxSvc}"></div></div><span class="sb-val">${s.count}</span></div>`).join(''):'<p style="color:var(--hint);font-size:13px">Aucune prestation définie.</p>'}
     </div>`;
 }
-function renderMonthStats(){
-  const now=new Date();const monthStart=new Date(now.getFullYear(),now.getMonth(),1);const monthEnd=new Date(now.getFullYear(),now.getMonth()+1,1);
+function renderMonthStats(offset){
+  offset=offset||0;
+  const monthStart=monthWithOffset(offset);const monthEnd=monthWithOffset(offset+1);
   const inRange=(s,a,b)=>{const d=new Date(s.date+'T00:00');return d>=a&&d<b;};
   const month=allSlots.filter(s=>isOccupied(s)&&inRange(s,monthStart,monthEnd));
   const revenue=month.reduce((sum,s)=>sum+slotRevenueCents(s),0);
@@ -1668,6 +1854,37 @@ function renderMonthStats(){
     <div class="card">
       <h3>Chiffre d'affaires par semaine</h3>
       <div class="bar-row">${weeks.map(w=>`<div class="bar-col"><span class="bv">${w.cents?(w.cents/100).toFixed(0)+'€':'-'}</span><div class="bb-track"><div class="bb" style="--pct:${Math.max(w.cents/maxCents,.03)}"></div></div><span class="bd">${w.label}</span></div>`).join('')}</div>
+    </div>
+    <div class="card">
+      <h3>Répartition par prestation</h3>
+      ${bySvc.length?bySvc.map(s=>`<div class="svc-bar"><span class="sb-label">${s.name}</span><div class="sb-track"><div class="sb-fill" style="--pct:${s.count/maxSvc}"></div></div><span class="sb-val">${s.count}</span></div>`).join(''):'<p style="color:var(--hint);font-size:13px">Aucune prestation définie.</p>'}
+    </div>`;
+}
+function renderYearStats(offset){
+  offset=offset||0;
+  const year=new Date().getFullYear()+offset;
+  const yStart=new Date(year,0,1);const yEnd=new Date(year+1,0,1);
+  const inRange=(s,a,b)=>{const d=new Date(s.date+'T00:00');return d>=a&&d<b;};
+  const yr=allSlots.filter(s=>isOccupied(s)&&inRange(s,yStart,yEnd));
+  const revenue=yr.reduce((sum,s)=>sum+slotRevenueCents(s),0);
+  const byMonth=[...Array(12)].map((_,i)=>{
+    const mStart=new Date(year,i,1);const mEnd=new Date(year,i+1,1);
+    const mSlots=yr.filter(s=>inRange(s,mStart,mEnd));
+    return{label:mStart.toLocaleDateString('fr-FR',{month:'short'}),cents:mSlots.reduce((a,s)=>a+slotRevenueCents(s),0)};
+  });
+  const maxCents=Math.max(...byMonth.map(m=>m.cents),1);
+  const bySvc=allServices.map(sv=>({name:sv.name,count:yr.filter(s=>s.service_id===sv.id).length}));
+  const maxSvc=Math.max(...bySvc.map(s=>s.count),1);
+  return `
+    <div class="stat-grid">
+      <div class="stat-card"><div class="sc-label">Clients cette année</div><div class="sc-val">${yr.length}</div></div>
+      <div class="stat-card"><div class="sc-label">CA de l'année</div><div class="sc-val">${(revenue/100).toFixed(2)}€</div></div>
+      <div class="stat-card"><div class="sc-label">Année</div><div class="sc-val" style="font-size:16px">${year}</div></div>
+      <div class="stat-card"><div class="sc-label">Moy. / mois</div><div class="sc-val" style="font-size:16px">${(revenue/1200).toFixed(0)}€</div></div>
+    </div>
+    <div class="card">
+      <h3>Chiffre d'affaires par mois</h3>
+      <div class="bar-row">${byMonth.map(m=>`<div class="bar-col"><span class="bv">${m.cents?(m.cents/100).toFixed(0)+'€':'-'}</span><div class="bb-track"><div class="bb" style="--pct:${Math.max(m.cents/maxCents,.03)}"></div></div><span class="bd">${m.label}</span></div>`).join('')}</div>
     </div>
     <div class="card">
       <h3>Répartition par prestation</h3>
@@ -1746,15 +1963,27 @@ function renderProfil(){
   document.getElementById('n-released').checked=CU.notif_released!==false;
   document.getElementById('n-reminder').checked=CU.notif_reminder!==false;
   updateOneSignalStatus();
-  const mySlots=allSlots.filter(s=>s.booked_by===CU.id).sort((a,b)=>(a.date+a.time).localeCompare(b.date+b.time));
+  const mySlots=allSlots.filter(s=>s.booked_by===CU.id);
+  const now=new Date();
+  const future=mySlots.filter(s=>new Date(s.date+'T23:59')>=now).sort((a,b)=>(a.date+a.time).localeCompare(b.date+b.time));
+  const past=mySlots.filter(s=>new Date(s.date+'T23:59')<now);
   const list=document.getElementById('hist-list');
   if(!mySlots.length){list.innerHTML='<p style="color:var(--hint);font-size:13px">Aucune réservation.</p>';return;}
-  list.innerHTML=mySlots.map(s=>{
+  const futureHtml=future.length?future.map(s=>{
     const d=new Date(s.date+'T12:00').toLocaleDateString('fr-FR',{weekday:'long',day:'numeric',month:'long'});
-    const isFuture=new Date(s.date+'T23:59')>=new Date();
-    const calBtn=isFuture?`<button class="i-btn" style="padding:6px 8px" onclick="showCalendarPrompt('${s.id}')" title="Ajouter à l'agenda">${ic('calendar',14)}</button>`:'';
-    return`<div class="hist-item"><div class="date">${d}</div><div class="time">${s.time}</div>${calBtn}<span class="status ${isFuture?'hist-future':'hist-past'}">${isFuture?'À venir':'Passé'}</span></div>`;
-  }).join('');
+    const calBtn=`<button class="i-btn" style="padding:6px 8px" onclick="showCalendarPrompt('${s.id}')" title="Ajouter à l'agenda">${ic('calendar',14)}</button>`;
+    return`<div class="hist-item"><div class="date">${d}</div><div class="time">${s.time}</div>${calBtn}<span class="status hist-future">À venir</span></div>`;
+  }).join(''):'<p style="color:var(--hint);font-size:13px">Aucun rendez-vous à venir.</p>';
+  const pastHtml=past.length?renderGroupedByWeekMonth(past,clientHistItem):'<p style="color:var(--hint);font-size:13px">Aucun rendez-vous passé.</p>';
+  list.innerHTML=`
+    <div class="hist-week-hd" style="margin-bottom:9px">À venir</div>
+    ${futureHtml}
+    <div class="hist-week-hd" style="margin:16px 0 9px">Historique</div>
+    ${pastHtml}`;
+}
+function clientHistItem(s){
+  const d=new Date(s.date+'T12:00').toLocaleDateString('fr-FR',{weekday:'long',day:'numeric',month:'long'});
+  return`<div class="hist-item"><div class="date">${d}</div><div class="time">${s.time}</div><span class="status hist-past">Passé</span></div>`;
 }
 // ── PHOTO DE PROFIL (optionnelle) ──
 function resizeImageToDataUrl(file,maxDim){
