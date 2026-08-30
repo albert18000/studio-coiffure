@@ -298,6 +298,28 @@ table.cal{width:100%;min-width:420px;border-collapse:collapse;table-layout:fixed
 .toast{position:fixed;bottom:30px;left:50%;transform:translateX(-50%) translateY(90px);background:var(--acc);color:#fbf7fd;padding:12px 24px;border-radius:30px;font-size:13px;font-weight:600;z-index:999;transition:transform .32s var(--ease-out);pointer-events:none;white-space:nowrap;box-shadow:var(--sh-lg);display:flex;align-items:center;gap:8px}
 .toast.on{transform:translateX(-50%) translateY(0)}
 
+/* CHAT */
+.chat-fab{position:fixed;right:18px;bottom:18px;width:52px;height:52px;border-radius:50%;background:var(--acc);color:#fbf7fd;border:none;display:flex;align-items:center;justify-content:center;box-shadow:var(--sh-lg);cursor:pointer;z-index:400;transition:transform .12s var(--ease-out)}
+.chat-fab:active{transform:scale(.94)}
+.chat-modal{background:var(--surface);border-radius:24px 24px 0 0;width:100%;max-width:430px;height:78vh;max-height:640px;display:flex;flex-direction:column;position:relative;transform-origin:center;animation:su .38s var(--ease-spring)}
+@media(min-width:480px){.chat-modal{border-radius:22px;animation:pi .3s var(--ease-spring)}}
+.ov.closing .chat-modal{animation:sd .24s var(--ease-in-out) forwards!important}
+@media(min-width:480px){.ov.closing .chat-modal{animation:po .22s var(--ease-in-out) forwards!important}}
+.chat-head{display:flex;align-items:center;justify-content:space-between;padding:16px 18px;border-bottom:1px solid var(--bdr);flex-shrink:0}
+.chat-head h3{font-family:'Fraunces',serif;font-size:17px}
+.chat-body{flex:1;overflow-y:auto;padding:16px 18px;display:flex;flex-direction:column;gap:10px}
+.chat-msg{max-width:82%;padding:9px 13px;border-radius:16px;font-size:13.5px;line-height:1.45;animation:riseIn .22s var(--ease-out) both}
+.chat-msg.user{align-self:flex-end;background:var(--acc);color:#fbf7fd;border-bottom-right-radius:4px}
+.chat-msg.bot{align-self:flex-start;background:var(--s2);border-bottom-left-radius:4px}
+.chat-msg.typing{color:var(--hint);font-style:italic}
+.chat-slots{display:flex;flex-wrap:wrap;margin-top:4px}
+.chat-slot-chip{display:inline-flex;align-items:center;gap:5px;padding:6px 11px;background:var(--surface);border:1px solid var(--bdr);border-radius:12px;font-size:12.5px;cursor:pointer;margin:3px 4px 0 0;color:var(--tx)}
+.chat-input-row{display:flex;gap:8px;padding:12px 14px;border-top:1px solid var(--bdr);flex-shrink:0}
+.chat-input-row input{flex:1;padding:10px 13px;border:1px solid var(--bdr);border-radius:20px;font-size:13.5px;outline:none;background:var(--surface);color:var(--tx)}
+.chat-input-row input:focus{border-color:var(--gold)}
+.chat-send{width:38px;height:38px;border-radius:50%;background:var(--acc);color:#fbf7fd;border:none;display:flex;align-items:center;justify-content:center;cursor:pointer;flex-shrink:0}
+.chat-send:disabled{opacity:.4;cursor:not-allowed}
+
 @keyframes riseIn{from{opacity:0;transform:translateY(7px)}to{opacity:1;transform:translateY(0)}}
 .sli,.svc-row,.ann-item,.pay-card,.hist-item{animation-fill-mode:both}
 .sli:nth-child(1),.svc-row:nth-child(1),.ann-item:nth-child(1),.pay-card:nth-child(1),.hist-item:nth-child(1){animation-delay:0ms}
@@ -322,6 +344,8 @@ table.cal{width:100%;min-width:420px;border-collapse:collapse;table-layout:fixed
   .modal,.alert-modal,.ann-popup{animation:none!important}
   .sli,.svc-row,.ann-item,.pay-card,.hist-item,.msg.on{animation:none!important}
   .ov{transition:none!important}
+  .chat-modal{animation:none!important}
+  .chat-msg{animation:none!important}
 }
 @media(hover:hover) and (pointer:fine){
   .i-btn:hover{background:var(--s2)}
@@ -331,6 +355,8 @@ table.cal{width:100%;min-width:420px;border-collapse:collapse;table-layout:fixed
   .sc.free:hover{background:#d9ede1}
   .sc.mine:hover{background:#f2e2b6}
   .sc.adm-e:hover{background:var(--s3);color:var(--gold)}
+  .chat-fab:hover{background:var(--acc2)}
+  .chat-slot-chip:hover{background:var(--s2)}
 }
 </style>
 </head>
@@ -364,6 +390,8 @@ table.cal{width:100%;min-width:420px;border-collapse:collapse;table-layout:fixed
     <button class="i-btn" id="logout-btn" style="display:none" onclick="doLogout()">Déco.</button>
   </div>
 </div>
+
+<button class="chat-fab" id="chat-fab" style="display:none" onclick="openChat()" title="Assistant"><svg class="ico" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M21 11.5a8.4 8.4 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.4 8.4 0 0 1-3.8-.9L3 21l1.9-5.7a8.4 8.4 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.4 8.4 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"/></svg></button>
 
 <!-- AUTH -->
 <div id="s-auth" class="scr">
@@ -494,6 +522,7 @@ table.cal{width:100%;min-width:420px;border-collapse:collapse;table-layout:fixed
     <button class="a-tab" id="at-paiement" onclick="atab('paiement')"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="6" width="18" height="13" rx="3"/><path d="M3 10.2h18"/><circle cx="16.5" cy="14.3" r="1" fill="currentColor" stroke="none"/></svg> Paiement</button>
     <button class="a-tab" id="at-annonces" onclick="atab('annonces')"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M3 10v4a1 1 0 0 0 1 1h2l3.5 4.5a1 1 0 0 0 1.8-.6V5.1a1 1 0 0 0-1.8-.6L6 9H4a1 1 0 0 0-1 1Z"/><path d="M17 8a5 5 0 0 1 0 8M20 5.5a9 9 0 0 1 0 13"/></svg> Annonces</button>
     <button class="a-tab" id="at-membres" onclick="atab('membres')"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><circle cx="9" cy="8" r="3.2"/><path d="M2.7 19c1-3.3 3.3-5 6.3-5s5.3 1.7 6.3 5"/><circle cx="17.5" cy="8.5" r="2.6"/><path d="M16 13.3c2.2.4 3.7 1.9 4.4 4.2"/></svg> Membres</button>
+    <button class="a-tab" id="at-requests" onclick="atab('requests')"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M21 11.5a8.4 8.4 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.4 8.4 0 0 1-3.8-.9L3 21l1.9-5.7a8.4 8.4 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.4 8.4 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"/></svg> Demandes</button>
     <button class="a-tab" id="at-invite" onclick="atab('invite')"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M9.5 14.5 14.5 9.5"/><path d="M11 6.5 12.7 4.8a3.5 3.5 0 1 1 5 5L15.9 11.5"/><path d="M13 17.5 11.3 19.2a3.5 3.5 0 1 1-5-5L8.1 12.5"/></svg> Invitation</button>
   </div>
 
@@ -650,6 +679,15 @@ table.cal{width:100%;min-width:420px;border-collapse:collapse;table-layout:fixed
     <div class="card"><h3>Membres inscrits</h3><p style="font-size:12px;color:var(--muted);margin:-6px 0 13px">Triés par dernière connexion, la plus récente en premier.</p><div id="membres-list"></div></div>
   </div>
 
+  <!-- DEMANDES DE CRENEAUX (chatbot) -->
+  <div id="ap-requests" style="display:none">
+    <div class="card">
+      <h3>Demandes de créneaux</h3>
+      <p style="font-size:13px;color:var(--muted);margin-bottom:15px">Créneaux demandés par les clients via l'assistant, hors disponibilités actuelles.</p>
+      <div id="requests-list"></div>
+    </div>
+  </div>
+
   <!-- INVITE -->
   <div id="ap-invite" style="display:none">
     <div class="card">
@@ -660,6 +698,13 @@ table.cal{width:100%;min-width:420px;border-collapse:collapse;table-layout:fixed
         <button class="btn btn-dark btn-sm" onclick="cpInvite()"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="12" height="12" rx="2.5"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg> Copier</button>
         <button class="btn btn-out btn-sm" onclick="regenInvite()"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4v5h5M20 20v-5h-5"/><path d="M4.6 15a8 8 0 0 0 14.5 2.3M19.4 9A8 8 0 0 0 4.9 6.7"/></svg> Nouveau code</button>
       </div>
+    </div>
+    <div class="card">
+      <h3>Ton de l'assistant (chatbot)</h3>
+      <p style="font-size:13px;color:var(--muted);margin-bottom:15px">Décrivez le ton à adopter, ou collez quelques messages types que vous envoyez habituellement — l'assistant s'en inspire. Laissez vide pour le ton par défaut (chaleureux, direct, tutoiement).</p>
+      <div class="fld"><textarea class="inp" id="persona-inp" placeholder="Ex : Chaleureux mais direct, tutoiement, quelques emojis. Exemple de message : « Salut ! Ton créneau est bien noté, à demain 😊 »" style="min-height:120px"></textarea></div>
+      <button class="btn btn-dark btn-sm" onclick="savePersona()">Enregistrer le ton</button>
+      <div id="persona-status" class="msg" style="margin-top:11px"></div>
     </div>
   </div>
 </div>
@@ -739,6 +784,21 @@ table.cal{width:100%;min-width:420px;border-collapse:collapse;table-layout:fixed
   </div>
 </div>
 
+<!-- CHAT ASSISTANT -->
+<div class="ov" id="ov-chat" onclick="if(event.target===this)closeChat()">
+  <div class="chat-modal" onclick="event.stopPropagation()">
+    <div class="chat-head">
+      <h3>Assistant</h3>
+      <button class="mx" onclick="closeChat()"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 6l12 12M18 6 6 18"/></svg></button>
+    </div>
+    <div class="chat-body" id="chat-body"></div>
+    <div class="chat-input-row">
+      <input id="chat-inp" placeholder="Écrivez votre message…" autocomplete="off" onkeydown="if(event.key==='Enter')sendChatMessage()">
+      <button class="chat-send" id="chat-send-btn" onclick="sendChatMessage()"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 2 11 13"/><path d="M22 2 15 22l-4-9-9-4 20-7z"/></svg></button>
+    </div>
+  </div>
+</div>
+
 <!-- ALERT -->
 <div class="ov" id="ov-alert" onclick="closeAlert()">
   <div class="alert-modal" onclick="event.stopPropagation()">
@@ -771,7 +831,9 @@ const ICON_PATHS={
   check:'<path d="M5 13l4.5 4.5L19 7"/>',
   calendar:'<rect x="3" y="5" width="18" height="16" rx="3.5"/><path d="M3 9.5h18M8 3v4M16 3v4"/>',
   download:'<path d="M12 3v12m0 0 4.5-4.5M12 15 7.5 10.5"/><path d="M4 17v2a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-2"/>',
-  extlink:'<path d="M14 4h6v6"/><path d="M10 14 20 4"/><path d="M18 13v5a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h5"/>'
+  extlink:'<path d="M14 4h6v6"/><path d="M10 14 20 4"/><path d="M18 13v5a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h5"/>',
+  chat:'<path d="M21 11.5a8.4 8.4 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.4 8.4 0 0 1-3.8-.9L3 21l1.9-5.7a8.4 8.4 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.4 8.4 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"/>',
+  send:'<path d="M22 2 11 13"/><path d="M22 2 15 22l-4-9-9-4 20-7z"/>'
 };
 function ic(name,size){size=size||16;return '<svg class="ico" width="'+size+'" height="'+size+'" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round">'+(ICON_PATHS[name]||'')+'</svg>';}
 function escapeHtml(s){return (s||'').replace(/[&<>"']/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c];});}
@@ -848,6 +910,215 @@ function closeCalPrompt(){closeOverlay('ov-calprompt');}
 const dk=d=>d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0');
 function getMonday(offset=0){const d=new Date();d.setHours(0,0,0,0);const day=d.getDay();const diff=day===0?-6:1-day;d.setDate(d.getDate()+diff+offset*7);return d;}
 
+// ── CHAT ASSISTANT ──
+let chatMessages=[],chatBusy=false,chatbotPersona='';
+const CHAT_TOOLS=[
+  {name:'enable_notifications',description:"Active les notifications push pour l'utilisateur actuel. Utiliser quand il demande comment activer/recevoir les notifications.",input_schema:{type:'object',properties:{},required:[]}},
+  {name:'navigate_to_screen',description:"Amène l'utilisateur sur un écran de l'app pendant que tu lui expliques comment faire.",input_schema:{type:'object',properties:{screen:{type:'string',enum:['cal','paiement','profil'],description:'cal=calendrier/réservation, paiement=moyens de paiement, profil=profil utilisateur'}},required:['screen']}},
+  {name:'list_available_slots',description:"Liste les créneaux libres à venir, éventuellement filtrés par date. Utiliser pour répondre à des questions sur les disponibilités.",input_schema:{type:'object',properties:{from_date:{type:'string',description:'YYYY-MM-DD, optionnel'},to_date:{type:'string',description:'YYYY-MM-DD, optionnel'}},required:[]}},
+  {name:'book_slot',description:"Réserve immédiatement un créneau libre pour l'utilisateur courant. N'utiliser que sur un id renvoyé par list_available_slots.",input_schema:{type:'object',properties:{slot_id:{type:'string'}},required:['slot_id']}},
+  {name:'cancel_my_booking',description:"Annule une réservation existante de l'utilisateur courant.",input_schema:{type:'object',properties:{slot_id:{type:'string'}},required:['slot_id']}},
+  {name:'request_off_hours_slot',description:"Transmet à l'administrateur une demande de créneau hors des disponibilités actuelles (ou confirme un créneau alternatif déjà proposé par l'administrateur). Utiliser quand aucun créneau ne convient au client mais qu'il souhaite quand même une coupe à une date/heure précise.",input_schema:{type:'object',properties:{date:{type:'string',description:'YYYY-MM-DD'},time:{type:'string',description:'HH:MM'},note:{type:'string',description:'précision optionnelle du client'}},required:['date','time']}}
+];
+function chatKnowledgeBase(){
+  return `Tu es l'assistant intégré à AlBarber, une app de réservation de coiffeur. Réponds en français, tutoiement, ton naturel et concis (2-4 phrases sauf si plus de détail est nécessaire).
+
+Fonctionnalités de l'app que tu dois connaître et pouvoir expliquer + déclencher toi-même quand c'est pertinent, sans faire naviguer le client dans les menus :
+- Réserver un créneau : onglet Calendrier, case verte = libre. Tu peux lister les créneaux libres (list_available_slots) et réserver directement (book_slot).
+- Annuler une réservation : tu peux le faire directement (cancel_my_booking).
+- Notifications : tu peux les activer directement (enable_notifications) — nouveaux créneaux, rappels, confirmations.
+- Moyens de paiement : onglet Paiement.
+- Profil : onglet Profil (infos personnelles, photo).
+- Créneau hors disponibilité : si aucun créneau ne convient, transmets une demande précise (date+heure) à l'administrateur via request_off_hours_slot. Explique que la réponse arrivera dans ce chat (acceptée, refusée, ou avec des alternatives proposées).
+- Si le client confirme vouloir un des créneaux alternatifs qu'un administrateur lui a proposés suite à une demande précédente, transmets une nouvelle demande via request_off_hours_slot avec cette date/heure (l'administrateur n'aura qu'à l'accepter en un clic).
+
+Règles :
+- Quand une action est possible, propose-la ET exécute-la directement via l'outil correspondant plutôt que de simplement expliquer comment faire à la main.
+- N'invente jamais un créneau ou une information — utilise les outils pour vérifier.
+- Reste bref, chaleureux, direct.`;
+}
+function buildChatSystemPrompt(){
+  const persona=chatbotPersona&&chatbotPersona.trim()?chatbotPersona.trim():'Ton par défaut : chaleureux, direct, tutoiement, peu d\'emoji.';
+  return [{type:'text',text:chatKnowledgeBase()+'\n\nStyle/ton à adopter :\n'+persona,cache_control:{type:'ephemeral'}}];
+}
+function openChat(){
+  if(!chatMessages.length)addChatBubble('bot',"Salut ! Je suis là pour t'aider avec l'app ou pour transmettre une demande de créneau. Comment je peux t'aider ?");
+  openOverlay('ov-chat');
+  setTimeout(()=>document.getElementById('chat-inp').focus(),300);
+}
+function closeChat(){closeOverlay('ov-chat');}
+function addChatBubble(role,text){
+  const body=document.getElementById('chat-body');
+  const div=document.createElement('div');
+  div.className='chat-msg '+(role==='user'?'user':'bot');
+  div.textContent=text;
+  body.appendChild(div);
+  body.scrollTop=body.scrollHeight;
+  return div;
+}
+function addChatSlotChips(slots,kind){
+  const body=document.getElementById('chat-body');
+  const wrap=document.createElement('div');
+  wrap.className='chat-slots';
+  slots.forEach(s=>{
+    const chip=document.createElement('button');
+    chip.className='chat-slot-chip';
+    chip.textContent=s.date+' à '+s.time;
+    chip.onclick=()=>{
+      document.getElementById('chat-inp').value=kind==='alternative'
+        ?('Je confirme vouloir le créneau alternatif proposé du '+s.date+' à '+s.time)
+        :('Réserve le créneau du '+s.date+' à '+s.time);
+      sendChatMessage();
+    };
+    wrap.appendChild(chip);
+  });
+  body.appendChild(wrap);
+  body.scrollTop=body.scrollHeight;
+}
+async function sendChatMessage(){
+  if(chatBusy)return;
+  const inp=document.getElementById('chat-inp');
+  const text=inp.value.trim();
+  if(!text)return;
+  inp.value='';
+  addChatBubble('user',text);
+  chatMessages.push({role:'user',content:text});
+  await runChatTurn();
+}
+async function runChatTurn(){
+  chatBusy=true;
+  document.getElementById('chat-send-btn').disabled=true;
+  const typing=addChatBubble('bot','…');
+  typing.classList.add('typing');
+  try{
+    let iterations=0;
+    while(iterations<6){
+      iterations++;
+      const res=await fetch('/.netlify/functions/chat',{
+        method:'POST',headers:{'Content-Type':'application/json'},
+        body:JSON.stringify({system:buildChatSystemPrompt(),messages:chatMessages,tools:CHAT_TOOLS})
+      });
+      const data=await res.json();
+      if(!res.ok||data.error){
+        typing.remove();
+        addChatBubble('bot',"Désolé, je n'ai pas pu répondre (problème technique). Réessaie dans un instant.");
+        console.error('chat error',data);
+        return;
+      }
+      chatMessages.push({role:'assistant',content:data.content});
+      if(data.stop_reason==='tool_use'){
+        const toolUses=data.content.filter(b=>b.type==='tool_use');
+        const results=[];
+        for(const tu of toolUses){
+          const result=await executeToolCall(tu.name,tu.input);
+          results.push({type:'tool_result',tool_use_id:tu.id,content:typeof result==='string'?result:JSON.stringify(result)});
+        }
+        chatMessages.push({role:'user',content:results});
+        continue;
+      }
+      typing.remove();
+      data.content.filter(b=>b.type==='text').forEach(b=>addChatBubble('bot',b.text));
+      return;
+    }
+    typing.remove();
+    addChatBubble('bot',"Je n'arrive pas à conclure cette demande, contacte directement l'administrateur si besoin.");
+  }catch(e){
+    console.error(e);
+    typing.remove();
+    addChatBubble('bot',"Désolé, une erreur est survenue.");
+  }finally{
+    chatBusy=false;
+    document.getElementById('chat-send-btn').disabled=false;
+  }
+}
+async function executeToolCall(name,input){
+  try{
+    if(name==='enable_notifications'){
+      requestPush();
+      return 'Activation des notifications demandée.';
+    }
+    if(name==='navigate_to_screen'){
+      const tab=['cal','paiement','profil'].includes(input.screen)?input.screen:'cal';
+      closeChat();
+      goTab(tab);
+      return 'Navigation effectuée vers '+tab+'.';
+    }
+    if(name==='list_available_slots'){
+      const now=new Date();
+      let list=allSlots.filter(s=>!s.booked_by&&!s.is_manual&&s.visible!==false&&new Date(s.date+'T'+s.time)>=now);
+      if(input.from_date)list=list.filter(s=>s.date>=input.from_date);
+      if(input.to_date)list=list.filter(s=>s.date<=input.to_date);
+      list.sort((a,b)=>(a.date+a.time).localeCompare(b.date+b.time));
+      list=list.slice(0,10);
+      if(list.length)setTimeout(()=>addChatSlotChips(list.map(s=>({date:s.date,time:s.time})),'available'),50);
+      return JSON.stringify(list.map(s=>({id:s.id,date:s.date,time:s.time})));
+    }
+    if(name==='book_slot'){
+      const slot=allSlots.find(s=>s.id===input.slot_id);
+      if(!slot)return 'Ce créneau n\'existe plus.';
+      if(slot.booked_by||slot.is_manual)return 'Ce créneau vient d\'être pris, propose-en un autre.';
+      const{error}=await sb.from('slots').update({booked_by:CU.id}).eq('id',input.slot_id).is('booked_by',null);
+      if(error)return 'La réservation a échoué.';
+      allSlots=allSlots.map(s=>s.id===input.slot_id?{...s,booked_by:CU.id}:s);
+      renderCal();
+      return 'Créneau réservé avec succès.';
+    }
+    if(name==='cancel_my_booking'){
+      const slot=allSlots.find(s=>s.id===input.slot_id);
+      if(!slot||slot.booked_by!==CU.id)return 'Créneau introuvable ou non réservé par cet utilisateur.';
+      await sb.from('slots').update({booked_by:null}).eq('id',input.slot_id).eq('booked_by',CU.id);
+      allSlots=allSlots.map(s=>s.id===input.slot_id?{...s,booked_by:null}:s);
+      renderCal();
+      return 'Réservation annulée.';
+    }
+    if(name==='request_off_hours_slot'){
+      const{error}=await sb.from('slot_requests').insert({client_id:CU.id,requested_date:input.date,requested_time:input.time,note:input.note||null});
+      if(error)return 'La demande n\'a pas pu être envoyée.';
+      notifyAdminsOfSlotRequest(input.date,input.time);
+      return 'Demande transmise à l\'administrateur.';
+    }
+    return 'Outil inconnu.';
+  }catch(e){
+    console.error(e);
+    return 'Erreur lors de l\'exécution.';
+  }
+}
+async function notifyAdminsOfSlotRequest(date,time){
+  const adminIds=allUsers.filter(u=>u.is_admin&&u.onesignal_id).map(u=>u.onesignal_id);
+  if(!adminIds.length)return;
+  try{
+    await fetch('/.netlify/functions/notify',{
+      method:'POST',headers:{'Content-Type':'application/json'},
+      body:JSON.stringify({player_ids:adminIds,title:'Nouvelle demande de créneau',message:(CU.first||CU.username)+' souhaite un créneau le '+date+' à '+time+'.'})
+    });
+  }catch(e){console.error(e);}
+}
+async function notifyClientOfSlotRequestUpdate(clientId,title,message){
+  const client=allUsers.find(u=>u.id===clientId);
+  if(!client||!client.onesignal_id)return;
+  try{
+    await fetch('/.netlify/functions/notify',{
+      method:'POST',headers:{'Content-Type':'application/json'},
+      body:JSON.stringify({player_ids:[client.onesignal_id],title,message})
+    });
+  }catch(e){console.error(e);}
+}
+function handleSlotRequestRealtime(row){
+  if(CU&&row.client_id===CU.id&&row.status!=='pending'){
+    let msg=null;
+    if(row.status==='accepted')msg='Bonne nouvelle : ta demande de créneau du '+row.requested_date+' à '+row.requested_time+' a été acceptée, c\'est ajouté à ton calendrier !';
+    else if(row.status==='declined')msg='Désolé, ta demande de créneau du '+row.requested_date+' à '+row.requested_time+' n\'a pas pu être acceptée.'+(row.admin_response?(' '+row.admin_response):'');
+    else if(row.status==='alternatives_proposed')msg='Le créneau demandé n\'était pas disponible, mais voici des alternatives :';
+    if(msg){
+      chatMessages.push({role:'assistant',content:msg});
+      addChatBubble('bot',msg);
+      if(row.status==='alternatives_proposed'&&Array.isArray(row.proposed_alternatives)&&row.proposed_alternatives.length)addChatSlotChips(row.proposed_alternatives,'alternative');
+      if(!document.getElementById('ov-chat').classList.contains('on'))showToast('Réponse à ta demande de créneau 💬');
+    }
+  }
+  if(document.getElementById('s-adm').classList.contains('on')&&admTab==='requests')renderAdmRequests(true);
+}
+
 async function boot(){
   showLoader(true,'Préparation de votre expérience…');
   fillTimeDropdowns();
@@ -857,6 +1128,8 @@ async function boot(){
     const{data:inv}=await sb.from('settings').select('value').eq('key','invite_code').single();
     if(inv)inviteCode=inv.value;
     else{inviteCode=genCode();await sb.from('settings').insert({key:'invite_code',value:inviteCode});}
+    const{data:persona}=await sb.from('settings').select('value').eq('key','chatbot_persona').single();
+    if(persona)chatbotPersona=persona.value;
     const params=new URLSearchParams(location.search);
     const urlInv=params.get('inv');
     if(urlInv&&!CU){document.getElementById('inv-inp').value=urlInv.toUpperCase();sv('v-inv');setTimeout(()=>checkInvite(),300);}
@@ -918,6 +1191,9 @@ function setupRealtime(){
       await loadPayments();
       if(document.getElementById('s-paiement').classList.contains('on'))renderPaiement();
       if(document.getElementById('s-adm').classList.contains('on')&&admTab==='paiement')renderAdminPayments(true);
+    })
+    .on('postgres_changes',{event:'*',schema:'public',table:'slot_requests'},({new:row})=>{
+      if(row)handleSlotRequestRealtime(row);
     })
     .subscribe(status=>{
       if(status==='SUBSCRIBED')setRtStatus(true);
@@ -1264,6 +1540,7 @@ async function enterApp(){
   document.getElementById('logout-btn').style.display='';
   document.getElementById('hdr-tabs').style.display='';
   document.getElementById('bell-btn').style.display='';
+  document.getElementById('chat-fab').style.display='';
   document.getElementById('tab-adm').style.display=CU.is_admin?'':'none';
   if(CU.is_admin)document.getElementById('leg-hidden').style.display='';
   updateBellBadge();
@@ -1511,7 +1788,7 @@ async function toggleSlotVis(id,visible){
 // ── ADMIN ──
 function atab(tab){
   admTab=tab;
-  ['slots','services','stats','paiement','annonces','membres','invite'].forEach(t=>{
+  ['slots','services','stats','paiement','annonces','membres','requests','invite'].forEach(t=>{
     document.getElementById('at-'+t).classList.toggle('on',t===tab);
     document.getElementById('ap-'+t).style.display=t===tab?'':'none';
   });
@@ -1524,6 +1801,7 @@ function renderAdm(){
   else if(admTab==='paiement')renderAdminPayments();
   else if(admTab==='annonces')renderAdmAnnonces();
   else if(admTab==='membres')renderMembres();
+  else if(admTab==='requests')renderAdmRequests();
   else renderAInvite();
 }
 
@@ -1567,6 +1845,73 @@ function renderAdmAnnonces(silent){
       </div>
     </div>`;
   }).join('');
+}
+
+// ── ADMIN DEMANDES DE CRENEAUX ──
+let allSlotRequests=[];
+async function loadSlotRequests(){const{data}=await sb.from('slot_requests').select('*').order('created_at',{ascending:false});allSlotRequests=data||[];}
+async function renderAdmRequests(silent){
+  await loadSlotRequests();
+  const cls=silent?'sli no-anim':'sli';
+  const list=document.getElementById('requests-list');
+  if(!allSlotRequests.length){list.innerHTML='<p style="color:var(--hint);font-size:13px">Aucune demande de créneau.</p>';return;}
+  const statusLabel={pending:'En attente',accepted:'Acceptée',declined:'Refusée',alternatives_proposed:'Alternatives proposées'};
+  const statusClass={pending:'st-p',accepted:'st-f',declined:'st-t',alternatives_proposed:'st-h'};
+  list.innerHTML=allSlotRequests.map(r=>{
+    const client=allUsers.find(u=>u.id===r.client_id);
+    const name=client?(client.first+' '+client.last+' (@'+client.username+')'):'Client';
+    const d=new Date(r.requested_date+'T12:00').toLocaleDateString('fr-FR',{weekday:'short',day:'numeric',month:'short'});
+    const acts=r.status==='pending'?`<div class="sli-actions">
+        <button class="btn btn-green btn-sm" style="font-size:11px;padding:4px 9px" onclick="acceptSlotRequest('${r.id}')">Accepter</button>
+        <button class="btn btn-out btn-sm" style="font-size:11px;padding:4px 9px" onclick="showProposeAltForm('${r.id}')">Proposer autre chose</button>
+        <button class="btn btn-out btn-sm" style="color:var(--red);border-color:var(--red-b);font-size:11px;padding:4px 9px" onclick="declineSlotRequest('${r.id}')">Refuser</button>
+      </div>`:'';
+    return`<div class="${cls}" style="flex-wrap:wrap">
+      <div class="si">${escapeHtml(name)} — ${d} à ${r.requested_time} <span class="st ${statusClass[r.status]||'st-p'}">${statusLabel[r.status]||r.status}</span>
+      ${r.note?('<div style="color:var(--muted);font-size:12px;margin-top:2px">'+escapeHtml(r.note)+'</div>'):''}</div>
+      ${acts}
+      <div id="alt-form-${r.id}" style="display:none;flex-basis:100%;margin-top:8px"></div>
+    </div>`;
+  }).join('');
+}
+async function acceptSlotRequest(id){
+  const r=allSlotRequests.find(x=>x.id===id);if(!r)return;
+  const{error}=await sb.from('slots').insert({date:r.requested_date,time:r.requested_time,booked_by:r.client_id,visible:true,duration_minutes:30,service_id:null,price_charged_cents:null});
+  if(error){showToast('Erreur lors de la création du créneau.');return;}
+  await sb.from('slot_requests').update({status:'accepted',resolved_at:new Date().toISOString()}).eq('id',id);
+  notifyClientOfSlotRequestUpdate(r.client_id,'Créneau confirmé','Ta demande du '+r.requested_date+' à '+r.requested_time+' a été acceptée.');
+  await loadSlots();renderCal();
+  showToast('Créneau ajouté et demande acceptée.');
+  renderAdmRequests(true);
+}
+async function declineSlotRequest(id){
+  const r=allSlotRequests.find(x=>x.id===id);if(!r)return;
+  await sb.from('slot_requests').update({status:'declined',resolved_at:new Date().toISOString()}).eq('id',id);
+  notifyClientOfSlotRequestUpdate(r.client_id,'Réponse à ta demande','Ta demande du '+r.requested_date+' à '+r.requested_time+' n\'a malheureusement pas pu être acceptée.');
+  showToast('Demande refusée.');
+  renderAdmRequests(true);
+}
+function showProposeAltForm(id){
+  const el=document.getElementById('alt-form-'+id);
+  if(!el)return;
+  el.style.display=el.style.display==='none'?'':'none';
+  if(el.style.display!=='none'&&!el.dataset.built){
+    el.dataset.built='1';
+    el.innerHTML=[1,2,3].map(n=>`<div class="fld"><label class="lbl">Alternative ${n}${n>1?' (optionnel)':''}</label><div style="display:flex;gap:6px"><input type="date" class="inp alt-date" style="flex:1"><input type="time" class="inp alt-time" style="flex:1"></div></div>`).join('')
+      +`<button class="btn btn-dark btn-sm" onclick="sendProposedAlternatives('${id}',this)">Envoyer les propositions</button>`;
+  }
+}
+async function sendProposedAlternatives(id,btn){
+  const wrap=btn.parentElement;
+  const dates=[...wrap.querySelectorAll('.alt-date')].map(i=>i.value);
+  const times=[...wrap.querySelectorAll('.alt-time')].map(i=>i.value);
+  const alts=dates.map((d,i)=>d&&times[i]?{date:d,time:times[i]}:null).filter(Boolean);
+  if(!alts.length){showToast('Renseigne au moins une alternative.');return;}
+  const r=allSlotRequests.find(x=>x.id===id);if(!r)return;
+  await sb.from('slot_requests').update({status:'alternatives_proposed',proposed_alternatives:alts,resolved_at:new Date().toISOString()}).eq('id',id);
+  notifyClientOfSlotRequestUpdate(r.client_id,'Alternatives proposées','Le créneau demandé n\'était pas disponible, découvre les alternatives dans le chat.');
+  showToast('Alternatives envoyées.');
+  renderAdmRequests(true);
 }
 
 async function delAnnonce(id){
@@ -1979,6 +2324,15 @@ function renderMembres(){
 function renderAInvite(){
   const link=location.origin+location.pathname+'?inv='+inviteCode;
   document.getElementById('inv-disp').innerHTML=`<span class="inv-code">${inviteCode}</span><span class="inv-link">Lien :<br>${link}</span>`;
+  document.getElementById('persona-inp').value=chatbotPersona||'';
+}
+async function savePersona(){
+  const val=document.getElementById('persona-inp').value.trim();
+  const m=document.getElementById('persona-status');
+  const{error}=await sb.from('settings').upsert({key:'chatbot_persona',value:val});
+  if(error){showMsg(m,'err','Erreur lors de l\'enregistrement.');return;}
+  chatbotPersona=val;
+  showMsg(m,'ok','✓ Ton enregistré.');
 }
 function cpInvite(){
   const link=location.origin+location.pathname+'?inv='+inviteCode;
