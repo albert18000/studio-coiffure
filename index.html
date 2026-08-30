@@ -173,6 +173,16 @@ table.cal{width:100%;min-width:420px;border-collapse:collapse;table-layout:fixed
 .ann-item-exp{font-size:11px;color:var(--hint);margin-top:9px;font-weight:600}
 .ann-item-admin{display:flex;align-items:flex-start;justify-content:space-between;gap:8px}
 
+/* PUSH BANNER */
+.push-banner{display:flex;align-items:flex-start;gap:11px;background:var(--amber-l);border:1px solid var(--amber-b);border-radius:var(--r);padding:14px 14px 14px 15px;margin-bottom:16px;animation:riseIn .3s var(--ease-out) both}
+.push-banner .pb-ico{color:var(--amber);flex-shrink:0;margin-top:1px}
+.push-banner .pb-body{flex:1;min-width:0}
+.push-banner .pb-body strong{display:block;font-size:13.5px;color:var(--tx);margin-bottom:2px}
+.push-banner .pb-body span{display:block;font-size:12px;color:var(--muted);line-height:1.5;margin-bottom:10px}
+.push-banner .pb-acts{display:flex;gap:8px;flex-wrap:wrap}
+.push-banner .pb-close{background:none;border:none;cursor:pointer;color:var(--muted);padding:2px;flex-shrink:0;display:flex;border-radius:6px}
+.push-banner .pb-close:hover{background:rgba(0,0,0,.06)}
+
 /* ADMIN */
 .pg-title{font-size:25px;margin-bottom:20px;letter-spacing:-.02em;font-weight:600}
 .card{background:var(--surface);border:1px solid var(--bdr);border-radius:var(--r);padding:20px;margin-bottom:14px;box-shadow:var(--sh)}
@@ -404,6 +414,18 @@ table.cal{width:100%;min-width:420px;border-collapse:collapse;table-layout:fixed
 
 <!-- CALENDAR -->
 <div id="s-cal" class="scr">
+  <div class="push-banner" id="push-banner" style="display:none">
+    <span class="pb-ico"><svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M6 8a6 6 0 1 1 12 0c0 4 1.4 5.5 2 6.5H4c.6-1 2-2.5 2-6.5Z"/><path d="M9.5 18a2.5 2.5 0 0 0 5 0"/></svg></span>
+    <div class="pb-body">
+      <strong>Activer les notifications ?</strong>
+      <span>Sois prévenu dès qu'un nouveau créneau se libère et reçois un rappel avant ton rendez-vous.</span>
+      <div class="pb-acts">
+        <button class="btn btn-dark btn-sm" onclick="activatePushFromBanner()">Activer</button>
+        <button class="btn btn-out btn-sm" onclick="dismissPushBanner()">Non merci</button>
+      </div>
+    </div>
+    <button class="pb-close" onclick="dismissPushBanner()" title="Fermer" aria-label="Fermer"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 6l12 12M18 6 6 18"/></svg></button>
+  </div>
   <div class="wk-bar">
     <button class="wk-btn" id="prev-wk" onclick="prevW()"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14.5 5 8 12l6.5 7"/></svg></button>
     <div class="wk-title" id="wk-lbl"></div>
@@ -1099,6 +1121,25 @@ function updateOneSignalStatus(){
   const el=document.getElementById('onesignal-status');
   if(!el)return;
   el.textContent=CU?.onesignal_id?'Activées sur cet appareil ✓':'Non activées sur cet appareil';
+  maybeShowPushBanner();
+}
+// Bannière "Activer les notifications" : ne s'affiche qu'une seule fois par utilisateur
+// (mémorisé côté serveur via users.push_prompt_dismissed, pour que ça tienne même en changeant d'appareil).
+function maybeShowPushBanner(){
+  const el=document.getElementById('push-banner');
+  if(!el)return;
+  el.style.display=(CU&&!CU.onesignal_id&&!CU.push_prompt_dismissed)?'flex':'none';
+}
+async function dismissPushBanner(){
+  const el=document.getElementById('push-banner');
+  if(el)el.style.display='none';
+  if(!CU||CU.push_prompt_dismissed)return;
+  await sb.from('users').update({push_prompt_dismissed:true}).eq('id',CU.id);
+  CU={...CU,push_prompt_dismissed:true};
+}
+function activatePushFromBanner(){
+  requestPush();
+  dismissPushBanner();
 }
 
 // ── ANNONCES ──
@@ -1227,6 +1268,7 @@ async function enterApp(){
   if(CU.is_admin)document.getElementById('leg-hidden').style.display='';
   updateBellBadge();
   goTab('cal');
+  maybeShowPushBanner();
   initOneSignal();
   setTimeout(()=>showAnnoncePopup(),800);
 }
@@ -1354,7 +1396,9 @@ function openM(sid){
   if(isHidden&&CU?.is_admin){
     const calBtn=slot.is_manual?`<button class="btn btn-out" onclick="addSlotToCalendarIcs('${slot.id}',true)">${ic('download',15)} Ajouter à mon agenda</button>`:'';
     const visBtn=slot.is_manual?'':`<button class="btn btn-green" onclick="toggleSlotVis('${slot.id}',true)">${ic('eye',15)} Rendre visible</button>`;
-    acts.innerHTML=`${visBtn}
+    const svcBtn=isTaken?`<button class="btn btn-out" onclick="openServicePicker('${slot.id}',false)">${ic('tag',15)} ${svc?'Changer la prestation':'Choisir la prestation'}</button>`:'';
+    acts.innerHTML=`${svcBtn}
+    ${visBtn}
     ${calBtn}
     <button class="btn btn-out" style="color:var(--red);border-color:var(--red-b)" onclick="admDelSlot()">Supprimer</button>
     <button class="btn btn-out" onclick="closeM()">Fermer</button>`;
