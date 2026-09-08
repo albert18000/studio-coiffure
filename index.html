@@ -1707,7 +1707,7 @@ async function doReg(){
     username,first,last,email,is_admin:false,
     notif_available:true,notif_released:true,notif_reminder:true,notif_confirm:true
   }).select().single();
-  if(error||!u){showMsg(m,'err','Erreur. Réessayez.');setBtnLoading('reg-btn',false);return;}
+  if(error||!u){showMsg(m,'err',error&&error.code==='23505'?'Ce pseudo est déjà utilisé.':'Erreur. Réessayez.');setBtnLoading('reg-btn',false);return;}
   CU=u;localStorage.setItem('cb_session',u.id);
   showMsg(m,'ok','Bienvenue '+first+' !');setTimeout(enterApp,700);
 }
@@ -2683,7 +2683,7 @@ async function saveProfil(){
   const updateObj={first,last,email,username};
   if(pendingAvatarDataUrl!==undefined)updateObj.avatar_url=pendingAvatarDataUrl;
   const{error}=await sb.from('users').update(updateObj).eq('id',CU.id);
-  if(error){showMsg(m,'err','Erreur. Réessayez.');return;}
+  if(error){showMsg(m,'err',error.code==='23505'?'Ce pseudo est déjà utilisé.':'Erreur. Réessayez.');return;}
   CU={...CU,...updateObj};
   closeEditProfil();renderProfil();
   document.getElementById('ubadge').innerHTML=CU.is_admin?(ic('crown',12)+' Admin'):'@'+CU.username;
