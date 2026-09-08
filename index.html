@@ -1018,15 +1018,18 @@ Fonctionnalités de l'app que tu dois connaître et pouvoir expliquer + déclenc
 Règles :
 - Quand une action est possible, propose-la ET exécute-la directement via l'outil correspondant plutôt que de simplement expliquer comment faire à la main.
 - N'invente jamais un créneau ou une information — utilise les outils pour vérifier.
-- Reste bref, chaleureux, direct.`;
+- Reste bref, chaleureux, direct.
+- Dates relatives : la date et le jour de la semaine actuels sont fournis plus bas (section "Aujourd'hui"). Avant tout appel d'outil impliquant une date, résous mentalement toute expression relative en date exacte YYYY-MM-DD à partir de cette référence — "demain" = jour suivant, "samedi" (sans précision) = le samedi de la semaine en cours s'il n'est pas encore passé, sinon celui de la semaine suivante, "dans 3 jours" = +3 jours, etc. Ne jamais transmettre une expression relative telle quelle à un outil (date, from_date, to_date) — toujours la date résolue.`;
 }
 function buildChatSystemPrompt(){
   const persona=chatbotPersona&&chatbotPersona.trim()?chatbotPersona.trim():'Ton par défaut : chaleureux, direct, tutoiement, peu d\'emoji.';
   const servicesList=(allServices||[]).filter(s=>s.active!==false).map(s=>'- '+s.name+' : '+(s.price_cents/100).toFixed(2)+'€').join('\n')||'(aucune prestation configurée pour le moment)';
   const paymentsList=(allPayments||[]).filter(p=>p.active!==false).map(p=>'- '+p.title+' : '+p.description).join('\n')||'(aucun moyen de paiement configuré pour le moment)';
+  const now=new Date();
+  const todayLine='Aujourd\'hui : '+now.toLocaleDateString('fr-FR',{weekday:'long',day:'numeric',month:'long',year:'numeric'})+' (format date exacte à utiliser dans les outils : '+dk(now)+').';
   return [
     {type:'text',text:chatKnowledgeBase()+'\n\nStyle/ton à adopter :\n'+persona,cache_control:{type:'ephemeral'}},
-    {type:'text',text:'Prestations actuelles (source exacte, ne pas en inventer d\'autres) :\n'+servicesList+'\n\nMoyens de paiement actuels (source exacte, ne pas en inventer d\'autres) :\n'+paymentsList}
+    {type:'text',text:todayLine+'\n\nPrestations actuelles (source exacte, ne pas en inventer d\'autres) :\n'+servicesList+'\n\nMoyens de paiement actuels (source exacte, ne pas en inventer d\'autres) :\n'+paymentsList}
   ];
 }
 function openChat(){
