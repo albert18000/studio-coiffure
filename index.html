@@ -520,6 +520,10 @@ table.cal{width:100%;min-width:420px;border-collapse:collapse;table-layout:fixed
       <button class="btn btn-out btn-sm" onclick="requestPush()">Activer</button>
     </div>
   </div>
+  <div class="card" id="my-requests-card" style="display:none">
+    <h3><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M21 11.5a8.4 8.4 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.4 8.4 0 0 1-3.8-.9L3 21l1.9-5.7a8.4 8.4 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.4 8.4 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"/></svg> Mes demandes de créneaux</h3>
+    <div id="my-requests-list"></div>
+  </div>
   <div class="card">
     <h3><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M8 6h13M8 12h13M8 18h13M3 6h.01M3 12h.01M3 18h.01"/></svg> Mes réservations</h3>
     <div id="hist-list"></div>
@@ -1188,6 +1192,9 @@ async function notifyClientOfSlotRequestUpdate(clientId,title,message){
   }catch(e){console.error(e);}
 }
 function handleSlotRequestRealtime(row){
+  if(CU&&row.client_id===CU.id){
+    renderMySlotRequests();
+  }
   if(CU&&row.client_id===CU.id&&row.status!=='pending'){
     let msg=null;
     if(row.status==='accepted')msg='Bonne nouvelle : ta demande de créneau du '+row.requested_date+' à '+row.requested_time+' a été acceptée, c\'est ajouté à ton calendrier !';
@@ -1201,6 +1208,33 @@ function handleSlotRequestRealtime(row){
     }
   }
   if(document.getElementById('s-adm').classList.contains('on')&&admTab==='requests')renderAdmRequests(true);
+}
+async function renderMySlotRequests(){
+  if(!CU)return;
+  const card=document.getElementById('my-requests-card');
+  const list=document.getElementById('my-requests-list');
+  if(!card||!list)return;
+  const{data}=await sb.from('slot_requests').select('*').eq('client_id',CU.id).order('created_at',{ascending:false});
+  const rows=data||[];
+  if(!rows.length){card.style.display='none';return;}
+  card.style.display='';
+  const statusLabel={pending:'En attente',accepted:'Acceptée',declined:'Refusée',alternatives_proposed:'Alternatives proposées'};
+  const statusClass={pending:'st-p',accepted:'st-f',declined:'st-t',alternatives_proposed:'st-h'};
+  list.innerHTML=rows.map(r=>{
+    const d=new Date(r.requested_date+'T12:00').toLocaleDateString('fr-FR',{weekday:'short',day:'numeric',month:'short'});
+    let extra='';
+    if(r.status==='declined'&&r.admin_response)extra=`<div style="font-size:12px;color:var(--muted);margin-top:3px">${escapeHtml(r.admin_response)}</div>`;
+    if(r.status==='alternatives_proposed'&&Array.isArray(r.proposed_alternatives)&&r.proposed_alternatives.length){
+      extra='<div class="chat-slots" style="margin-top:6px">'+r.proposed_alternatives.map(a=>`<button class="chat-slot-chip" onclick="confirmProposedAlt('${a.date}','${a.time}')">${a.date} à ${a.time}</button>`).join('')+'</div>';
+    }
+    return`<div class="sli" style="flex-wrap:wrap"><div class="si">${d} à ${r.requested_time} <span class="st ${statusClass[r.status]||'st-p'}">${statusLabel[r.status]||r.status}</span>${extra}</div></div>`;
+  }).join('');
+}
+async function confirmProposedAlt(date,time){
+  if(!CU)return;
+  await sb.from('slot_requests').insert({client_id:CU.id,requested_date:date,requested_time:time,note:'Confirmation d\'une alternative proposée'});
+  showToast('Créneau confirmé, transmis à l\'administrateur.');
+  renderMySlotRequests();
 }
 
 // ── RECOMMANDATION COIFFURE ──
@@ -1733,7 +1767,7 @@ function goTab(tab){
   ['cal','paiement','profil','adm'].forEach(t=>{const btn=document.getElementById('tab-'+t);if(btn)btn.classList.toggle('on',t===tab);});
   if(tab==='cal'){showScr('s-cal');renderCal();}
   else if(tab==='paiement'){showScr('s-paiement');renderPaiement();}
-  else if(tab==='profil'){showScr('s-profil');renderProfil();}
+  else if(tab==='profil'){showScr('s-profil');renderProfil();renderMySlotRequests();}
   else{showScr('s-adm');renderAdm();}
 }
 
