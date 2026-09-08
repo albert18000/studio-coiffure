@@ -1006,7 +1006,7 @@ Fonctionnalités de l'app que tu dois connaître et pouvoir expliquer + déclenc
 - Annuler une réservation : tu peux le faire directement (cancel_my_booking).
 - Notifications : tu peux les activer directement (enable_notifications) — nouveaux créneaux, rappels, confirmations.
 - Prix / tarifs : si le client demande "combien ça coûte" ou le prix d'une prestation, énumère TOUTES les prestations disponibles avec leur prix exact (liste fournie plus bas, section "Prestations actuelles").
-- Moyens de paiement : onglet Paiement.
+- Moyens de paiement : il n'y a pas de paiement en ligne dans l'app. Si le client demande comment payer, cite directement les moyens disponibles (liste fournie plus bas, section "Moyens de paiement actuels") plutôt que de juste renvoyer vers l'onglet Paiement.
 - Profil : onglet Profil (infos personnelles, photo).
 - Créneau hors disponibilité : si aucun créneau ne convient, transmets une demande précise (date+heure) à l'administrateur via request_off_hours_slot. Explique que la réponse arrivera dans ce chat (acceptée, refusée, ou avec des alternatives proposées).
 - Si le client confirme vouloir un des créneaux alternatifs qu'un administrateur lui a proposés suite à une demande précédente, transmets une nouvelle demande via request_off_hours_slot avec cette date/heure (l'administrateur n'aura qu'à l'accepter en un clic).
@@ -1019,9 +1019,10 @@ Règles :
 function buildChatSystemPrompt(){
   const persona=chatbotPersona&&chatbotPersona.trim()?chatbotPersona.trim():'Ton par défaut : chaleureux, direct, tutoiement, peu d\'emoji.';
   const servicesList=(allServices||[]).filter(s=>s.active!==false).map(s=>'- '+s.name+' : '+(s.price_cents/100).toFixed(2)+'€').join('\n')||'(aucune prestation configurée pour le moment)';
+  const paymentsList=(allPayments||[]).filter(p=>p.active!==false).map(p=>'- '+p.title+' : '+p.description).join('\n')||'(aucun moyen de paiement configuré pour le moment)';
   return [
     {type:'text',text:chatKnowledgeBase()+'\n\nStyle/ton à adopter :\n'+persona,cache_control:{type:'ephemeral'}},
-    {type:'text',text:'Prestations actuelles (source exacte, ne pas en inventer d\'autres) :\n'+servicesList}
+    {type:'text',text:'Prestations actuelles (source exacte, ne pas en inventer d\'autres) :\n'+servicesList+'\n\nMoyens de paiement actuels (source exacte, ne pas en inventer d\'autres) :\n'+paymentsList}
   ];
 }
 function openChat(){
