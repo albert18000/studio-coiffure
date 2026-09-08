@@ -1639,9 +1639,13 @@ function getActiveAnnonces(){
   return allAnnonces.filter(a=>a.expires_at>=today);
 }
 
+function annSeenKey(){return CU?('cb_ann_seen_at_'+CU.id):null;}
 function updateBellBadge(){
   const active=getActiveAnnonces();
-  document.getElementById('bell-badge').classList.toggle('on',active.length>0);
+  const key=annSeenKey();
+  const seenAt=key?(localStorage.getItem(key)||'1970-01-01'):'1970-01-01';
+  const hasUnseen=active.some(a=>(a.created_at||'')>seenAt);
+  document.getElementById('bell-badge').classList.toggle('on',hasUnseen);
 }
 
 function openAnnonces(){
@@ -1660,6 +1664,8 @@ function openAnnonces(){
     }).join('');
   }
   openOverlay('ov-ann');
+  const key=annSeenKey();
+  if(key){localStorage.setItem(key,new Date().toISOString());updateBellBadge();}
 }
 function closeAnnonces(){closeOverlay('ov-ann');}
 
