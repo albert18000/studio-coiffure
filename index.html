@@ -1005,6 +1005,7 @@ Fonctionnalités de l'app que tu dois connaître et pouvoir expliquer + déclenc
 - Réserver un créneau : onglet Calendrier, case verte = libre. Tu peux lister les créneaux libres (list_available_slots) et réserver directement (book_slot).
 - Annuler une réservation : tu peux le faire directement (cancel_my_booking).
 - Notifications : tu peux les activer directement (enable_notifications) — nouveaux créneaux, rappels, confirmations.
+- Prix / tarifs : si le client demande "combien ça coûte" ou le prix d'une prestation, énumère TOUTES les prestations disponibles avec leur prix exact (liste fournie plus bas, section "Prestations actuelles").
 - Moyens de paiement : onglet Paiement.
 - Profil : onglet Profil (infos personnelles, photo).
 - Créneau hors disponibilité : si aucun créneau ne convient, transmets une demande précise (date+heure) à l'administrateur via request_off_hours_slot. Explique que la réponse arrivera dans ce chat (acceptée, refusée, ou avec des alternatives proposées).
@@ -1017,7 +1018,11 @@ Règles :
 }
 function buildChatSystemPrompt(){
   const persona=chatbotPersona&&chatbotPersona.trim()?chatbotPersona.trim():'Ton par défaut : chaleureux, direct, tutoiement, peu d\'emoji.';
-  return [{type:'text',text:chatKnowledgeBase()+'\n\nStyle/ton à adopter :\n'+persona,cache_control:{type:'ephemeral'}}];
+  const servicesList=(allServices||[]).filter(s=>s.active!==false).map(s=>'- '+s.name+' : '+(s.price_cents/100).toFixed(2)+'€').join('\n')||'(aucune prestation configurée pour le moment)';
+  return [
+    {type:'text',text:chatKnowledgeBase()+'\n\nStyle/ton à adopter :\n'+persona,cache_control:{type:'ephemeral'}},
+    {type:'text',text:'Prestations actuelles (source exacte, ne pas en inventer d\'autres) :\n'+servicesList}
+  ];
 }
 function openChat(){
   if(!chatMessages.length)addChatBubble('bot',"Salut ! Je suis là pour t'aider avec l'app ou pour transmettre une demande de créneau. Comment je peux t'aider ?");
