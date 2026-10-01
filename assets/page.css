@@ -1,28 +1,15 @@
-/* Pages statiques (confidentialité, mentions légales, 404). Mêmes variables que index.html, voir DESIGN.md */
+/* Page 404. Mêmes variables que index.html, voir DESIGN.md */
 @font-face{font-family:'Libre Franklin';font-style:normal;font-weight:400 800;font-display:swap;src:url(fonts/lf-latin-ext.woff2) format('woff2');unicode-range:U+0100-02BA,U+02BD-02C5,U+02C7-02CC,U+02CE-02D7,U+02DD-02FF,U+0304,U+0308,U+0329,U+1D00-1DBF,U+1E00-1E9F,U+1EF2-1EFF,U+2020,U+20A0-20AB,U+20AD-20C0,U+2113,U+2C60-2C7F,U+A720-A7FF}
 @font-face{font-family:'Libre Franklin';font-style:normal;font-weight:400 800;font-display:swap;src:url(fonts/lf-latin.woff2) format('woff2');unicode-range:U+0000-00FF,U+0131,U+0152-0153,U+02BB-02BC,U+02C6,U+02DA,U+02DC,U+0304,U+0308,U+0329,U+2000-206F,U+20AC,U+2122,U+2191,U+2193,U+2212,U+2215,U+FEFF,U+FFFD}
 *{box-sizing:border-box;margin:0;padding:0}
-:root{--bg:#0C0820;--tx:#F4EFFC;--muted:rgba(244,239,252,.68);--acc:#D9C6FF;--cta:#F4EFFF;--on-cta:#1A1035;--f1:rgba(255,255,255,.05);--l1:rgba(255,255,255,.14);--l2:rgba(255,255,255,.28);--r:14px;--warn:#F0C36B;--warn-bg:rgba(240,195,107,.18);--warn-line:rgba(240,195,107,.42)}
+:root{--bg:#0C0820;--tx:#F4EFFC;--muted:rgba(244,239,252,.68);--acc:#D9C6FF;--cta:#F4EFFF;--on-cta:#1A1035;--r:14px}
 html{color-scheme:dark}
 body{font-family:'Libre Franklin',sans-serif;background:var(--bg);color:var(--tx);font-size:15px;line-height:1.6;-webkit-font-smoothing:antialiased}
 .pg-bar{display:flex;align-items:center;justify-content:space-between;gap:16px;max-width:720px;margin:0 auto;padding:20px 16px}
 .pg-brand{font-weight:800;font-size:15px;letter-spacing:.2em;color:var(--acc);text-decoration:none}
-.pg-back{font-size:13px;font-weight:600;color:var(--tx);text-decoration:none;border:1px solid var(--l2);border-radius:var(--r);padding:12px 16px;min-height:44px;display:inline-flex;align-items:center}
-.pg-back:hover{background:var(--f1)}
-main{max-width:720px;margin:0 auto;padding:16px 16px 64px}
 h1{font-size:28px;font-weight:700;line-height:1.2;margin-bottom:8px}
-h2{font-size:19px;font-weight:700;margin:32px 0 8px}
 p,li{color:var(--muted);margin-bottom:12px}
-p strong,li strong{color:var(--tx);font-weight:600}
-ul{padding-left:20px;margin-bottom:12px}
 a{color:var(--acc)}
-.lead{font-size:15px;margin-bottom:24px}
-.todo{background:var(--warn-bg);border:1px solid var(--warn-line);color:var(--warn);border-radius:var(--r);padding:12px 16px;font-size:13px;margin-bottom:24px}
-.tbl{width:100%;border-collapse:collapse;margin-bottom:16px;font-size:13px}
-.tbl th,.tbl td{text-align:left;vertical-align:top;padding:12px;border:1px solid var(--l1);color:var(--muted)}
-.tbl th{color:var(--tx);font-weight:600;background:var(--f1)}
-.tbl-wrap{overflow-x:auto}
-.pg-foot{max-width:720px;margin:0 auto;padding:24px 16px 48px;border-top:1px solid var(--l1);display:flex;flex-wrap:wrap;gap:16px;font-size:13px}
 .center{min-height:70vh;display:flex;flex-direction:column;justify-content:center;align-items:flex-start;gap:16px;max-width:720px;margin:0 auto;padding:16px}
 .btn{display:inline-flex;align-items:center;min-height:48px;padding:0 24px;background:var(--cta);color:var(--on-cta);border-radius:var(--r);font-weight:600;text-decoration:none}
 @media(prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}

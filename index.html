@@ -343,7 +343,8 @@ table.cal{width:100%;min-width:420px;border-collapse:collapse;table-layout:fixed
 @media(max-width:480px){
   .scr{padding:18px 14px calc(84px + env(safe-area-inset-bottom))}.hdr{padding:0 14px;height:54px}
   .auth-card{padding:26px 18px;border-radius:var(--r)}
-  .cal th .dn{font-size:14px}.wk-title{font-size:15px}.sc{min-height:40px}
+  .cal th .dn{font-size:14px}.wk-title{font-size:15px}.sc{min-height:40px;padding:2px 1px}
+  table.cal{min-width:0}.cal td.tc{width:38px;padding-right:3px}.cal td{padding-left:2px;padding-right:2px}.sl{letter-spacing:-.02em}
 }
 
 @media(hover:hover) and (pointer:fine){
@@ -455,6 +456,7 @@ table.cal,.cal th{background:transparent}
 
 /* Accueil (référence : maquette fournie) */
 body.auth-mode .hdr,body.auth-mode .hdr-tabs,body.auth-mode .chat-fab{display:none!important}
+body:has(.ov.on) .chat-fab{visibility:hidden}
 #s-auth{max-width:none;padding:0;margin:0}
 .hero{position:relative;min-height:100vh;min-height:100svh;display:flex;flex-direction:column;color:var(--white);isolation:isolate;overflow:hidden;background:var(--bg)}
 .hero-bg{position:absolute;inset:0;z-index:-1;display:none;background:center/cover no-repeat}
@@ -478,9 +480,6 @@ body.auth-mode .hdr,body.auth-mode .hdr-tabs,body.auth-mode .chat-fab{display:no
 .hero-btn-solid{background:var(--cta);color:var(--on-cta)}
 .hero-btn-glass{background:var(--f3);border-color:var(--l2);color:var(--white);-webkit-backdrop-filter:blur(14px);backdrop-filter:blur(14px)}
 @media(hover:hover) and (pointer:fine){.hero-btn-solid:hover{background:var(--white)}.hero-btn-glass:hover{background:var(--f4)}}
-.legal-links{display:flex;gap:16px;flex-wrap:wrap;margin-top:12px;font-size:13px}
-.legal-links a{color:var(--muted);text-decoration:underline;text-underline-offset:3px;display:inline-flex;align-items:center;min-height:32px}
-.legal-links a:hover{color:var(--tx)}
 .hero-note{margin-top:14px;font-size:13px;color:var(--muted);max-width:44ch}
 .hero-cards{display:flex;gap:12px;flex-wrap:wrap}
 .hero-card{display:flex;align-items:center;gap:14px;padding:16px 18px;background:var(--f3);border:1px solid var(--l2);border-top-color:var(--l3);-webkit-backdrop-filter:blur(20px) saturate(170%);backdrop-filter:blur(20px) saturate(170%);box-shadow:inset 0 1px 0 var(--f4);flex:1 1 230px;max-width:290px}
@@ -555,7 +554,6 @@ body.auth-mode .hdr,body.auth-mode .hdr-tabs,body.auth-mode .chat-fab{display:no
             <button class="hero-btn hero-btn-glass" onclick="sv('v-inv')">J'ai une invitation</button>
           </div>
           <p class="hero-note">L'inscription se fait avec un code d'invitation.</p>
-          <p class="legal-links"><a href="confidentialite.html">Confidentialité</a><a href="mentions-legales.html">Mentions légales</a></p>
         </div>
         <div class="hero-cards">
           <div class="hero-card"><span class="hero-card-ico"><svg width="20" height="20" viewBox="0 0 256 256" fill="currentColor" aria-hidden="true"><path d="M208,32H184V24a8,8,0,0,0-16,0v8H88V24a8,8,0,0,0-16,0v8H48A16,16,0,0,0,32,48V208a16,16,0,0,0,16,16H208a16,16,0,0,0,16-16V48A16,16,0,0,0,208,32ZM72,48v8a8,8,0,0,0,16,0V48h80v8a8,8,0,0,0,16,0V48h24V80H48V48ZM208,208H48V96H208V208Z"/></svg></span><div><strong>Sans appeler</strong><span class="t">Les créneaux libres s'affichent en direct.</span></div></div>
@@ -624,7 +622,7 @@ body.auth-mode .hdr,body.auth-mode .hdr-tabs,body.auth-mode .chat-fab{display:no
   <div class="rt-bar"><span class="rt-dot" id="rt-dot"></span><span id="rt-txt">Connexion…</span></div>
   <div class="legend">
     <div class="leg"><div class="lsq" style="background:var(--green)"></div>Disponible</div>
-    <div class="leg"><div class="lsq" style="background:var(--red)"></div>Réservé</div>
+    <div class="leg"><div class="lsq" style="background:var(--red)"></div>Pris</div>
     <div class="leg"><div class="lsq" style="background:var(--amber)"></div>Ma réservation</div>
     <div class="leg" id="leg-hidden" style="display:none"><div class="lsq" style="background:var(--purple)"></div>Caché</div>
   </div>
@@ -681,7 +679,6 @@ body.auth-mode .hdr,body.auth-mode .hdr-tabs,body.auth-mode .chat-fab{display:no
     <h3>Mes réservations</h3>
     <div id="hist-list"></div>
   </div>
-  <p class="legal-links" style="margin-top:8px"><a href="confidentialite.html">Confidentialité</a><a href="mentions-legales.html">Mentions légales</a></p>
 </div>
 
 <!-- COUPE IDEALE -->
@@ -1985,7 +1982,7 @@ function renderCal(){
           }
           else if(isPastDay&&!isAdm){html+=`<td><div class="sc past-slot"><span class="sl p">·</span></div></td>`;}
           else if(isMine){html+=`<td><div class="sc mine" onclick="openM('${slot.id}')"><span class="sl m">Moi</span></div></td>`;}
-          else if(isTaken){const bkr=allUsers.find(u=>u.id===slot.booked_by);html+=`<td><div class="sc taken"${isAdm?` onclick="openM('${slot.id}')"`:''}><span class="sl t">${isAdm?'@'+(bkr?.username||'?'):'Réservé'}</span></div></td>`;}
+          else if(isTaken){const bkr=allUsers.find(u=>u.id===slot.booked_by);html+=`<td><div class="sc taken"${isAdm?` onclick="openM('${slot.id}')"`:''}><span class="sl t">${isAdm?'@'+(bkr?.username||'?'):'Pris'}</span></div></td>`;}
           else{html+=`<td><div class="sc free" onclick="openM('${slot.id}')"><span class="sl f">${t}</span></div></td>`;}
         }
       });
@@ -2080,7 +2077,7 @@ async function confirmBook(){
   if(fresh.booked_by){closeM();showAlert('zap','Déjà réservé','Ce créneau vient d\'être réservé.');return;}
   await sb.from('slots').update({booked_by:CU.id}).eq('id',pendSlot).is('booked_by',null);
   const{data:check}=await sb.from('slots').select('booked_by').eq('id',pendSlot).single();
-  if(check?.booked_by!==CU.id){closeM();showAlert('zap','Déjà réservé','Réservé au même moment.');return;}
+  if(check?.booked_by!==CU.id){closeM();showAlert('zap','Déjà pris',"Quelqu'un l'a réservé juste avant toi.");return;}
   allSlots=allSlots.map(s=>s.id===pendSlot?{...s,booked_by:CU.id}:s);
   const bookedId=pendSlot;
   closeM();showToast('Créneau réservé.');renderCal();

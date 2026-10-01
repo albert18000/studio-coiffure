@@ -101,5 +101,5 @@ Avec « réduire les animations » activé dans le système, plus aucune animati
 - Favicon : `favicon.ico` (16 et 32 px), `assets/icons/icon.svg`, `apple-touch-icon.png` (180 px), `icon-192.png`, `icon-512.png`, déclarés dans `manifest.webmanifest`.
 - Image de partage : `assets/og.png` (1200 × 630), texte seul, sans portrait.
 - Portrait d'accueil : `assets/hero.jpg` est une image générée, provisoire. À remplacer par une vraie photo.
-- Pages : `index.html`, `confidentialite.html`, `mentions-legales.html`, `404.html`. Styles des pages statiques dans `assets/page.css`, mêmes variables.
+- Pages : `index.html` et `404.html`. Styles de la page 404 dans `assets/page.css`, mêmes variables.
 - `netlify.toml` masque `plans/`, `.claude/`, `netlify/`, `DESIGN.md` et fixe les en-têtes de sécurité.
