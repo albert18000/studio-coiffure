@@ -46,9 +46,8 @@ button,input,select,textarea{font-family:inherit}
 .loader-brand{font-family:'Libre Franklin',sans-serif;font-size:32px;color:var(--acc)}
 .loader-txt{font-size:12px;color:var(--muted)}
 
-.rt-dot{width:7px;height:7px;border-radius:var(--r);background:var(--green);display:inline-block;margin-right:4px;animation:pulse 2s infinite}
-.rt-dot.off{background:var(--hint);animation:none}
-@keyframes pulse{0%,100%{opacity:1}50%{opacity:.35}}
+.rt-dot{width:7px;height:7px;border-radius:var(--r);background:var(--green);display:inline-block;margin-right:4px}
+.rt-dot.off{background:var(--hint)}
 
 /* HDR */
 .hdr{background:var(--bg);border-bottom:1px solid var(--l1);padding:0 18px;height:58px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:200;gap:8px}
@@ -80,7 +79,7 @@ button,input,select,textarea{font-family:inherit}
 .auth-card h1{font-size:27px;margin-bottom:6px;font-weight:600}
 .auth-card .sub{color:var(--muted);font-size:13px;margin-bottom:28px;line-height:1.6}
 label.lbl{display:block;font-size:11px;font-weight:700;color:var(--muted);margin-bottom:6px}
-input.inp,select.inp,textarea.inp{width:100%;padding:11px 14px;border:1px solid var(--l1);border-radius:var(--r);font-size:14px;outline:none;background:var(--f2);color:var(--tx);transition:border .2s var(--ease-out),box-shadow .2s var(--ease-out);-webkit-appearance:none}
+input.inp,select.inp,textarea.inp{width:100%;padding:11px 14px;border:1px solid var(--l1);border-radius:var(--r);font-size:14px;outline:none;background:var(--f2);color:var(--tx);transition:border .15s var(--ease-out),box-shadow .15s var(--ease-out);-webkit-appearance:none}
 input.inp:focus,select.inp:focus,textarea.inp:focus{border-color:var(--acc);box-shadow:0 0 0 3px var(--acc-bg)}
 textarea.inp{resize:vertical;min-height:84px;line-height:1.5}
 .fld{margin-bottom:14px}
@@ -96,7 +95,7 @@ textarea.inp{resize:vertical;min-height:84px;line-height:1.5}
 .link{background:none;border:none;color:var(--acc);cursor:pointer;font-size:13px;font-weight:700}
 .auth-ft{text-align:center;margin-top:16px;font-size:13px;color:var(--muted)}
 .msg{padding:10px 14px;border-radius:var(--r);font-size:13px;margin-bottom:12px;display:none;line-height:1.5}
-.msg.on{display:block;animation:riseIn .25s var(--ease-out) both}
+.msg.on{display:block;animation:riseIn .2s var(--ease-out) both}
 .msg.err{background:var(--red-l);color:var(--red);border:1px solid var(--red-b)}
 .msg.ok{background:var(--green-l);color:var(--green);border:1px solid var(--green-b)}
 
@@ -106,8 +105,6 @@ textarea.inp{resize:vertical;min-height:84px;line-height:1.5}
 .wk-btn{width:38px;height:38px;border-radius:var(--r);border:1px solid var(--l1);background:var(--f2);cursor:pointer;display:flex;align-items:center;justify-content:center;flex-shrink:0;color:var(--tx)}
 .wk-btn:disabled{opacity:.3;cursor:not-allowed}
 .rt-bar{display:flex;align-items:center;justify-content:flex-end;margin-bottom:12px;font-size:11px;color:var(--hint);gap:4px}
-@keyframes flash{0%{opacity:.4}100%{opacity:1}}
-.cal-flash{animation:flash .4s var(--ease-out)}
 
 /* CALENDAR */
 .cal-scroll{overflow-x:auto;-webkit-overflow-scrolling:touch;border-radius:var(--r);border:1px solid var(--l1);background:var(--f2)}
@@ -119,7 +116,7 @@ table.cal{width:100%;min-width:420px;border-collapse:collapse;table-layout:fixed
 .cal th.past-col .dn{color:var(--hint)}
 .cal td{padding:3px;vertical-align:middle}
 .cal td.tc{width:42px;font-size:10.5px;color:var(--hint);text-align:right;padding:2px 5px 2px 2px;white-space:nowrap;font-weight:600}
-.sc{min-height:44px;border-radius:var(--r);display:flex;align-items:center;justify-content:center;transition:background .2s var(--ease-out),border .2s var(--ease-out);cursor:default;padding:2px}
+.sc{min-height:44px;border-radius:var(--r);display:flex;align-items:center;justify-content:center;transition:background .15s var(--ease-out),border .15s var(--ease-out);cursor:default;padding:2px}
 .sc.free{background:var(--green-l);cursor:pointer;border:1px solid var(--green-b)}
 .sc.taken{background:var(--red-l);border:1px solid var(--red-b)}
 .sc.mine{background:var(--amber-l);border:1px solid var(--amber-b);cursor:pointer}
@@ -134,34 +131,32 @@ table.cal{width:100%;min-width:420px;border-collapse:collapse;table-layout:fixed
 .lsq{width:9px;height:9px;border-radius:var(--r);flex-shrink:0}
 
 /* MODALS */
-.ov{display:flex;position:fixed;inset:0;background:var(--scrim);z-index:500;align-items:flex-end;justify-content:center;opacity:0;visibility:hidden;pointer-events:none;transition:opacity .28s var(--ease-out),visibility 0s linear .28s}
+.ov{display:flex;position:fixed;inset:0;background:var(--scrim);z-index:500;align-items:flex-end;justify-content:center;opacity:0;visibility:hidden;pointer-events:none;transition:opacity .22s var(--ease-out),visibility 0s linear .22s}
 @media(min-width:480px){.ov{align-items:center}}
 .ov.on{opacity:1;visibility:visible;pointer-events:auto;transition:opacity .22s var(--ease-out),visibility 0s linear 0s}
-.modal{background:var(--f2);border-radius:var(--r) var(--r) 0 0;padding:28px 24px 34px;width:100%;max-width:410px;position:relative;animation:su .38s var(--ease-out);max-height:90vh;overflow-y:auto;transform-origin:center}
-@media(min-width:480px){.modal{border-radius:var(--r);padding-bottom:28px;animation:pi .3s var(--ease-out)}}
-.ov.closing .modal,.ov.closing .alert-modal,.ov.closing .ann-popup{animation:sd .24s var(--ease-in-out) forwards!important}
-@media(min-width:480px){.ov.closing .modal,.ov.closing .alert-modal,.ov.closing .ann-popup{animation:po .2s var(--ease-in-out) forwards!important}}
-@keyframes su{from{transform:translateY(60px);opacity:0}60%{transform:translateY(-4px)}to{transform:translateY(0);opacity:1}}
-@keyframes pi{from{transform:scale(.94);opacity:0}60%{transform:scale(1.012)}to{transform:scale(1);opacity:1}}
-@keyframes sd{from{transform:translateY(0);opacity:1}to{transform:translateY(50px);opacity:0}}
-@keyframes po{from{transform:scale(1);opacity:1}to{transform:scale(.96);opacity:0}}
+.modal{background:var(--f2);border-radius:var(--r) var(--r) 0 0;padding:28px 24px 34px;width:100%;max-width:410px;position:relative;animation:su .22s var(--ease-out);max-height:90vh;overflow-y:auto;transform-origin:center}
+@media(min-width:480px){.modal{border-radius:var(--r);padding-bottom:28px;animation:pi .22s var(--ease-out)}}
+.ov.closing .modal,.ov.closing .alert-modal,.ov.closing .ann-popup{animation:sd .22s var(--ease-in-out) forwards!important}
+@media(min-width:480px){.ov.closing .modal,.ov.closing .alert-modal,.ov.closing .ann-popup{animation:po .22s var(--ease-in-out) forwards!important}}
+@keyframes su{from{transform:translateY(24px);opacity:0}to{transform:translateY(0);opacity:1}}
+@keyframes pi{from{transform:translateY(24px);opacity:0}to{transform:translateY(0);opacity:1}}
+@keyframes sd{from{transform:translateY(0);opacity:1}to{transform:translateY(24px);opacity:0}}
+@keyframes po{from{transform:translateY(0);opacity:1}to{transform:translateY(24px);opacity:0}}
 .modal h3{font-size:19px;margin-bottom:5px}
 .modal .ms{font-size:13px;color:var(--muted);margin-bottom:20px;line-height:1.55}
 .modal-acts{display:flex;flex-direction:column;gap:8px}
 .mx{position:absolute;top:14px;right:15px;background:var(--f2);border:none;border-radius:var(--r);width:30px;height:30px;cursor:pointer;display:flex;align-items:center;justify-content:center;color:var(--muted)}
-.alert-modal{background:var(--f2);border-radius:var(--r) var(--r) 0 0;padding:30px 24px 34px;width:100%;max-width:380px;position:relative;animation:su .38s var(--ease-out);text-align:center;transform-origin:center}
-@media(min-width:480px){.alert-modal{border-radius:var(--r);padding-bottom:28px;animation:pi .3s var(--ease-out)}}
-.alert-icon{width:52px;height:52px;border-radius:var(--r);background:var(--f2);color:var(--acc);display:flex;align-items:center;justify-content:center;margin:0 auto 14px}
+.alert-modal{background:var(--f2);border-radius:var(--r) var(--r) 0 0;padding:30px 24px 34px;width:100%;max-width:380px;position:relative;animation:su .22s var(--ease-out);text-align:center;transform-origin:center}
+@media(min-width:480px){.alert-modal{border-radius:var(--r);padding-bottom:28px;animation:pi .22s var(--ease-out)}}
 .alert-modal h3{font-size:19px;margin-bottom:8px}
 .alert-modal p{font-size:13px;color:var(--muted);margin-bottom:22px;line-height:1.6}
 
 /* ANNONCE POPUP */
-.ann-popup{background:var(--f2);border-radius:var(--r) var(--r) 0 0;padding:28px 24px 34px;width:100%;max-width:430px;position:relative;animation:su .38s var(--ease-out);max-height:85vh;overflow-y:auto;transform-origin:center}
-@media(min-width:480px){.ann-popup{border-radius:var(--r);padding-bottom:28px;animation:pi .3s var(--ease-out)}}
+.ann-popup{background:var(--f2);border-radius:var(--r) var(--r) 0 0;padding:28px 24px 34px;width:100%;max-width:430px;position:relative;animation:su .22s var(--ease-out);max-height:85vh;overflow-y:auto;transform-origin:center}
+@media(min-width:480px){.ann-popup{border-radius:var(--r);padding-bottom:28px;animation:pi .22s var(--ease-out)}}
 .ann-header{display:flex;align-items:center;gap:11px;margin-bottom:18px}
-.ann-header-icon{width:36px;height:36px;border-radius:var(--r);background:var(--acc-bg);color:var(--acc);display:flex;align-items:center;justify-content:center;flex-shrink:0}
 .ann-header h3{font-size:19px;flex:1}
-.ann-item{background:var(--acc-bg);border:1px solid var(--acc-line);border-radius:var(--r);padding:15px;margin-bottom:10px;animation:riseIn .3s var(--ease-out) both}
+.ann-item{background:var(--acc-bg);border:1px solid var(--acc-line);border-radius:var(--r);padding:15px;margin-bottom:10px;animation:riseIn .2s var(--ease-out) both}
 .ann-item:last-child{margin-bottom:0}
 .ann-item-title{font-weight:700;font-size:14px;color:var(--acc);margin-bottom:6px;display:flex;align-items:center;gap:7px}
 .ann-item-msg{font-size:13px;color:var(--muted);line-height:1.6;white-space:pre-wrap}
@@ -169,8 +164,7 @@ table.cal{width:100%;min-width:420px;border-collapse:collapse;table-layout:fixed
 .ann-item-admin{display:flex;align-items:flex-start;justify-content:space-between;gap:8px}
 
 /* PUSH BANNER */
-.push-banner{display:flex;align-items:flex-start;gap:11px;background:var(--amber-l);border:1px solid var(--amber-b);border-radius:var(--r);padding:14px 14px 14px 15px;margin-bottom:16px;animation:riseIn .3s var(--ease-out) both}
-.push-banner .pb-ico{color:var(--amber);flex-shrink:0;margin-top:1px}
+.push-banner{display:flex;align-items:flex-start;gap:11px;background:var(--amber-l);border:1px solid var(--amber-b);border-radius:var(--r);padding:14px 14px 14px 15px;margin-bottom:16px;animation:riseIn .2s var(--ease-out) both}
 .push-banner .pb-body{flex:1;min-width:0}
 .push-banner .pb-body strong{display:block;font-size:13.5px;color:var(--tx);margin-bottom:2px}
 .push-banner .pb-body span{display:block;font-size:12px;color:var(--muted);line-height:1.5;margin-bottom:10px}
@@ -189,7 +183,7 @@ table.cal{width:100%;min-width:420px;border-collapse:collapse;table-layout:fixed
 .a-row .fld{margin:0;flex:1;min-width:110px}
 .a-row .fld input,.a-row .fld select{width:100%;padding:10px 12px;border:1px solid var(--l1);border-radius:var(--r);font-size:13px;outline:none;background:var(--f2);color:var(--tx);-webkit-appearance:none}
 .a-row .fld input:focus,.a-row .fld select:focus{border-color:var(--acc)}
-.sli{display:flex;align-items:center;justify-content:space-between;padding:10px 12px;background:var(--f2);border-radius:var(--r);margin-bottom:6px;font-size:13px;gap:8px;flex-wrap:wrap;animation:riseIn .3s var(--ease-out) both}
+.sli{display:flex;align-items:center;justify-content:space-between;padding:10px 12px;background:var(--f2);border-radius:var(--r);margin-bottom:6px;font-size:13px;gap:8px;flex-wrap:wrap;animation:riseIn .2s var(--ease-out) both}
 .hist-month-group{margin-bottom:18px}
 .hist-month-hd{font-family:'Libre Franklin',sans-serif;font-size:16px;font-weight:600;color:var(--tx);margin-bottom:9px;padding-bottom:6px;border-bottom:1px solid var(--l1)}
 .hist-week-group{margin-bottom:13px}
@@ -212,9 +206,9 @@ table.cal{width:100%;min-width:420px;border-collapse:collapse;table-layout:fixed
 .toggle-wrap{display:flex;align-items:center;gap:9px;font-size:13px;color:var(--muted)}
 .toggle{position:relative;width:42px;height:24px;flex-shrink:0}
 .toggle input{opacity:0;width:0;height:0;position:absolute}
-.toggle-track{position:absolute;inset:0;background:var(--l2);border-radius:var(--r);cursor:pointer;transition:background .2s var(--ease-out)}
+.toggle-track{position:absolute;inset:0;background:var(--l2);border-radius:var(--r);cursor:pointer;transition:background .15s var(--ease-out)}
 .toggle input:checked+.toggle-track{background:var(--acc)}
-.toggle-thumb{position:absolute;top:3px;left:3px;width:18px;height:18px;background:var(--white);border-radius:var(--r);transition:transform .2s var(--ease-out);pointer-events:none;box-shadow:none}
+.toggle-thumb{position:absolute;top:3px;left:3px;width:18px;height:18px;background:var(--white);border-radius:var(--r);transition:transform .15s var(--ease-out);pointer-events:none;box-shadow:none}
 .toggle input:checked~.toggle-thumb{transform:translateX(18px)}
 
 /* SERVICES / STATS / PAIEMENT */
@@ -237,17 +231,17 @@ table.cal{width:100%;min-width:420px;border-collapse:collapse;table-layout:fixed
 .bar-col{flex:1;display:flex;flex-direction:column;align-items:center;gap:5px;height:100%;justify-content:flex-end}
 .bar-col .bv{font-size:10px;color:var(--muted);font-weight:600}
 .bar-col .bb-track{width:100%;height:64px;display:flex;align-items:flex-end}
-.bar-col .bb{width:100%;height:100%;background:var(--acc);border-radius:var(--r) var(--r) 0 0;transform-origin:bottom;transform:scaleY(var(--pct,.03));transition:transform .5s var(--ease-out)}
+.bar-col .bb{width:100%;height:100%;background:var(--acc);border-radius:var(--r) var(--r) 0 0;transform-origin:bottom;transform:scaleY(var(--pct,.03));transition:transform .3s var(--ease-out)}
 .bar-col .bd{font-size:10px;color:var(--hint)}
-.svc-row{display:flex;align-items:center;justify-content:space-between;padding:11px 13px;background:var(--f2);border-radius:var(--r);margin-bottom:6px;gap:8px;flex-wrap:wrap;animation:riseIn .3s var(--ease-out) both}
+.svc-row{display:flex;align-items:center;justify-content:space-between;padding:11px 13px;background:var(--f2);border-radius:var(--r);margin-bottom:6px;gap:8px;flex-wrap:wrap;animation:riseIn .2s var(--ease-out) both}
 .svc-row .sv-name{font-weight:700;font-size:13px}
 .svc-row .sv-price{font-size:13px;color:var(--acc);font-weight:700}
 .svc-bar{display:flex;align-items:center;gap:9px;margin-bottom:9px}
 .svc-bar .sb-track{flex:1;height:8px;background:var(--f2);border-radius:var(--r);overflow:hidden}
-.svc-bar .sb-fill{width:100%;height:100%;background:var(--acc);transform-origin:left;transform:scaleX(var(--pct,0));transition:transform .5s var(--ease-out)}
+.svc-bar .sb-fill{width:100%;height:100%;background:var(--acc);transform-origin:left;transform:scaleX(var(--pct,0));transition:transform .3s var(--ease-out)}
 .svc-bar .sb-label{font-size:12px;color:var(--muted);min-width:110px;font-weight:500}
 .svc-bar .sb-val{font-size:12px;color:var(--tx);font-weight:700;min-width:50px;text-align:right}
-.pay-card{background:var(--f2);border:1px solid var(--l1);border-radius:var(--r);padding:18px;margin-bottom:12px;animation:riseIn .32s var(--ease-out) both}
+.pay-card{background:var(--f2);border:1px solid var(--l1);border-radius:var(--r);padding:18px;margin-bottom:12px;animation:riseIn .2s var(--ease-out) both}
 .pay-card-top{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:9px}
 .pay-card-title{font-family:'Libre Franklin',sans-serif;font-size:17px}
 .pay-card-desc{font-size:13.5px;color:var(--muted);line-height:1.65;white-space:pre-wrap}
@@ -277,7 +271,7 @@ table.cal{width:100%;min-width:420px;border-collapse:collapse;table-layout:fixed
 .bd-val{font-size:13.5px;font-weight:600;text-align:right}
 
 .mb-lastseen{font-size:11px;color:var(--hint);white-space:nowrap;flex-shrink:0}
-.hist-item{display:flex;align-items:center;justify-content:space-between;padding:11px 13px;background:var(--f2);border-radius:var(--r);margin-bottom:7px;font-size:13px;gap:8px;animation:riseIn .3s var(--ease-out) both}
+.hist-item{display:flex;align-items:center;justify-content:space-between;padding:11px 13px;background:var(--f2);border-radius:var(--r);margin-bottom:7px;font-size:13px;gap:8px;animation:riseIn .2s var(--ease-out) both}
 .hist-item .date{flex:1;font-weight:600}
 .hist-item .time{color:var(--muted);font-size:12px}
 .hist-item .status{font-size:11px;font-weight:700;padding:3px 9px;border-radius:var(--r)}
@@ -290,20 +284,20 @@ table.cal{width:100%;min-width:420px;border-collapse:collapse;table-layout:fixed
 .notif-info span{font-size:12px;color:var(--muted)}
 
 /* TOAST */
-.toast{position:fixed;bottom:30px;left:50%;transform:translateX(-50%) translateY(90px);background:var(--acc);color:var(--tx);padding:12px 24px;border-radius:var(--r);font-size:13px;font-weight:600;z-index:999;transition:transform .32s var(--ease-out);pointer-events:none;white-space:nowrap;box-shadow:0 24px 60px var(--shade);display:flex;align-items:center;gap:8px}
+.toast{position:fixed;bottom:30px;left:50%;transform:translateX(-50%) translateY(90px);background:var(--acc);color:var(--tx);padding:12px 24px;border-radius:var(--r);font-size:13px;font-weight:600;z-index:999;transition:transform .22s var(--ease-out);pointer-events:none;white-space:nowrap;box-shadow:0 24px 60px var(--shade);display:flex;align-items:center;gap:8px}
 .toast.on{transform:translateX(-50%) translateY(0)}
 
 /* CHAT */
 .chat-fab{position:fixed;right:18px;bottom:calc(78px + env(safe-area-inset-bottom));width:52px;height:52px;border-radius:var(--r);background:var(--acc);color:var(--tx);border:none;display:flex;align-items:center;justify-content:center;box-shadow:0 24px 60px var(--shade);cursor:pointer;z-index:240;transition:transform .12s var(--ease-out)}
 .chat-fab:active{transform:scale(.94)}
-.chat-modal{background:var(--f2);border-radius:var(--r) var(--r) 0 0;width:100%;max-width:430px;height:78vh;max-height:640px;display:flex;flex-direction:column;position:relative;transform-origin:center;animation:su .38s var(--ease-out)}
-@media(min-width:480px){.chat-modal{border-radius:var(--r);animation:pi .3s var(--ease-out)}}
-.ov.closing .chat-modal{animation:sd .24s var(--ease-in-out) forwards!important}
+.chat-modal{background:var(--f2);border-radius:var(--r) var(--r) 0 0;width:100%;max-width:430px;height:78vh;max-height:640px;display:flex;flex-direction:column;position:relative;transform-origin:center;animation:su .22s var(--ease-out)}
+@media(min-width:480px){.chat-modal{border-radius:var(--r);animation:pi .22s var(--ease-out)}}
+.ov.closing .chat-modal{animation:sd .22s var(--ease-in-out) forwards!important}
 @media(min-width:480px){.ov.closing .chat-modal{animation:po .22s var(--ease-in-out) forwards!important}}
 .chat-head{display:flex;align-items:center;justify-content:space-between;padding:16px 18px;border-bottom:1px solid var(--l1);flex-shrink:0}
 .chat-head h3{font-family:'Libre Franklin',sans-serif;font-size:17px}
 .chat-body{flex:1;overflow-y:auto;padding:16px 18px;display:flex;flex-direction:column;gap:10px}
-.chat-msg{max-width:82%;padding:9px 13px;border-radius:var(--r);font-size:13.5px;line-height:1.45;animation:riseIn .22s var(--ease-out) both}
+.chat-msg{max-width:82%;padding:9px 13px;border-radius:var(--r);font-size:13.5px;line-height:1.45;animation:riseIn .2s var(--ease-out) both}
 .chat-msg.user{align-self:flex-end;background:var(--acc);color:var(--tx)}
 .chat-msg.bot{align-self:flex-start;background:var(--f2)}
 .chat-msg.typing{color:var(--hint);font-style:italic}
@@ -324,14 +318,7 @@ table.cal{width:100%;min-width:420px;border-collapse:collapse;table-layout:fixed
 .hr-style-card h4{font-family:'Libre Franklin',sans-serif;font-size:15px;margin-bottom:4px}
 .hr-style-card p{font-size:12.5px;color:var(--muted);line-height:1.5;margin-bottom:3px}
 
-@keyframes riseIn{from{opacity:0;transform:translateY(7px)}to{opacity:1;transform:translateY(0)}}
-.sli,.svc-row,.ann-item,.pay-card,.hist-item{animation-fill-mode:both}
-.sli:nth-child(1),.svc-row:nth-child(1),.ann-item:nth-child(1),.pay-card:nth-child(1),.hist-item:nth-child(1){animation-delay:0ms}
-.sli:nth-child(2),.svc-row:nth-child(2),.ann-item:nth-child(2),.pay-card:nth-child(2),.hist-item:nth-child(2){animation-delay:40ms}
-.sli:nth-child(3),.svc-row:nth-child(3),.ann-item:nth-child(3),.pay-card:nth-child(3),.hist-item:nth-child(3){animation-delay:80ms}
-.sli:nth-child(4),.svc-row:nth-child(4),.ann-item:nth-child(4),.pay-card:nth-child(4),.hist-item:nth-child(4){animation-delay:120ms}
-.sli:nth-child(5),.svc-row:nth-child(5),.ann-item:nth-child(5),.pay-card:nth-child(5),.hist-item:nth-child(5){animation-delay:160ms}
-.sli:nth-child(n+6),.svc-row:nth-child(n+6),.ann-item:nth-child(n+6),.pay-card:nth-child(n+6),.hist-item:nth-child(n+6){animation-delay:200ms}
+@keyframes riseIn{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:translateY(0)}}
 
 @supports(padding-bottom:env(safe-area-inset-bottom)){
   .modal,.alert-modal,.ann-popup{padding-bottom:calc(28px + env(safe-area-inset-bottom))}
@@ -342,14 +329,7 @@ table.cal{width:100%;min-width:420px;border-collapse:collapse;table-layout:fixed
   .auth-card{padding:26px 18px;border-radius:var(--r)}
   .cal th .dn{font-size:14px}.wk-title{font-size:15px}.sc{min-height:40px}
 }
-@media(prefers-reduced-motion:reduce){
-  .scr.on{animation:none}
-  .modal,.alert-modal,.ann-popup{animation:none!important}
-  .sli,.svc-row,.ann-item,.pay-card,.hist-item,.msg.on{animation:none!important}
-  .ov{transition:none!important}
-  .chat-modal{animation:none!important}
-  .chat-msg{animation:none!important}
-}
+
 @media(hover:hover) and (pointer:fine){
   .i-btn:hover{background:var(--f2)}
   .bell-btn:hover{background:var(--f2)}
@@ -405,7 +385,6 @@ input.inp:focus,select.inp:focus,textarea.inp:focus,.a-row .fld input:focus,.a-r
 .wk-btn{font-size:24px;line-height:1;padding-bottom:3px;color:var(--tx);background:var(--f3);-webkit-backdrop-filter:blur(14px) saturate(160%);backdrop-filter:blur(14px) saturate(160%);border:1px solid var(--l2);box-shadow:inset 0 1px 0 var(--f4)}
 .mx,.pb-close{font-size:22px;line-height:1;color:var(--tx)}
 .mx{background:var(--f3)}
-.alert-icon,.ann-header-icon,.pb-ico{display:none}
 .seg,.a-tabs{background:var(--f2)}
 .seg button,.a-tab{border:1px solid transparent;color:var(--muted)}
 .seg button.on,.a-tab.on{background:var(--f4);color:var(--white);border-color:var(--l2);box-shadow:none}
@@ -507,6 +486,9 @@ body.auth-mode .hdr,body.auth-mode .hdr-tabs,body.auth-mode .chat-fab{display:no
   .hdr,.hdr-tabs{background:var(--solid)}
   .card,.pay-card,.cal-scroll,.wk-btn,.modal,.alert-modal,.ann-popup,.chat-modal,.hero .auth-card,.hero-card,.hero-btn-glass,.hero-pill{background:var(--solid)}
 }
+
+/* Réduire les animations : plus aucune animation */
+@media(prefers-reduced-motion:reduce){*,*::before,*::after{animation:none!important;transition:none!important;scroll-behavior:auto!important}}
 </style>
 </head>
 <body>
@@ -555,8 +537,8 @@ body.auth-mode .hdr,body.auth-mode .hdr-tabs,body.auth-mode .chat-fab{display:no
           </div>
         </div>
         <div class="hero-cards">
-          <div class="hero-card"><span class="hero-card-ico"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="5" width="18" height="16" rx="3.5"/><path d="M3 9.5h18M8 3v4M16 3v4"/></svg></span><div><strong>En ligne</strong><span class="t">Réservez à toute heure, sans appeler</span></div></div>
-          <div class="hero-card"><span class="hero-card-ico"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M6 8a6 6 0 1 1 12 0c0 4 1.4 5.5 2 6.5H4c.6-1 2-2.5 2-6.5Z"/><path d="M9.5 18a2.5 2.5 0 0 0 5 0"/></svg></span><div><strong>Rappels</strong><span class="t">Une notification avant votre rendez-vous</span></div></div>
+          <div class="hero-card"><span class="hero-card-ico"><svg width="20" height="20" viewBox="0 0 256 256" fill="currentColor" aria-hidden="true"><path d="M208,32H184V24a8,8,0,0,0-16,0v8H88V24a8,8,0,0,0-16,0v8H48A16,16,0,0,0,32,48V208a16,16,0,0,0,16,16H208a16,16,0,0,0,16-16V48A16,16,0,0,0,208,32ZM72,48v8a8,8,0,0,0,16,0V48h80v8a8,8,0,0,0,16,0V48h24V80H48V48ZM208,208H48V96H208V208Z"/></svg></span><div><strong>En ligne</strong><span class="t">Réservez à toute heure, sans appeler</span></div></div>
+          <div class="hero-card"><span class="hero-card-ico"><svg width="20" height="20" viewBox="0 0 256 256" fill="currentColor" aria-hidden="true"><path d="M168,224a8,8,0,0,1-8,8H96a8,8,0,1,1,0-16h64A8,8,0,0,1,168,224Zm53.85-32A15.8,15.8,0,0,1,208,200H48a16,16,0,0,1-13.8-24.06C39.75,166.38,48,139.34,48,104a80,80,0,1,1,160,0c0,35.33,8.26,62.38,13.81,71.94A15.89,15.89,0,0,1,221.84,192ZM208,184c-7.73-13.27-16-43.95-16-80a64,64,0,1,0-128,0c0,36.06-8.28,66.74-16,80Z"/></svg></span><div><strong>Rappels</strong><span class="t">Une notification avant votre rendez-vous</span></div></div>
         </div>
       </div>
     </div>
@@ -603,7 +585,6 @@ body.auth-mode .hdr,body.auth-mode .hdr-tabs,body.auth-mode .chat-fab{display:no
 <!-- CALENDAR -->
 <div id="s-cal" class="scr">
   <div class="push-banner" id="push-banner" style="display:none">
-    <span class="pb-ico"></span>
     <div class="pb-body">
       <strong>Activer les notifications ?</strong>
       <span>Sois prévenu dès qu'un nouveau créneau se libère et reçois un rappel avant ton rendez-vous.</span>
@@ -929,7 +910,7 @@ body.auth-mode .hdr,body.auth-mode .hdr-tabs,body.auth-mode .chat-fab{display:no
     <div class="card">
       <h3>Ton de l'assistant (chatbot)</h3>
       <p style="font-size:13px;color:var(--muted);margin-bottom:15px">Décrivez le ton à adopter, ou collez quelques messages types que vous envoyez habituellement : l'assistant s'en inspire. Laissez vide pour le ton par défaut (chaleureux, direct, tutoiement).</p>
-      <div class="fld"><textarea class="inp" id="persona-inp" placeholder="Ex : Chaleureux mais direct, tutoiement, quelques emojis. Exemple de message : « Salut ! Ton créneau est bien noté, à demain 😊 »" style="min-height:120px"></textarea></div>
+      <div class="fld"><textarea class="inp" id="persona-inp" placeholder="Ex : Direct et chaleureux, tutoiement, phrases courtes. Exemple : « Ton créneau est noté. À demain. »" style="min-height:120px"></textarea></div>
       <button class="btn btn-dark btn-sm" onclick="savePersona()">Enregistrer le ton</button>
       <div id="persona-status" class="msg" style="margin-top:11px"></div>
     </div>
@@ -966,7 +947,6 @@ body.auth-mode .hdr,body.auth-mode .hdr-tabs,body.auth-mode .chat-fab{display:no
   <div class="ann-popup">
     <button class="mx" onclick="closeAnnonces()">×</button>
     <div class="ann-header">
-      <span class="ann-header-icon"> </span>
       <h3>Annonces</h3>
     </div>
     <div id="ann-popup-content"></div>
@@ -1035,7 +1015,7 @@ body.auth-mode .hdr,body.auth-mode .hdr-tabs,body.auth-mode .chat-fab{display:no
 <!-- ALERT -->
 <div class="ov" id="ov-alert" onclick="closeAlert()">
   <div class="alert-modal" onclick="event.stopPropagation()">
-    <div class="alert-icon" id="alert-icon"></div>
+    
     <h3 id="alert-title"></h3>
     <p id="alert-msg"></p>
     <button class="btn btn-dark" onclick="closeAlert()">Compris</button>
@@ -1051,7 +1031,6 @@ const sb=supabase.createClient(SUPA_URL,SUPA_KEY,{realtime:{params:{eventsPerSec
 const ONESIGNAL_APP_ID='b68eced9-8ced-4193-bc25-7ccda7670e21';
 
 // Icônes décoratives supprimées volontairement : texte seul.
-function ic(){return '';}
 function escapeHtml(s){return (s||'').replace(/[&<>"']/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c];});}
 
 let CU=null,WS=null,pendSlot=null,admTab='slots',pendingAvatarDataUrl;
@@ -1111,8 +1090,8 @@ function addSlotToCalendarGoogle(slotId,forAdmin){
 function showCalendarPrompt(sid){
   const acts=document.getElementById('calprompt-acts');
   acts.innerHTML=`
-    <button class="btn btn-dark" onclick="addSlotToCalendarIcs('${sid}',false);closeCalPrompt()">${ic('download',15)} Apple / Outlook (.ics)</button>
-    <button class="btn btn-out" onclick="addSlotToCalendarGoogle('${sid}',false);closeCalPrompt()">${ic('extlink',15)} Google Calendar</button>
+    <button class="btn btn-dark" onclick="addSlotToCalendarIcs('${sid}',false);closeCalPrompt()">Apple / Outlook (.ics)</button>
+    <button class="btn btn-out" onclick="addSlotToCalendarGoogle('${sid}',false);closeCalPrompt()">Google Calendar</button>
     <button class="btn btn-out btn-sm" style="color:var(--muted)" onclick="closeCalPrompt()">Non merci</button>`;
   openOverlay('ov-calprompt');
 }
@@ -1157,7 +1136,7 @@ Règles :
 - Dates relatives : la date et le jour de la semaine actuels sont fournis plus bas (section "Aujourd'hui"). Avant tout appel d'outil impliquant une date, résous mentalement toute expression relative en date exacte YYYY-MM-DD à partir de cette référence : "demain" = jour suivant, "samedi" (sans précision) = le samedi de la semaine en cours s'il n'est pas encore passé, sinon celui de la semaine suivante, "dans 3 jours" = +3 jours, etc. Ne jamais transmettre une expression relative telle quelle à un outil (date, from_date, to_date) — toujours la date résolue.`;
 }
 function buildChatSystemPrompt(){
-  const persona=chatbotPersona&&chatbotPersona.trim()?chatbotPersona.trim():'Ton par défaut : chaleureux, direct, tutoiement, peu d\'emoji.';
+  const persona=chatbotPersona&&chatbotPersona.trim()?chatbotPersona.trim():'Ton par défaut : chaleureux, direct, tutoiement, phrases courtes, sans emoji.';
   const servicesList=(allServices||[]).filter(s=>s.active!==false).map(s=>'- '+s.name+' : '+(s.price_cents/100).toFixed(2)+'€').join('\n')||'(aucune prestation configurée pour le moment)';
   const paymentsList=(allPayments||[]).filter(p=>p.active!==false).map(p=>'- '+p.title+' : '+p.description).join('\n')||'(aucun moyen de paiement configuré pour le moment)';
   const now=new Date();
@@ -1342,7 +1321,7 @@ function handleSlotRequestRealtime(row){
       chatMessages.push({role:'assistant',content:msg});
       addChatBubble('bot',msg);
       if(row.status==='alternatives_proposed'&&Array.isArray(row.proposed_alternatives)&&row.proposed_alternatives.length)addChatSlotChips(row.proposed_alternatives,'alternative');
-      if(!document.getElementById('ov-chat').classList.contains('on'))showToast('Réponse à ta demande de créneau 💬');
+      if(!document.getElementById('ov-chat').classList.contains('on'))showToast('Réponse à ta demande de créneau');
     }
   }
   if(document.getElementById('s-adm').classList.contains('on')&&admTab==='requests')renderAdmRequests(true);
@@ -1556,8 +1535,6 @@ function setRtStatus(ok){
   if(dot)dot.classList.toggle('off',!ok);if(txt)txt.textContent=ok?'Temps réel actif':'Reconnexion…';
 }
 function flashAndRender(){
-  const tbl=document.getElementById('cal-tbl');
-  if(tbl){tbl.classList.remove('cal-flash');void tbl.offsetWidth;tbl.classList.add('cal-flash');}
   if(document.getElementById('s-cal').classList.contains('on'))renderCal();
   if(document.getElementById('s-adm').classList.contains('on')){
     if(admTab==='slots')renderASlots(true);
@@ -1634,7 +1611,7 @@ function renderPaiement(){
     <div class="pay-card">
       <div class="pay-card-top">
         <div class="pay-card-title">${escapeHtml(p.title)}</div>
-        ${p.allow_copy?`<button class="btn btn-out btn-sm pay-copy" onclick="copyPayment('${p.id}')">${ic('copy',13)} Copier</button>`:''}
+        ${p.allow_copy?`<button class="btn btn-out btn-sm pay-copy" onclick="copyPayment('${p.id}')">Copier</button>`:''}
       </div>
       <div class="pay-card-desc">${escapeHtml(p.description)}</div>
     </div>`).join('');
@@ -1669,7 +1646,7 @@ function editPayment(id){
   document.getElementById('pay-desc').value=p.description;
   document.getElementById('pay-allow-copy').checked=!!p.allow_copy;
   document.getElementById('pay-form-title').textContent='Modifier le moyen de paiement';
-  document.getElementById('pay-save-btn').innerHTML=ic('check',14)+' Enregistrer';
+  document.getElementById('pay-save-btn').textContent='Enregistrer';
   document.getElementById('pay-cancel-btn').style.display='';
   document.getElementById('pay-title').scrollIntoView({behavior:'smooth',block:'center'});
 }
@@ -1679,7 +1656,6 @@ function cancelEditPayment(){
   document.getElementById('pay-desc').value='';
   document.getElementById('pay-allow-copy').checked=false;
   document.getElementById('pay-form-title').textContent='Ajouter un moyen de paiement';
-  document.getElementById('pay-save-btn').innerHTML=ic('crown',0)===''?'':'';
   document.getElementById('pay-save-btn').innerHTML='Ajouter';
   document.getElementById('pay-cancel-btn').style.display='none';
 }
@@ -1792,7 +1768,7 @@ function openAnnonces(){
     content.innerHTML=active.map(a=>{
       const exp=new Date(a.expires_at+'T12:00').toLocaleDateString('fr-FR',{day:'numeric',month:'long'});
       return`<div class="ann-item">
-        <div class="ann-item-title">${ic('megaphone',14)} ${escapeHtml(a.title)}</div>
+        <div class="ann-item-title">${escapeHtml(a.title)}</div>
         <div class="ann-item-msg">${escapeHtml(a.message)}</div>
         <div class="ann-item-exp">Visible jusqu'au ${exp}</div>
       </div>`;
@@ -1811,7 +1787,7 @@ async function showAnnoncePopup(){
   content.innerHTML=active.map(a=>{
     const exp=new Date(a.expires_at+'T12:00').toLocaleDateString('fr-FR',{day:'numeric',month:'long'});
     return`<div class="ann-item">
-      <div class="ann-item-title">${ic('megaphone',14)} ${escapeHtml(a.title)}</div>
+      <div class="ann-item-title">${escapeHtml(a.title)}</div>
       <div class="ann-item-msg">${escapeHtml(a.message)}</div>
       <div class="ann-item-exp">Visible jusqu'au ${exp}</div>
     </div>`;
@@ -1893,7 +1869,7 @@ async function enterApp(){
   populateServiceSelects();
   showLoader(false);
   const badge=document.getElementById('ubadge');
-  badge.innerHTML=CU.is_admin?(ic('crown',12)+' Admin'):'@'+CU.username;
+  badge.innerHTML=CU.is_admin?'Admin':'@'+CU.username;
   badge.className='badge '+(CU.is_admin?'admin':'user');
   badge.style.display='';
   document.getElementById('logout-btn').style.display='';
@@ -2034,27 +2010,27 @@ function openM(sid){
   }
   const acts=document.getElementById('m-acts');
   if(isHidden&&CU?.is_admin){
-    const calBtn=slot.is_manual?`<button class="btn btn-out" onclick="addSlotToCalendarIcs('${slot.id}',true)">${ic('download',15)} Ajouter à mon agenda</button>`:'';
-    const visBtn=slot.is_manual?'':`<button class="btn btn-green" onclick="toggleSlotVis('${slot.id}',true)">${ic('eye',15)} Rendre visible</button>`;
-    const svcBtn=isTaken?`<button class="btn btn-out" onclick="openServicePicker('${slot.id}',false)">${ic('tag',15)} ${svc?'Changer la prestation':'Choisir la prestation'}</button>`:'';
+    const calBtn=slot.is_manual?`<button class="btn btn-out" onclick="addSlotToCalendarIcs('${slot.id}',true)">Ajouter à mon agenda</button>`:'';
+    const visBtn=slot.is_manual?'':`<button class="btn btn-green" onclick="toggleSlotVis('${slot.id}',true)">Rendre visible</button>`;
+    const svcBtn=isTaken?`<button class="btn btn-out" onclick="openServicePicker('${slot.id}',false)">${svc?'Changer la prestation':'Choisir la prestation'}</button>`:'';
     acts.innerHTML=`${svcBtn}
     ${visBtn}
     ${calBtn}
     <button class="btn btn-out" style="color:var(--red);border-color:var(--red-b)" onclick="admDelSlot()">Supprimer</button>
     <button class="btn btn-out" onclick="closeM()">Fermer</button>`;
   }else if(isMine){
-    acts.innerHTML=`<button class="btn btn-out" onclick="openServicePicker('${slot.id}',false)">${ic('tag',15)} ${svc?'Changer la prestation':'Choisir la prestation'}</button>
+    acts.innerHTML=`<button class="btn btn-out" onclick="openServicePicker('${slot.id}',false)">${svc?'Changer la prestation':'Choisir la prestation'}</button>
     <button class="btn btn-red" onclick="cancelBook()">Annuler ma réservation</button>
     <button class="btn btn-out" onclick="closeM()">Fermer</button>`;
   }else if(!isTaken){
     let b=`<button class="btn btn-dark" onclick="confirmBook()">Réserver</button>
     <button class="btn btn-out" onclick="closeM()">Annuler</button>`;
-    if(CU?.is_admin)b+=`<button class="btn btn-out btn-sm" style="margin-top:5px" onclick="toggleSlotVis('${slot.id}',false)">${ic('eyeOff',14)} Cacher</button>
+    if(CU?.is_admin)b+=`<button class="btn btn-out btn-sm" style="margin-top:5px" onclick="toggleSlotVis('${slot.id}',false)">Cacher</button>
     <button class="btn btn-out btn-sm" style="color:var(--red);border-color:var(--red-b)" onclick="admDelSlot()">Supprimer</button>`;
     acts.innerHTML=b;
   }else if(CU?.is_admin){
-    acts.innerHTML=`<button class="btn btn-out" onclick="openServicePicker('${slot.id}',false)">${ic('tag',15)} ${svc?'Changer la prestation':'Choisir la prestation'}</button>
-    <button class="btn btn-out" onclick="addSlotToCalendarIcs('${slot.id}',true)">${ic('download',15)} Ajouter à mon agenda</button>
+    acts.innerHTML=`<button class="btn btn-out" onclick="openServicePicker('${slot.id}',false)">${svc?'Changer la prestation':'Choisir la prestation'}</button>
+    <button class="btn btn-out" onclick="addSlotToCalendarIcs('${slot.id}',true)">Ajouter à mon agenda</button>
     <button class="btn btn-red" onclick="admCancelBook()">Annuler la réservation</button>
     <button class="btn btn-out" style="color:var(--red);border-color:var(--red-b)" onclick="admDelSlot()">Supprimer</button>
     <button class="btn btn-out" onclick="closeM()">Fermer</button>`;
@@ -2066,7 +2042,6 @@ function closeOverlay(id,cb){const ov=document.getElementById(id);if(!ov||!ov.cl
 function closeM(){closeOverlay('ov');pendSlot=null;}
 function ovClick(e){if(e.target===document.getElementById('ov'))closeM();}
 function showAlert(icon,title,msg){
-  document.getElementById('alert-icon').innerHTML=ic(icon,24);
   document.getElementById('alert-title').textContent=title;
   document.getElementById('alert-msg').textContent=msg;
   openOverlay('ov-alert');
@@ -2200,7 +2175,7 @@ function renderAdmAnnonces(silent){
     return`<div class="${cls}" style="${isExpired?'opacity:.5':''}">
       <div class="ann-item-admin">
         <div style="flex:1">
-          <div class="ann-item-title">${ic('megaphone',14)} ${escapeHtml(a.title)}</div>
+          <div class="ann-item-title">${escapeHtml(a.title)}</div>
           <div class="ann-item-msg">${escapeHtml(a.message)}</div>
           <div class="ann-item-exp">${isExpired?'Expirée le':'Visible jusqu\'au'} ${exp}</div>
         </div>
@@ -2346,7 +2321,7 @@ function renderPubInfo(){
       const dt=new Date(k);
       const label=dt.toLocaleDateString('fr-FR',{weekday:'short',day:'numeric',month:'short'})+' à '+dt.toLocaleTimeString('fr-FR',{hour:'2-digit',minute:'2-digit'});
       return`<div style="display:flex;align-items:center;justify-content:space-between;gap:9px;background:var(--f2);border-radius:var(--r);padding:9px 12px;margin-top:7px">
-        <span style="font-size:12.5px">${ic('calendar',13)} ${groups[k].length} créneau(x) programmé(s) pour le ${label}</span>
+        <span style="font-size:12.5px">${groups[k].length} créneau(x) programmé(s) pour le ${label}</span>
         <button class="btn btn-out btn-sm" style="font-size:11px;padding:4px 9px" onclick="cancelSchedule('${k}')">Annuler</button>
       </div>`;
     }).join('');
@@ -2455,8 +2430,8 @@ function renderASlots(silent){
     const isHidden=s.visible===false;const isPast=new Date(s.date+'T23:59')<new Date();
     const who=s.is_manual?(s.manual_client_name||'Manuel'):(bkr?'@'+bkr.username:null);
     const schedLabel=isHidden&&s.publish_at?` · programmé ${new Date(s.publish_at).toLocaleDateString('fr-FR',{day:'numeric',month:'short'})} ${new Date(s.publish_at).toLocaleTimeString('fr-FR',{hour:'2-digit',minute:'2-digit'})}`:'';
-    const st=who?`<span class="st st-t">${s.is_manual?'Privé · ':'@'}${s.is_manual?who:bkr.username}</span>`:isHidden?`<span class="st st-h">${ic('eyeOff',11)} ${schedLabel||'En attente'}</span>`:isPast?`<span class="st st-p">Passé</span>`:`<span class="st st-f">Libre</span>`;
-    const vb=s.is_manual?`<span class="st st-h" title="Toujours privé">${ic('eyeOff',11)} Privé</span>`:(isHidden?`<button class="btn btn-out btn-sm" style="font-size:11px;padding:4px 9px" onclick="toggleSlotVis('${s.id}',true)">Afficher</button>`:`<button class="btn btn-out btn-sm" style="font-size:11px;padding:4px 9px" onclick="toggleSlotVis('${s.id}',false)">Masquer</button>`);
+    const st=who?`<span class="st st-t">${s.is_manual?'Privé · ':'@'}${s.is_manual?who:bkr.username}</span>`:isHidden?`<span class="st st-h">${schedLabel||'En attente'}</span>`:isPast?`<span class="st st-p">Passé</span>`:`<span class="st st-f">Libre</span>`;
+    const vb=s.is_manual?`<span class="st st-h" title="Toujours privé">Privé</span>`:(isHidden?`<button class="btn btn-out btn-sm" style="font-size:11px;padding:4px 9px" onclick="toggleSlotVis('${s.id}',true)">Afficher</button>`:`<button class="btn btn-out btn-sm" style="font-size:11px;padding:4px 9px" onclick="toggleSlotVis('${s.id}',false)">Masquer</button>`);
     return`<div class="${cls}"><div class="si">${d} · ${s.time} (${s.duration_minutes||30}min)${svc?' · '+svc.name:''}</div>${st}
     <div class="sli-actions">${vb}<button class="btn btn-out btn-sm" style="color:var(--red);border-color:var(--red-b);padding:4px 9px;font-size:12px" onclick="delSlot('${s.id}')">Supprimer</button></div></div>`;
   }).join('');
@@ -2834,7 +2809,7 @@ async function saveProfil(){
   if(error){showMsg(m,'err',error.code==='23505'?'Ce pseudo est déjà utilisé.':'Erreur. Réessayez.');return;}
   CU={...CU,...updateObj};
   closeEditProfil();renderProfil();
-  document.getElementById('ubadge').innerHTML=CU.is_admin?(ic('crown',12)+' Admin'):'@'+CU.username;
+  document.getElementById('ubadge').innerHTML=CU.is_admin?'Admin':'@'+CU.username;
   showToast('Profil mis à jour !');
 }
 async function saveNotifPref(){
