@@ -2,17 +2,33 @@
 <html lang="fr">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="default">
 <meta name="apple-mobile-web-app-title" content="AlBarber">
 <meta name="theme-color" content="#0c0820">
-<title>AlBarber · Réservations</title>
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Libre+Franklin:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<title>AlBarber · Réserve ta coupe</title>
+<meta name="description" content="Réserve ton créneau chez AlBarber en ligne. Choisis ta prestation, un jour et une heure, tu reçois un rappel avant ton rendez-vous.">
+<meta property="og:type" content="website">
+<meta property="og:locale" content="fr_FR">
+<meta property="og:site_name" content="AlBarber">
+<meta property="og:title" content="AlBarber · Réserve ta coupe">
+<meta property="og:description" content="Choisis ta prestation, un jour et une heure. Tu reçois un rappel avant ton rendez-vous.">
+<meta property="og:image" content="assets/og.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="AlBarber, réserve ta coupe en ligne">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="icon" href="favicon.ico" sizes="32x32">
+<link rel="icon" href="assets/icons/icon.svg" type="image/svg+xml">
+<link rel="apple-touch-icon" href="assets/icons/apple-touch-icon.png">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="preload" href="assets/fonts/lf-latin.woff2" as="font" type="font/woff2" crossorigin>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script src="https://cdn.onesignal.com/sdks/web/v16/OneSignalSDK.page.js" defer></script>
 <style>
+@font-face{font-family:'Libre Franklin';font-style:normal;font-weight:400 800;font-display:swap;src:url(assets/fonts/lf-latin-ext.woff2) format('woff2');unicode-range:U+0100-02BA,U+02BD-02C5,U+02C7-02CC,U+02CE-02D7,U+02DD-02FF,U+0304,U+0308,U+0329,U+1D00-1DBF,U+1E00-1E9F,U+1EF2-1EFF,U+2020,U+20A0-20AB,U+20AD-20C0,U+2113,U+2C60-2C7F,U+A720-A7FF}
+@font-face{font-family:'Libre Franklin';font-style:normal;font-weight:400 800;font-display:swap;src:url(assets/fonts/lf-latin.woff2) format('woff2');unicode-range:U+0000-00FF,U+0131,U+0152-0153,U+02BB-02BC,U+02C6,U+02DA,U+02DC,U+0304,U+0308,U+0329,U+2000-206F,U+20AC,U+2122,U+2191,U+2193,U+2212,U+2215,U+FEFF,U+FFFD}
 *{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
 :root{
   --bg:#0C0820;
@@ -59,7 +75,7 @@ button,input,select,textarea{font-family:inherit}
 .badge.user{background:var(--f2);color:var(--muted)}
 .badge.admin{background:var(--acc);color:var(--tx)}
 .hdr-tabs{position:fixed;left:0;right:0;bottom:0;z-index:250;display:flex;justify-content:space-around;align-items:stretch;background:var(--bg);border-top:1px solid var(--l1);padding-bottom:env(safe-area-inset-bottom)}
-.htab{flex:1;background:none;border:none;padding:8px 4px 7px;cursor:pointer;color:var(--muted);display:flex;flex-direction:column;align-items:center;gap:3px;font-size:10.5px;font-weight:600}
+.htab{flex:1;background:none;border:none;padding:8px 4px 7px;cursor:pointer;color:var(--muted);display:flex;flex-direction:column;align-items:center;gap:3px;font-size:11px;font-weight:600}
 .htab.on{color:var(--acc)}
 .i-btn{background:none;border:1px solid var(--l1);border-radius:var(--r);padding:6px 12px;font-size:13px;font-weight:600;cursor:pointer;color:var(--muted);white-space:nowrap}
 
@@ -109,13 +125,13 @@ textarea.inp{resize:vertical;min-height:84px;line-height:1.5}
 /* CALENDAR */
 .cal-scroll{overflow-x:auto;-webkit-overflow-scrolling:touch;border-radius:var(--r);border:1px solid var(--l1);background:var(--f2)}
 table.cal{width:100%;min-width:420px;border-collapse:collapse;table-layout:fixed;background:var(--f2)}
-.cal th{padding:10px 3px;font-size:10px;font-weight:700;color:var(--muted);text-align:center;border-bottom:1px solid var(--l1);background:var(--f2)}
+.cal th{padding:10px 3px;font-size:11px;font-weight:700;color:var(--muted);text-align:center;border-bottom:1px solid var(--l1);background:var(--f2)}
 .cal th.td-col{color:var(--acc)}
 .cal th .dn{display:block;font-family:'Libre Franklin',sans-serif;font-size:16px;font-weight:500;color:var(--tx);margin-top:2px}
 .cal th .dn.td-n{background:var(--acc);color:var(--tx);width:27px;height:27px;border-radius:var(--r);display:inline-flex;align-items:center;justify-content:center;margin-top:2px;font-size:13px}
 .cal th.past-col .dn{color:var(--hint)}
 .cal td{padding:3px;vertical-align:middle}
-.cal td.tc{width:42px;font-size:10.5px;color:var(--hint);text-align:right;padding:2px 5px 2px 2px;white-space:nowrap;font-weight:600}
+.cal td.tc{width:42px;font-size:11px;color:var(--hint);text-align:right;padding:2px 5px 2px 2px;white-space:nowrap;font-weight:600}
 .sc{min-height:44px;border-radius:var(--r);display:flex;align-items:center;justify-content:center;transition:background .15s var(--ease-out),border .15s var(--ease-out);cursor:default;padding:2px}
 .sc.free{background:var(--green-l);cursor:pointer;border:1px solid var(--green-b)}
 .sc.taken{background:var(--red-l);border:1px solid var(--red-b)}
@@ -124,7 +140,7 @@ table.cal{width:100%;min-width:420px;border-collapse:collapse;table-layout:fixed
 .sc.past-slot{background:var(--f2);border:1px solid var(--l1);opacity:.55}
 .sc.empty{background:transparent}
 .sc.adm-e{background:var(--f2);cursor:pointer;border:1px dashed var(--l2);color:var(--hint)}
-.sl{font-size:10px;font-weight:700;text-align:center;line-height:1.35}
+.sl{font-size:11px;font-weight:700;text-align:center;line-height:1.35}
 .sl.f{color:var(--green)}.sl.t{color:var(--red)}.sl.m{color:var(--amber)}.sl.h{color:var(--purple);display:flex;align-items:center;justify-content:center}.sl.a{display:flex;align-items:center;justify-content:center}.sl.p{color:var(--hint)}
 .legend{display:flex;gap:12px;flex-wrap:wrap;margin-bottom:14px}
 .leg{display:flex;align-items:center;gap:6px;font-size:11.5px;color:var(--muted);font-weight:500}
@@ -191,7 +207,7 @@ table.cal{width:100%;min-width:420px;border-collapse:collapse;table-layout:fixed
 .sli.no-anim,.svc-row.no-anim,.ann-item.no-anim,.pay-card.no-anim,.hist-item.no-anim{animation:none}
 .sli .si{flex:1;font-size:13px;min-width:110px}
 .sli-actions{display:flex;gap:5px;align-items:center;flex-shrink:0}
-.st{font-size:10px;font-weight:700;padding:3px 9px;border-radius:var(--r);white-space:nowrap}
+.st{font-size:11px;font-weight:700;padding:3px 9px;border-radius:var(--r);white-space:nowrap}
 .st-f{background:var(--green-l);color:var(--green)}
 .st-t{background:var(--amber-l);color:var(--amber)}
 .st-h{background:var(--f2);color:var(--purple)}
@@ -229,10 +245,10 @@ table.cal{width:100%;min-width:420px;border-collapse:collapse;table-layout:fixed
 .stat-card .sc-delta.down{color:var(--red)}
 .bar-row{display:flex;align-items:flex-end;gap:8px;height:88px;margin-bottom:8px}
 .bar-col{flex:1;display:flex;flex-direction:column;align-items:center;gap:5px;height:100%;justify-content:flex-end}
-.bar-col .bv{font-size:10px;color:var(--muted);font-weight:600}
+.bar-col .bv{font-size:11px;color:var(--muted);font-weight:600}
 .bar-col .bb-track{width:100%;height:64px;display:flex;align-items:flex-end}
 .bar-col .bb{width:100%;height:100%;background:var(--acc);border-radius:var(--r) var(--r) 0 0;transform-origin:bottom;transform:scaleY(var(--pct,.03));transition:transform .3s var(--ease-out)}
-.bar-col .bd{font-size:10px;color:var(--hint)}
+.bar-col .bd{font-size:11px;color:var(--hint)}
 .svc-row{display:flex;align-items:center;justify-content:space-between;padding:11px 13px;background:var(--f2);border-radius:var(--r);margin-bottom:6px;gap:8px;flex-wrap:wrap;animation:riseIn .2s var(--ease-out) both}
 .svc-row .sv-name{font-weight:700;font-size:13px}
 .svc-row .sv-price{font-size:13px;color:var(--acc);font-weight:700}
@@ -462,6 +478,9 @@ body.auth-mode .hdr,body.auth-mode .hdr-tabs,body.auth-mode .chat-fab{display:no
 .hero-btn-solid{background:var(--cta);color:var(--on-cta)}
 .hero-btn-glass{background:var(--f3);border-color:var(--l2);color:var(--white);-webkit-backdrop-filter:blur(14px);backdrop-filter:blur(14px)}
 @media(hover:hover) and (pointer:fine){.hero-btn-solid:hover{background:var(--white)}.hero-btn-glass:hover{background:var(--f4)}}
+.legal-links{display:flex;gap:16px;flex-wrap:wrap;margin-top:12px;font-size:13px}
+.legal-links a{color:var(--muted);text-decoration:underline;text-underline-offset:3px;display:inline-flex;align-items:center;min-height:32px}
+.legal-links a:hover{color:var(--tx)}
 .hero-note{margin-top:14px;font-size:13px;color:var(--muted);max-width:44ch}
 .hero-cards{display:flex;gap:12px;flex-wrap:wrap}
 .hero-card{display:flex;align-items:center;gap:14px;padding:16px 18px;background:var(--f3);border:1px solid var(--l2);border-top-color:var(--l3);-webkit-backdrop-filter:blur(20px) saturate(170%);backdrop-filter:blur(20px) saturate(170%);box-shadow:inset 0 1px 0 var(--f4);flex:1 1 230px;max-width:290px}
@@ -495,7 +514,7 @@ body.auth-mode .hdr,body.auth-mode .hdr-tabs,body.auth-mode .chat-fab{display:no
 
 <div class="loader-wrap" id="loader">
   <div class="loader-brand">AlBarber</div>
-  <div class="loader-txt" id="loader-txt">Préparation de votre expérience…</div>
+  <div class="loader-txt" id="loader-txt">Chargement…</div>
 </div>
 
 <div class="app-bg" id="app-bg" aria-hidden="true"></div>
@@ -505,7 +524,7 @@ body.auth-mode .hdr,body.auth-mode .hdr-tabs,body.auth-mode .chat-fab{display:no
   <div class="hdr-r">
     <button class="bell-btn" id="bell-btn" style="display:none" onclick="openAnnonces()" title="Annonces">Annonces<span class="bell-badge" id="bell-badge"></span></button>
     <span class="badge" id="ubadge" style="display:none"></span>
-    <button class="i-btn" id="logout-btn" style="display:none" onclick="doLogout()">Déco.</button>
+    <button class="i-btn" id="logout-btn" style="display:none" onclick="doLogout()">Quitter</button>
   </div>
 </div>
 
@@ -527,18 +546,20 @@ body.auth-mode .hdr,body.auth-mode .hdr-tabs,body.auth-mode .chat-fab{display:no
       <button class="hero-pill" onclick="sv('v-login')">Se connecter</button>
     </div>
     <div id="v-land" class="hero-land">
-      <h1 class="hero-title"><span>Réservez</span><span>votre coupe.</span></h1>
+      <h1 class="hero-title"><span>Réserve</span><span>ta coupe.</span></h1>
       <div class="hero-bottom">
         <div>
-          <p class="hero-tag">Votre créneau,<br>en quelques secondes.</p>
+          <p class="hero-tag">Choisis ton créneau<br>en ligne.</p>
           <div class="hero-cta">
             <button class="hero-btn hero-btn-solid" onclick="sv('v-login')">Se connecter</button>
-            <button class="hero-btn hero-btn-glass" onclick="sv('v-inv')">J'ai un lien d'invitation</button>
+            <button class="hero-btn hero-btn-glass" onclick="sv('v-inv')">J'ai une invitation</button>
           </div>
+          <p class="hero-note">L'inscription se fait avec un code d'invitation.</p>
+          <p class="legal-links"><a href="confidentialite.html">Confidentialité</a><a href="mentions-legales.html">Mentions légales</a></p>
         </div>
         <div class="hero-cards">
-          <div class="hero-card"><span class="hero-card-ico"><svg width="20" height="20" viewBox="0 0 256 256" fill="currentColor" aria-hidden="true"><path d="M208,32H184V24a8,8,0,0,0-16,0v8H88V24a8,8,0,0,0-16,0v8H48A16,16,0,0,0,32,48V208a16,16,0,0,0,16,16H208a16,16,0,0,0,16-16V48A16,16,0,0,0,208,32ZM72,48v8a8,8,0,0,0,16,0V48h80v8a8,8,0,0,0,16,0V48h24V80H48V48ZM208,208H48V96H208V208Z"/></svg></span><div><strong>En ligne</strong><span class="t">Réservez à toute heure, sans appeler</span></div></div>
-          <div class="hero-card"><span class="hero-card-ico"><svg width="20" height="20" viewBox="0 0 256 256" fill="currentColor" aria-hidden="true"><path d="M168,224a8,8,0,0,1-8,8H96a8,8,0,1,1,0-16h64A8,8,0,0,1,168,224Zm53.85-32A15.8,15.8,0,0,1,208,200H48a16,16,0,0,1-13.8-24.06C39.75,166.38,48,139.34,48,104a80,80,0,1,1,160,0c0,35.33,8.26,62.38,13.81,71.94A15.89,15.89,0,0,1,221.84,192ZM208,184c-7.73-13.27-16-43.95-16-80a64,64,0,1,0-128,0c0,36.06-8.28,66.74-16,80Z"/></svg></span><div><strong>Rappels</strong><span class="t">Une notification avant votre rendez-vous</span></div></div>
+          <div class="hero-card"><span class="hero-card-ico"><svg width="20" height="20" viewBox="0 0 256 256" fill="currentColor" aria-hidden="true"><path d="M208,32H184V24a8,8,0,0,0-16,0v8H88V24a8,8,0,0,0-16,0v8H48A16,16,0,0,0,32,48V208a16,16,0,0,0,16,16H208a16,16,0,0,0,16-16V48A16,16,0,0,0,208,32ZM72,48v8a8,8,0,0,0,16,0V48h80v8a8,8,0,0,0,16,0V48h24V80H48V48ZM208,208H48V96H208V208Z"/></svg></span><div><strong>Sans appeler</strong><span class="t">Les créneaux libres s'affichent en direct.</span></div></div>
+          <div class="hero-card"><span class="hero-card-ico"><svg width="20" height="20" viewBox="0 0 256 256" fill="currentColor" aria-hidden="true"><path d="M168,224a8,8,0,0,1-8,8H96a8,8,0,1,1,0-16h64A8,8,0,0,1,168,224Zm53.85-32A15.8,15.8,0,0,1,208,200H48a16,16,0,0,1-13.8-24.06C39.75,166.38,48,139.34,48,104a80,80,0,1,1,160,0c0,35.33,8.26,62.38,13.81,71.94A15.89,15.89,0,0,1,221.84,192ZM208,184c-7.73-13.27-16-43.95-16-80a64,64,0,1,0-128,0c0,36.06-8.28,66.74-16,80Z"/></svg></span><div><strong>Rappel</strong><span class="t">Une notification avant ton rendez-vous, si tu l'actives.</span></div></div>
         </div>
       </div>
     </div>
@@ -546,17 +567,17 @@ body.auth-mode .hdr,body.auth-mode .hdr-tabs,body.auth-mode .chat-fab{display:no
     <div class="auth-card">
       <div id="v-inv" style="display:none">
         <h1>Invitation</h1>
-        <p class="sub">Entrez le code reçu dans votre invitation.</p>
+        <p class="sub">Entre le code reçu avec ton invitation.</p>
         <div id="inv-msg" class="msg"></div>
         <div class="fld"><label class="lbl">Code d'invitation</label>
           <input class="inp" id="inv-inp" placeholder="INV-XXXXXX" autocomplete="off" autocapitalize="characters" spellcheck="false" oninput="this.value=this.value.toUpperCase().replace(/[^A-Z0-9-]/g,'')">
         </div>
-        <button class="btn btn-gold" onclick="checkInvite()">Valider le code </button>
-        <div class="auth-ft"><button class="link" onclick="sv('v-land')">← Retour</button></div>
+        <button class="btn btn-gold" onclick="checkInvite()">Valider le code</button>
+        <div class="auth-ft"><button class="link" onclick="sv('v-land')">Retour</button></div>
       </div>
       <div id="v-reg" style="display:none">
-        <h1>Créer un compte</h1>
-        <p class="sub">Renseignez vos informations.</p>
+        <h1>Crée ton compte</h1>
+        <p class="sub">Remplis tes informations.</p>
         <div id="reg-msg" class="msg"></div>
         <div class="fld"><label class="lbl">Prénom</label><input class="inp" id="r-first" placeholder="Jean" autocomplete="given-name"></div>
         <div class="fld"><label class="lbl">Nom</label><input class="inp" id="r-last" placeholder="Dupont" autocomplete="family-name"></div>
@@ -565,17 +586,17 @@ body.auth-mode .hdr,body.auth-mode .hdr-tabs,body.auth-mode .chat-fab{display:no
           <input class="inp" id="r-user" placeholder="jean_dupont" autocomplete="username" autocapitalize="none" spellcheck="false">
           <p style="font-size:11px;color:var(--hint);margin-top:5px">Lettres, chiffres et _ uniquement.</p>
         </div>
-        <button class="btn btn-dark" id="reg-btn" onclick="doReg()">Créer mon compte </button>
+        <button class="btn btn-dark" id="reg-btn" onclick="doReg()">Créer mon compte</button>
       </div>
       <div id="v-login" style="display:none">
         <h1>Connexion</h1>
-        <p class="sub">Entrez votre pseudo.</p>
+        <p class="sub">Entre ton pseudo.</p>
         <div id="log-msg" class="msg"></div>
         <div class="fld"><label class="lbl">Pseudo</label>
           <input class="inp" id="l-user" placeholder="jean_dupont" autocomplete="username" autocapitalize="none" spellcheck="false" onkeydown="if(event.key==='Enter')doLogin()">
         </div>
-        <button class="btn btn-dark" id="login-btn" onclick="doLogin()">Se connecter </button>
-        <div class="auth-ft"><button class="link" onclick="sv('v-land')">← Retour</button></div>
+        <button class="btn btn-dark" id="login-btn" onclick="doLogin()">Se connecter</button>
+        <div class="auth-ft"><button class="link" onclick="sv('v-land')">Retour</button></div>
       </div>
     </div>
     </div>
@@ -587,7 +608,7 @@ body.auth-mode .hdr,body.auth-mode .hdr-tabs,body.auth-mode .chat-fab{display:no
   <div class="push-banner" id="push-banner" style="display:none">
     <div class="pb-body">
       <strong>Activer les notifications ?</strong>
-      <span>Sois prévenu dès qu'un nouveau créneau se libère et reçois un rappel avant ton rendez-vous.</span>
+      <span>Sois prévenu quand un créneau se libère. Reçois un rappel avant ton rendez-vous.</span>
       <div class="pb-acts">
         <button class="btn btn-dark btn-sm" onclick="activatePushFromBanner()">Activer</button>
         <button class="btn btn-out btn-sm" onclick="dismissPushBanner()">Non merci</button>
@@ -614,7 +635,7 @@ body.auth-mode .hdr,body.auth-mode .hdr-tabs,body.auth-mode .chat-fab{display:no
 <!-- PAIEMENT -->
 <div id="s-paiement" class="scr">
   <div class="pg-title">Moyens de paiement</div>
-  <p style="font-size:13.5px;color:var(--muted);margin-bottom:20px;line-height:1.6">Voici comment vous pouvez régler votre prestation.</p>
+  <p style="font-size:13.5px;color:var(--muted);margin-bottom:20px;line-height:1.6">Voici comment régler ta prestation.</p>
   <div id="pay-list"></div>
 </div>
 
@@ -626,25 +647,25 @@ body.auth-mode .hdr,body.auth-mode .hdr-tabs,body.auth-mode .chat-fab{display:no
     <div class="profil-name" id="profil-name"></div>
     <div class="profil-username" id="profil-username"></div>
     <div id="profil-email" style="text-align:center;font-size:12px;color:var(--hint);margin-bottom:18px"></div>
-    <button class="btn btn-out btn-sm" style="margin:0 auto;display:flex" onclick="openEditProfil()"> Modifier</button>
+    <button class="btn btn-out btn-sm" style="margin:0 auto;display:flex" onclick="openEditProfil()">Modifier</button>
   </div>
   <div class="card">
-    <h3> Ma coupe idéale</h3>
-    <p style="font-size:13px;color:var(--muted);margin-bottom:14px">Réponds à un court questionnaire et prends 3 photos pour recevoir des suggestions de coupes adaptées à ta morphologie.</p>
-    <button class="btn btn-dark btn-sm" onclick="openHairReco()">Découvrir ma coupe idéale</button>
+    <h3>Ma coupe idéale</h3>
+    <p style="font-size:13px;color:var(--muted);margin-bottom:14px">Réponds à quelques questions et envoie 3 photos. Tu reçois des coupes adaptées à ton visage.</p>
+    <button class="btn btn-dark btn-sm" onclick="openHairReco()">Trouver ma coupe idéale</button>
   </div>
   <div class="card">
-    <h3> Notifications</h3>
+    <h3>Notifications</h3>
     <div class="notif-row">
-      <div class="notif-info"><strong>Nouveau créneau disponible</strong><span>Notification quand un créneau est rendu visible</span></div>
+      <div class="notif-info"><strong>Nouveau créneau</strong><span>Une notification quand un créneau est publié</span></div>
       <label class="toggle"><input type="checkbox" id="n-available" onchange="saveNotifPref()"><div class="toggle-track"></div><div class="toggle-thumb"></div></label>
     </div>
     <div class="notif-row">
-      <div class="notif-info"><strong>Créneau libéré</strong><span>Notification quand une réservation est annulée</span></div>
+      <div class="notif-info"><strong>Créneau libéré</strong><span>Une notification quand une réservation est annulée</span></div>
       <label class="toggle"><input type="checkbox" id="n-released" onchange="saveNotifPref()"><div class="toggle-track"></div><div class="toggle-thumb"></div></label>
     </div>
     <div class="notif-row">
-      <div class="notif-info"><strong>Rappels rendez-vous</strong><span>Notification le matin + 30 min avant votre coupe</span></div>
+      <div class="notif-info"><strong>Rappels</strong><span>Une notification le matin et 30 min avant ta coupe</span></div>
       <label class="toggle"><input type="checkbox" id="n-reminder" onchange="saveNotifPref()"><div class="toggle-track"></div><div class="toggle-thumb"></div></label>
     </div>
     <div class="notif-row">
@@ -653,13 +674,14 @@ body.auth-mode .hdr,body.auth-mode .hdr-tabs,body.auth-mode .chat-fab{display:no
     </div>
   </div>
   <div class="card" id="my-requests-card" style="display:none">
-    <h3> Mes demandes de créneaux</h3>
+    <h3>Mes demandes de créneaux</h3>
     <div id="my-requests-list"></div>
   </div>
   <div class="card">
-    <h3> Mes réservations</h3>
+    <h3>Mes réservations</h3>
     <div id="hist-list"></div>
   </div>
+  <p class="legal-links" style="margin-top:8px"><a href="confidentialite.html">Confidentialité</a><a href="mentions-legales.html">Mentions légales</a></p>
 </div>
 
 <!-- COUPE IDEALE -->
@@ -668,14 +690,14 @@ body.auth-mode .hdr,body.auth-mode .hdr-tabs,body.auth-mode .chat-fab{display:no
 
   <div id="hr-step-consent" class="card">
     <h3>Avant de commencer</h3>
-    <p style="font-size:13px;color:var(--muted);line-height:1.6;margin-bottom:14px">Tes photos sont envoyées à notre assistant IA uniquement pour analyser ta morphologie et te proposer des styles adaptés. Elles ne sont <strong>jamais enregistrées</strong> sur nos serveurs ni partagées. Seul le résultat (type de visage, suggestions de coupes) est conservé, pour que tu puisses le retrouver plus tard.</p>
+    <p style="font-size:13px;color:var(--muted);line-height:1.6;margin-bottom:14px">Tes photos sont envoyées à un assistant IA, uniquement pour analyser ton visage et te proposer des coupes. Elles ne sont <strong>jamais enregistrées</strong> sur nos serveurs. Seul le résultat (type de visage, coupes proposées) est conservé pour que tu le retrouves.</p>
     <label style="display:flex;align-items:flex-start;gap:9px;font-size:13px;color:var(--tx);margin-bottom:16px;cursor:pointer">
       <input type="checkbox" id="hr-consent-chk" onchange="document.getElementById('hr-consent-btn').disabled=!this.checked" style="margin-top:2px">
       <span>J'ai compris et j'accepte que mes photos soient analysées de cette façon.</span>
     </label>
     <div style="display:flex;gap:8px">
       <button class="btn btn-out btn-sm" onclick="showScr('s-profil')">Annuler</button>
-      <button class="btn btn-dark" id="hr-consent-btn" disabled onclick="hrGoStep('questionnaire')">Continuer </button>
+      <button class="btn btn-dark" id="hr-consent-btn" disabled onclick="hrGoStep('questionnaire')">Continuer</button>
     </div>
   </div>
 
@@ -696,17 +718,17 @@ body.auth-mode .hdr,body.auth-mode .hdr-tabs,body.auth-mode .chat-fab{display:no
     <div class="fld"><label class="lbl">Cuir chevelu</label>
       <select class="inp" id="hr-q-cuirchevelu"><option value="normal">Normal</option><option value="gras">Gras</option><option value="sec">Sec</option><option value="sensible">Sensible</option></select>
     </div>
-    <button class="btn btn-dark" onclick="hrGoStep('photos')">Continuer </button>
+    <button class="btn btn-dark" onclick="hrGoStep('photos')">Continuer</button>
   </div>
 
   <div id="hr-step-photos" class="card" style="display:none">
     <h3>Trois photos de ton visage</h3>
-    <p style="font-size:12px;color:var(--muted);margin-bottom:14px">Face, profil gauche, profil droit. Bonne lumière, cheveux dégagés du visage si possible.</p>
+    <p style="font-size:12px;color:var(--muted);margin-bottom:14px">Face, profil gauche, profil droit. Prends-les en bonne lumière, cheveux dégagés si possible.</p>
     <div class="hr-photo-row"><span class="lbl">Face</span><div class="hr-photo-pic" id="hr-pic-face"></div><label class="link" style="cursor:pointer">Choisir<input type="file" accept="image/*" capture="user" style="display:none" onchange="hrPhotoChosen(event,'face')"></label></div>
     <div class="hr-photo-row"><span class="lbl">Profil gauche</span><div class="hr-photo-pic" id="hr-pic-left"></div><label class="link" style="cursor:pointer">Choisir<input type="file" accept="image/*" capture="user" style="display:none" onchange="hrPhotoChosen(event,'left')"></label></div>
     <div class="hr-photo-row"><span class="lbl">Profil droit</span><div class="hr-photo-pic" id="hr-pic-right"></div><label class="link" style="cursor:pointer">Choisir<input type="file" accept="image/*" capture="user" style="display:none" onchange="hrPhotoChosen(event,'right')"></label></div>
     <div id="hr-photos-status" class="msg" style="margin-top:11px"></div>
-    <button class="btn btn-dark" id="hr-submit-btn" onclick="submitHairReco()" style="margin-top:8px" disabled>Obtenir ma recommandation</button>
+    <button class="btn btn-dark" id="hr-submit-btn" onclick="submitHairReco()" style="margin-top:8px" disabled>Voir ma recommandation</button>
   </div>
 
   <div id="hr-step-loading" class="card" style="display:none">
@@ -724,20 +746,20 @@ body.auth-mode .hdr,body.auth-mode .hdr-tabs,body.auth-mode .chat-fab{display:no
 <div id="s-adm" class="scr">
   <div class="pg-title">Administration</div>
   <div class="a-tabs">
-    <button class="a-tab on" id="at-slots" onclick="atab('slots')"> Créneaux</button>
-    <button class="a-tab" id="at-services" onclick="atab('services')"> Prestations</button>
-    <button class="a-tab" id="at-stats" onclick="atab('stats')"> Stats</button>
-    <button class="a-tab" id="at-paiement" onclick="atab('paiement')"> Paiement</button>
-    <button class="a-tab" id="at-annonces" onclick="atab('annonces')"> Annonces</button>
-    <button class="a-tab" id="at-membres" onclick="atab('membres')"> Membres</button>
-    <button class="a-tab" id="at-requests" onclick="atab('requests')"> Demandes</button>
-    <button class="a-tab" id="at-invite" onclick="atab('invite')"> Invitation</button>
+    <button class="a-tab on" id="at-slots" onclick="atab('slots')">Créneaux</button>
+    <button class="a-tab" id="at-services" onclick="atab('services')">Prestations</button>
+    <button class="a-tab" id="at-stats" onclick="atab('stats')">Stats</button>
+    <button class="a-tab" id="at-paiement" onclick="atab('paiement')">Paiement</button>
+    <button class="a-tab" id="at-annonces" onclick="atab('annonces')">Annonces</button>
+    <button class="a-tab" id="at-membres" onclick="atab('membres')">Membres</button>
+    <button class="a-tab" id="at-requests" onclick="atab('requests')">Demandes</button>
+    <button class="a-tab" id="at-invite" onclick="atab('invite')">Invitation</button>
   </div>
 
   <!-- SLOTS -->
   <div id="ap-slots">
     <div class="vis-banner">
-      <div><p><strong> Visibilité globale</strong>Rendez tous vos créneaux visibles en un clic.</p></div>
+      <div><p><strong> Visibilité globale</strong>Rends tous tes créneaux visibles en un clic.</p></div>
       <label class="toggle-wrap">
         <span>Cachés</span>
         <label class="toggle"><input type="checkbox" id="vis-toggle" onchange="toggleAllVisibility(this.checked)"><div class="toggle-track"></div><div class="toggle-thumb"></div></label>
@@ -756,28 +778,28 @@ body.auth-mode .hdr,body.auth-mode .hdr-tabs,body.auth-mode .chat-fab{display:no
         <div class="fld"><label class="lbl">Heure début</label><select id="adm-time-start" class="inp"></select></div>
         <div class="fld"><label class="lbl">Heure fin (optionnel)</label><select id="adm-time-end" class="inp"><option value="">Une seule heure</option></select></div>
       </div>
-      <p style="font-size:11px;color:var(--hint);margin-bottom:11px">Le créneau est créé masqué. La prestation sera choisie par le client juste après sa réservation. Utilisez « Publier des créneaux » ci-dessous pour le rendre visible, tout de suite ou à une date programmée.</p>
-      <button class="btn btn-dark btn-sm" onclick="addSlot()"> Ajouter</button>
+      <p style="font-size:11px;color:var(--hint);margin-bottom:11px">Le créneau est créé masqué. Le client choisit la prestation juste après avoir réservé. Utilise « Publier des créneaux » plus bas pour le rendre visible, tout de suite ou à une date programmée.</p>
+      <button class="btn btn-dark btn-sm" onclick="addSlot()">Ajouter</button>
       <div id="as-msg" class="msg" style="margin-top:11px"></div>
     </div>
     <div class="card">
-      <h3> Publier des créneaux</h3>
-      <p style="font-size:13px;color:var(--muted);margin-bottom:13px">Choisissez ce qu'il se passe pour les créneaux créés mais pas encore publiés : publication immédiate, ou programmée à un jour et une heure précis. Laissez les dates vides pour viser tous les créneaux en attente.</p>
+      <h3>Publier des créneaux</h3>
+      <p style="font-size:13px;color:var(--muted);margin-bottom:13px">Publie les créneaux créés mais pas encore visibles : tout de suite, ou à un jour et une heure précis. Laisse les dates vides pour viser tous les créneaux en attente.</p>
       <div id="pub-pending-info" style="margin-bottom:13px"></div>
       <div class="a-row">
         <div class="fld"><label class="lbl">Du (optionnel)</label><input type="date" id="pub-from" class="inp"></div>
         <div class="fld"><label class="lbl">Au (optionnel)</label><input type="date" id="pub-to" class="inp"></div>
       </div>
       <div style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:11px">
-        <button class="btn btn-dark btn-sm" onclick="publishNow()"> Publier maintenant</button>
-        <button class="btn btn-out btn-sm" onclick="togglePubSched()"> Programmer…</button>
+        <button class="btn btn-dark btn-sm" onclick="publishNow()">Publier maintenant</button>
+        <button class="btn btn-out btn-sm" onclick="togglePubSched()">Programmer…</button>
       </div>
       <div id="pub-sched" style="display:none;margin-bottom:11px">
         <div class="a-row">
           <div class="fld"><label class="lbl">Date de mise en ligne</label><input type="date" id="pub-date" class="inp"></div>
           <div class="fld"><label class="lbl">Heure</label><input type="time" id="pub-time" class="inp" value="09:00"></div>
         </div>
-        <button class="btn btn-dark btn-sm" onclick="schedulePublish()"> Confirmer la programmation</button>
+        <button class="btn btn-dark btn-sm" onclick="schedulePublish()">Confirmer la programmation</button>
       </div>
       <div id="pub-msg" class="msg"></div>
     </div>
@@ -792,7 +814,7 @@ body.auth-mode .hdr,body.auth-mode .hdr-tabs,body.auth-mode .chat-fab{display:no
         <div class="fld"><label class="lbl">Prestation</label><select id="man-service" class="inp"></select></div>
         <div class="fld"><label class="lbl">Client</label><input class="inp" id="man-client" placeholder="Nom du client"></div>
       </div>
-      <button class="btn btn-out btn-sm" onclick="addManualSlot()"> Ajouter (masqué)</button>
+      <button class="btn btn-out btn-sm" onclick="addManualSlot()">Ajouter (masqué)</button>
       <div id="man-msg" class="msg" style="margin-top:11px"></div>
     </div>
     <div class="card">
@@ -802,8 +824,8 @@ body.auth-mode .hdr,body.auth-mode .hdr-tabs,body.auth-mode .chat-fab{display:no
         <button id="sf-past" onclick="setSlotFilter('past')">Historique</button>
       </div>
       <div style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:13px">
-        <button class="btn btn-out btn-sm" onclick="showAllSlots(true)"> Tout visible</button>
-        <button class="btn btn-out btn-sm" onclick="showAllSlots(false)"> Tout cacher</button>
+        <button class="btn btn-out btn-sm" onclick="showAllSlots(true)">Tout visible</button>
+        <button class="btn btn-out btn-sm" onclick="showAllSlots(false)">Tout cacher</button>
       </div>
       <div id="slot-list"></div>
     </div>
@@ -817,7 +839,7 @@ body.auth-mode .hdr,body.auth-mode .hdr-tabs,body.auth-mode .chat-fab{display:no
         <div class="fld"><label class="lbl">Nom</label><input class="inp" id="svc-name" placeholder="Ex : Coupe simple"></div>
         <div class="fld"><label class="lbl">Prix (€)</label><input class="inp" id="svc-price" type="number" min="0" step="0.5" placeholder="12"></div>
       </div>
-      <button class="btn btn-dark btn-sm" onclick="addService()"> Ajouter</button>
+      <button class="btn btn-dark btn-sm" onclick="addService()">Ajouter</button>
       <div id="svc-msg" class="msg" style="margin-top:11px"></div>
     </div>
     <div class="card">
@@ -854,7 +876,7 @@ body.auth-mode .hdr,body.auth-mode .hdr-tabs,body.auth-mode .chat-fab{display:no
         </label>
       </div>
       <div style="display:flex;gap:9px;flex-wrap:wrap">
-        <button class="btn btn-dark btn-sm" id="pay-save-btn" onclick="savePayment()"> Ajouter</button>
+        <button class="btn btn-dark btn-sm" id="pay-save-btn" onclick="savePayment()">Ajouter</button>
         <button class="btn btn-out btn-sm" id="pay-cancel-btn" style="display:none" onclick="cancelEditPayment()">Annuler</button>
       </div>
       <div id="pay-msg" class="msg" style="margin-top:11px"></div>
@@ -869,11 +891,11 @@ body.auth-mode .hdr,body.auth-mode .hdr-tabs,body.auth-mode .chat-fab{display:no
   <div id="ap-annonces" style="display:none">
     <div class="card">
       <h3>Créer une annonce</h3>
-      <p style="font-size:13px;color:var(--muted);margin-bottom:15px">L'annonce apparaîtra en pop-up à chaque ouverture de l'app et sera accessible via la cloche.</p>
+      <p style="font-size:13px;color:var(--muted);margin-bottom:15px">L'annonce s'ouvre à chaque lancement de l'app. Elle reste accessible via « Annonces ».</p>
       <div class="fld"><label class="lbl">Titre</label><input class="inp" id="ann-title" placeholder="Ex : Mise en ligne des créneaux ce soir à 18h"></div>
-      <div class="fld"><label class="lbl">Message</label><textarea class="inp" id="ann-msg" placeholder="Ex : Les créneaux de la semaine prochaine seront disponibles ce soir à 18h. Soyez prêts !"></textarea></div>
+      <div class="fld"><label class="lbl">Message</label><textarea class="inp" id="ann-msg" placeholder="Ex : Les créneaux de la semaine prochaine seront disponibles ce soir à 18h. Sois prêt."></textarea></div>
       <div class="fld"><label class="lbl">Visible jusqu'au</label><input type="date" id="ann-expires" class="inp"></div>
-      <button class="btn btn-dark btn-sm" onclick="addAnnonce()" style="margin-top:5px"> Publier l'annonce</button>
+      <button class="btn btn-dark btn-sm" onclick="addAnnonce()" style="margin-top:5px">Publier l'annonce</button>
       <div id="ann-msg-status" class="msg" style="margin-top:11px"></div>
     </div>
     <div class="card">
@@ -900,23 +922,23 @@ body.auth-mode .hdr,body.auth-mode .hdr-tabs,body.auth-mode .chat-fab{display:no
   <div id="ap-invite" style="display:none">
     <div class="card">
       <h3>Lien d'invitation</h3>
-      <p style="font-size:13px;color:var(--muted);margin-bottom:15px">Partagez ce lien avec vos clients.</p>
+      <p style="font-size:13px;color:var(--muted);margin-bottom:15px">Partage ce lien avec tes clients.</p>
       <div class="inv-box" id="inv-disp"></div>
       <div class="cp-row">
-        <button class="btn btn-dark btn-sm" onclick="cpInvite()"> Copier</button>
-        <button class="btn btn-out btn-sm" onclick="regenInvite()"> Nouveau code</button>
+        <button class="btn btn-dark btn-sm" onclick="cpInvite()">Copier</button>
+        <button class="btn btn-out btn-sm" onclick="regenInvite()">Nouveau code</button>
       </div>
     </div>
     <div class="card">
-      <h3>Ton de l'assistant (chatbot)</h3>
-      <p style="font-size:13px;color:var(--muted);margin-bottom:15px">Décrivez le ton à adopter, ou collez quelques messages types que vous envoyez habituellement : l'assistant s'en inspire. Laissez vide pour le ton par défaut (chaleureux, direct, tutoiement).</p>
+      <h3>Ton de l'assistant</h3>
+      <p style="font-size:13px;color:var(--muted);margin-bottom:15px">Décris le ton à adopter, ou colle quelques messages que tu envoies d'habitude. L'assistant s'en inspire. Laisse vide pour le ton par défaut (chaleureux, direct, tutoiement).</p>
       <div class="fld"><textarea class="inp" id="persona-inp" placeholder="Ex : Direct et chaleureux, tutoiement, phrases courtes. Exemple : « Ton créneau est noté. À demain. »" style="min-height:120px"></textarea></div>
       <button class="btn btn-dark btn-sm" onclick="savePersona()">Enregistrer le ton</button>
       <div id="persona-status" class="msg" style="margin-top:11px"></div>
     </div>
     <div class="card">
       <h3>Tendances coiffure</h3>
-      <p style="font-size:13px;color:var(--muted);margin-bottom:15px">Rafraîchit le résumé des tendances actuelles utilisé par la recommandation de coupe. À refaire environ une fois par mois.</p>
+      <p style="font-size:13px;color:var(--muted);margin-bottom:15px">Met à jour le résumé des tendances utilisé pour recommander des coupes. À refaire une fois par mois environ.</p>
       <button class="btn btn-dark btn-sm" id="trends-refresh-btn" onclick="refreshTrends()">Rafraîchir les tendances</button>
       <div id="trends-status" class="msg" style="margin-top:11px"></div>
     </div>
@@ -958,7 +980,7 @@ body.auth-mode .hdr,body.auth-mode .hdr-tabs,body.auth-mode .chat-fab{display:no
   <div class="modal">
     <button class="mx" onclick="closeEditProfil()">×</button>
     <h3>Modifier mon profil</h3>
-    <p class="ms">Mettez à jour vos informations.</p>
+    <p class="ms">Mets à jour tes informations.</p>
     <div id="edit-msg" class="msg"></div>
     <div class="avatar-edit">
       <div class="avatar-edit-pic" id="e-avatar-pic"></div>
@@ -982,8 +1004,8 @@ body.auth-mode .hdr,body.auth-mode .hdr-tabs,body.auth-mode .chat-fab{display:no
 <!-- MODAL CHOIX PRESTATION -->
 <div class="ov" id="ov-svc">
   <div class="modal">
-    <h3>Quelle prestation souhaitez-vous ?</h3>
-    <p class="ms">Choisissez la coupe correspondant à votre créneau réservé.</p>
+    <h3>Quelle prestation veux-tu ?</h3>
+    <p class="ms">Choisis la coupe pour ton créneau.</p>
     <div class="modal-acts" id="svc-pick-acts"></div>
   </div>
 </div>
@@ -991,8 +1013,8 @@ body.auth-mode .hdr,body.auth-mode .hdr-tabs,body.auth-mode .chat-fab{display:no
 <!-- MODAL AJOUT AGENDA -->
 <div class="ov" id="ov-calprompt" onclick="if(event.target===this)closeCalPrompt()">
   <div class="modal">
-    <h3>Ajouter à votre agenda ?</h3>
-    <p class="ms">Recevez ce rendez-vous directement dans votre calendrier personnel.</p>
+    <h3>Ajouter à ton agenda ?</h3>
+    <p class="ms">Ajoute ce rendez-vous à ton calendrier.</p>
     <div class="modal-acts" id="calprompt-acts"></div>
   </div>
 </div>
@@ -1006,7 +1028,7 @@ body.auth-mode .hdr,body.auth-mode .hdr-tabs,body.auth-mode .chat-fab{display:no
     </div>
     <div class="chat-body" id="chat-body"></div>
     <div class="chat-input-row">
-      <input id="chat-inp" placeholder="Écrivez votre message…" autocomplete="off" onkeydown="if(event.key==='Enter')sendChatMessage()">
+      <input id="chat-inp" placeholder="Écris ton message…" autocomplete="off" onkeydown="if(event.key==='Enter')sendChatMessage()">
       <button class="chat-send" id="chat-send-btn" onclick="sendChatMessage()">Envoyer</button>
     </div>
   </div>
@@ -1147,7 +1169,7 @@ function buildChatSystemPrompt(){
   ];
 }
 function openChat(){
-  if(!chatMessages.length)addChatBubble('bot',"Salut ! Je suis là pour t'aider avec l'app ou pour transmettre une demande de créneau. Comment je peux t'aider ?");
+  if(!chatMessages.length)addChatBubble('bot',"Salut. Je peux t'aider avec l'app ou transmettre une demande de créneau. Que veux-tu faire ?");
   openOverlay('ov-chat');
   setTimeout(()=>document.getElementById('chat-inp').focus(),300);
 }
@@ -1266,7 +1288,7 @@ async function executeToolCall(name,input){
       if(error)return 'La réservation a échoué.';
       allSlots=allSlots.map(s=>s.id===input.slot_id?{...s,booked_by:CU.id}:s);
       renderCal();
-      return 'Créneau réservé avec succès.';
+      return 'Créneau réservé.';
     }
     if(name==='cancel_my_booking'){
       const slot=allSlots.find(s=>s.id===input.slot_id);
@@ -1314,7 +1336,7 @@ function handleSlotRequestRealtime(row){
   }
   if(CU&&row.client_id===CU.id&&row.status!=='pending'){
     let msg=null;
-    if(row.status==='accepted')msg='Bonne nouvelle : ta demande de créneau du '+row.requested_date+' à '+row.requested_time+' a été acceptée, c\'est ajouté à ton calendrier !';
+    if(row.status==='accepted')msg='Ta demande de créneau du '+row.requested_date+' à '+row.requested_time+' est acceptée. Elle est ajoutée à ton calendrier.';
     else if(row.status==='declined')msg='Désolé, ta demande de créneau du '+row.requested_date+' à '+row.requested_time+' n\'a pas pu être acceptée.'+(row.admin_response?(' '+row.admin_response):'');
     else if(row.status==='alternatives_proposed')msg='Le créneau demandé n\'était pas disponible, mais voici des alternatives :';
     if(msg){
@@ -1378,7 +1400,7 @@ async function hrPhotoChosen(e,slot){
   try{
     const dataUrl=await resizeImageToDataUrl(file,1024);
     hrPhotos[slot]=dataUrl;
-    document.getElementById('hr-pic-'+slot).innerHTML=`<img src="${dataUrl}" alt="">`;
+    document.getElementById('hr-pic-'+slot).innerHTML=`<img src="${dataUrl}" alt="Aperçu de la photo ${slot==='face'?'de face':slot==='left'?'du côté gauche':'du côté droit'}">`;
     document.getElementById('hr-submit-btn').disabled=!(hrPhotos.face&&hrPhotos.left&&hrPhotos.right);
   }catch(err){
     const status=document.getElementById('hr-photos-status');
@@ -1449,7 +1471,7 @@ function renderHairRecoResult(reco){
 function hrRestart(){openHairReco();}
 
 async function boot(){
-  showLoader(true,'Préparation de votre expérience…');
+  showLoader(true,'Chargement…');
   fillTimeDropdowns();
   try{
     const sessId=localStorage.getItem('cb_session');
@@ -1567,14 +1589,14 @@ async function addService(){
   const priceEl=document.getElementById('svc-price');
   const price=parseFloat(priceEl.value);
   const m=document.getElementById('svc-msg');
-  if(!name||isNaN(price)||price<0){showMsg(m,'err','Renseignez un nom et un prix valides.');return;}
+  if(!name||isNaN(price)||price<0){showMsg(m,'err','Indique un nom et un prix valides.');return;}
   const price_cents=Math.round(price*100);
   const sort_order=allServices.length;
   const{error}=await sb.from('services').insert({name,price_cents,sort_order});
   if(error){showMsg(m,'err','Erreur lors de l\'ajout.');return;}
   document.getElementById('svc-name').value='';priceEl.value='';
   await loadServices();populateServiceSelects();renderServices();
-  showMsg(m,'ok','Prestation ajoutée !');
+  showMsg(m,'ok','Prestation ajoutée.');
 }
 async function toggleServiceActive(id,active){
   await sb.from('services').update({active}).eq('id',id);
@@ -1618,7 +1640,7 @@ function renderPaiement(){
 }
 function copyPayment(id){
   const p=allPayments.find(x=>x.id===id);if(!p||!p.allow_copy)return;
-  navigator.clipboard.writeText(p.description).then(()=>showToast('Copié !')).catch(()=>showToast('Copie impossible sur cet appareil'));
+  navigator.clipboard.writeText(p.description).then(()=>showToast('Copié.')).catch(()=>showToast('Copie impossible sur cet appareil'));
 }
 async function savePayment(){
   const title=document.getElementById('pay-title').value.trim();
@@ -1808,7 +1830,7 @@ async function checkInvite(){
   const m=document.getElementById('inv-msg');
   const{data:inv}=await sb.from('settings').select('value').eq('key','invite_code').single();
   if(code!==(inv?.value||inviteCode)){showMsg(m,'err','Code invalide.');return;}
-  showMsg(m,'ok','Code valide !');setTimeout(()=>sv('v-reg'),600);
+  showMsg(m,'ok','Code valide.');setTimeout(()=>sv('v-reg'),600);
 }
 
 async function doReg(){
@@ -1827,15 +1849,15 @@ async function doReg(){
     username,first,last,email,is_admin:false,
     notif_available:true,notif_released:true,notif_reminder:true,notif_confirm:true
   }).select().single();
-  if(error||!u){showMsg(m,'err',error&&error.code==='23505'?'Ce pseudo est déjà utilisé.':'Erreur. Réessayez.');setBtnLoading('reg-btn',false);return;}
+  if(error||!u){showMsg(m,'err',error&&error.code==='23505'?'Ce pseudo est déjà utilisé.':'Erreur. Réessaie.');setBtnLoading('reg-btn',false);return;}
   CU=u;localStorage.setItem('cb_session',u.id);
-  showMsg(m,'ok','Bienvenue '+first+' !');setTimeout(enterApp,700);
+  showMsg(m,'ok','Compte créé. Bienvenue '+first+'.');setTimeout(enterApp,700);
 }
 
 async function doLogin(){
   const username=document.getElementById('l-user').value.trim().toLowerCase();
   const m=document.getElementById('log-msg');
-  if(!username){showMsg(m,'err','Entrez votre pseudo.');return;}
+  if(!username){showMsg(m,'err','Entre ton pseudo.');return;}
   setBtnLoading('login-btn',true);
   const{data:u}=await sb.from('users').select('*').eq('username',username).single();
   if(!u){showMsg(m,'err','Pseudo introuvable.');setBtnLoading('login-btn',false);return;}
@@ -1863,7 +1885,7 @@ async function touchLastSeen(){
   await sb.from('users').update({last_seen_at:now}).eq('id',CU.id);
 }
 async function enterApp(){
-  showLoader(true,'Préparation de votre expérience…');
+  showLoader(true,'Chargement…');
   await touchLastSeen();
   await loadSlots();await loadUsers();await loadAnnonces();await loadServices();await loadPayments();
   populateServiceSelects();
@@ -1889,6 +1911,8 @@ function showScr(id){
   document.querySelectorAll('.scr').forEach(s=>s.classList.remove('on'));
   document.getElementById(id).classList.add('on');
   document.body.classList.toggle('auth-mode',id==='s-auth');
+  const T={'s-auth':'Réserve ta coupe','s-cal':'Calendrier','s-paiement':'Paiement','s-profil':'Mon profil','s-hairreco':'Coupe idéale','s-adm':'Administration'};
+  document.title='AlBarber · '+(T[id]||'Réserve ta coupe');
 }
 function goTab(tab){
   ['cal','paiement','profil','adm'].forEach(t=>{const btn=document.getElementById('tab-'+t);if(btn)btn.classList.toggle('on',t===tab);});
@@ -1959,7 +1983,7 @@ function renderCal(){
             const label=slot.is_manual?(slot.manual_client_name||'Manuel'):'Masqué';
             html+=`<td><div class="sc hidden-slot" onclick="openM('${slot.id}')"><span class="sl h">${label}</span></div></td>`;
           }
-          else if(isPastDay&&!isAdm){html+=`<td><div class="sc past-slot"><span class="sl p">—</span></div></td>`;}
+          else if(isPastDay&&!isAdm){html+=`<td><div class="sc past-slot"><span class="sl p">·</span></div></td>`;}
           else if(isMine){html+=`<td><div class="sc mine" onclick="openM('${slot.id}')"><span class="sl m">Moi</span></div></td>`;}
           else if(isTaken){const bkr=allUsers.find(u=>u.id===slot.booked_by);html+=`<td><div class="sc taken"${isAdm?` onclick="openM('${slot.id}')"`:''}><span class="sl t">${isAdm?'@'+(bkr?.username||'?'):'Réservé'}</span></div></td>`;}
           else{html+=`<td><div class="sc free" onclick="openM('${slot.id}')"><span class="sl f">${t}</span></div></td>`;}
@@ -1970,12 +1994,12 @@ function renderCal(){
     if(isAdm)html+=`<tr><td colspan="8" style="text-align:center;padding:11px"><button class="btn btn-out btn-sm" onclick="goTab('adm')">+ Gérer</button></td></tr>`;
   }
   tbl.innerHTML=html+'</tbody>';
-  document.getElementById('cal-hint').textContent=isAdm?'Admin : appuyez sur + pour ajouter un créneau':'Appuyez sur un créneau vert pour le réserver.';
+  document.getElementById('cal-hint').textContent=isAdm?'Admin : touche + pour ajouter un créneau':'Touche un créneau vert pour le réserver.';
 }
 
 // ── MODAL SLOT : DETAIL RESERVATION ──
 function initialsOf(first,last){return (((first||'')[0]||'')+((last||'')[0]||'')).toUpperCase();}
-function avatarHtml(url,initials){return url?`<img src="${escapeHtml(url)}" alt="">`:escapeHtml(initials||'');}
+function avatarHtml(url,initials){return url?`<img src="${escapeHtml(url)}" alt="Photo de profil">`:escapeHtml(initials||'');}
 function showBookingDetail(o){
   document.getElementById('bd-avatar').innerHTML=avatarHtml(o.avatarUrl,o.initials);
   document.getElementById('bd-name').textContent=o.name;
@@ -2059,7 +2083,7 @@ async function confirmBook(){
   if(check?.booked_by!==CU.id){closeM();showAlert('zap','Déjà réservé','Réservé au même moment.');return;}
   allSlots=allSlots.map(s=>s.id===pendSlot?{...s,booked_by:CU.id}:s);
   const bookedId=pendSlot;
-  closeM();showToast('Créneau réservé !');renderCal();
+  closeM();showToast('Créneau réservé.');renderCal();
   openServicePicker(bookedId,true);
 }
 function openServicePicker(sid,allowSkip){
@@ -2159,7 +2183,7 @@ async function addAnnonce(){
   document.getElementById('ann-expires').value='';
   await loadAnnonces();
   updateBellBadge();
-  showMsg(m,'ok','Annonce publiée !');
+  showMsg(m,'ok','Annonce publiée.');
   renderAdmAnnonces();
 }
 
@@ -2225,7 +2249,7 @@ async function acceptSlotRequest(id){
 async function declineSlotRequest(id){
   const r=allSlotRequests.find(x=>x.id===id);if(!r)return;
   await sb.from('slot_requests').update({status:'declined',resolved_at:new Date().toISOString()}).eq('id',id);
-  notifyClientOfSlotRequestUpdate(r.client_id,'Réponse à ta demande','Ta demande du '+r.requested_date+' à '+r.requested_time+' n\'a malheureusement pas pu être acceptée.');
+  notifyClientOfSlotRequestUpdate(r.client_id,'Réponse à ta demande','Ta demande du '+r.requested_date+' à '+r.requested_time+' n\'a pas pu être acceptée.');
   showToast('Demande refusée.');
   renderAdmRequests(true);
 }
@@ -2247,7 +2271,7 @@ async function sendProposedAlternatives(id,btn){
   if(!alts.length){showToast('Renseigne au moins une alternative.');return;}
   const r=allSlotRequests.find(x=>x.id===id);if(!r)return;
   await sb.from('slot_requests').update({status:'alternatives_proposed',proposed_alternatives:alts,resolved_at:new Date().toISOString()}).eq('id',id);
-  notifyClientOfSlotRequestUpdate(r.client_id,'Alternatives proposées','Le créneau demandé n\'était pas disponible, découvre les alternatives dans le chat.');
+  notifyClientOfSlotRequestUpdate(r.client_id,'Alternatives proposées','Le créneau demandé n\'était pas disponible, vois les alternatives dans le chat.');
   showToast('Alternatives envoyées.');
   renderAdmRequests(true);
 }
@@ -2267,7 +2291,7 @@ async function addSlot(){
   const dur=parseInt(document.getElementById('adm-dur').value);
   const service_id=null;
   const m=document.getElementById('as-msg');
-  if(!date||!timeStart){showMsg(m,'err','Sélectionnez une date et une heure.');return;}
+  if(!date||!timeStart){showMsg(m,'err','Choisis une date et une heure.');return;}
   const visible=false;
   const timesToAdd=[];
   if(!timeEnd){timesToAdd.push(timeStart);}
@@ -2343,7 +2367,7 @@ async function schedulePublish(){
   const m=document.getElementById('pub-msg');
   const date=document.getElementById('pub-date').value;
   const time=document.getElementById('pub-time').value;
-  if(!date||!time){showMsg(m,'err','Choisissez une date et une heure de publication.');return;}
+  if(!date||!time){showMsg(m,'err','Choisis une date et une heure de publication.');return;}
   const publishAt=new Date(date+'T'+time+':00');
   if(isNaN(publishAt.getTime())){showMsg(m,'err','Date/heure invalide.');return;}
   const targets=pendingSlotsInRange();
@@ -2374,7 +2398,7 @@ async function addManualSlot(){
   const service_id=document.getElementById('man-service').value||null;
   const client=document.getElementById('man-client').value.trim();
   const m=document.getElementById('man-msg');
-  if(!date||!time||!client){showMsg(m,'err','Renseignez la date, l\'heure et le client.');return;}
+  if(!date||!time||!client){showMsg(m,'err','Indique la date, l\'heure et le client.');return;}
   if(allSlots.find(s=>s.date===date&&s.time===time)){showMsg(m,'err','Un créneau existe déjà à cette date/heure.');return;}
   const{data:ns,error}=await sb.from('slots').insert({date,time,booked_by:null,visible:false,is_manual:true,manual_client_name:client,duration_minutes:30,service_id,price_charged_cents:serviceCents(service_id)}).select().single();
   if(error){showMsg(m,'err','Erreur lors de l\'ajout.');return;}
@@ -2644,7 +2668,7 @@ function renderMembres(){
     const future=reservations.filter(s=>new Date(s.date+'T23:59')>=new Date());
     const past=reservations.filter(s=>new Date(s.date+'T23:59')<new Date());
     const initials=((u.first||'')[0]+(u.last||'')[0]).toUpperCase();
-    const pic=u.avatar_url?`<img src="${escapeHtml(u.avatar_url)}" alt="" style="width:100%;height:100%;object-fit:cover;border-radius:var(--r)">`:initials;
+    const pic=u.avatar_url?`<img src="${escapeHtml(u.avatar_url)}" alt="Photo de profil de ${escapeHtml(u.first||'')}" style="width:100%;height:100%;object-fit:cover;border-radius:var(--r)">`:initials;
     let resHtml='';
     if(future.length){resHtml+='<div style="font-size:11px;color:var(--green);font-weight:700;margin:7px 0 3px">À venir</div>';resHtml+=future.map(s=>{const d=new Date(s.date+'T12:00').toLocaleDateString('fr-FR',{weekday:'short',day:'numeric',month:'short'});return`<div style="font-size:12px;color:var(--muted);padding:2px 0">${d} à ${s.time}</div>`;}).join('');}
     if(past.length){resHtml+='<div style="font-size:11px;color:var(--hint);font-weight:700;margin:7px 0 3px">Historique</div>';resHtml+=past.slice(-3).map(s=>{const d=new Date(s.date+'T12:00').toLocaleDateString('fr-FR',{weekday:'short',day:'numeric',month:'short'});return`<div style="font-size:12px;color:var(--hint);padding:2px 0">${d} à ${s.time}</div>`;}).join('');}
@@ -2696,7 +2720,7 @@ async function refreshTrends(){
 }
 function cpInvite(){
   const link=location.origin+location.pathname+'?inv='+inviteCode;
-  navigator.clipboard.writeText(link).then(()=>showToast('Lien copié !')).catch(()=>showToast('Copiez manuellement'));
+  navigator.clipboard.writeText(link).then(()=>showToast('Lien copié.')).catch(()=>showToast('Copie le lien à la main.'));
 }
 async function regenInvite(){
   if(!confirm('Nouveau code ? L\'ancien ne fonctionnera plus.'))return;
@@ -2713,7 +2737,7 @@ async function delUser(id){
 function renderProfil(){
   if(!CU)return;
   const initials=initialsOf(CU.first,CU.last);
-  document.getElementById('profil-avatar').innerHTML=CU.avatar_url?`<img src="${escapeHtml(CU.avatar_url)}" alt="">`:escapeHtml(initials);
+  document.getElementById('profil-avatar').innerHTML=CU.avatar_url?`<img src="${escapeHtml(CU.avatar_url)}" alt="Ta photo de profil">`:escapeHtml(initials);
   document.getElementById('profil-name').textContent=CU.first+' '+CU.last;
   document.getElementById('profil-username').textContent='@'+CU.username;
   document.getElementById('profil-email').textContent=CU.email||'';
@@ -2769,10 +2793,10 @@ async function onAvatarFileChosen(e){
   e.target.value='';
   if(!file)return;
   const m=document.getElementById('edit-msg');
-  if(!file.type.startsWith('image/')){showMsg(m,'err','Choisissez un fichier image.');return;}
+  if(!file.type.startsWith('image/')){showMsg(m,'err','Choisis un fichier image.');return;}
   try{
     pendingAvatarDataUrl=await resizeImageToDataUrl(file,240);
-    document.getElementById('e-avatar-pic').innerHTML=`<img src="${pendingAvatarDataUrl}" alt="">`;
+    document.getElementById('e-avatar-pic').innerHTML=`<img src="${pendingAvatarDataUrl}" alt="Aperçu de ta nouvelle photo de profil">`;
     document.getElementById('e-avatar-remove').style.display='';
   }catch(err){showMsg(m,'err','Impossible de lire cette image.');}
 }
@@ -2788,7 +2812,7 @@ function openEditProfil(){
   document.getElementById('e-user').value=CU.username||'';
   document.getElementById('edit-msg').classList.remove('on');
   pendingAvatarDataUrl=undefined;
-  document.getElementById('e-avatar-pic').innerHTML=CU.avatar_url?`<img src="${escapeHtml(CU.avatar_url)}" alt="">`:escapeHtml(initialsOf(CU.first,CU.last));
+  document.getElementById('e-avatar-pic').innerHTML=CU.avatar_url?`<img src="${escapeHtml(CU.avatar_url)}" alt="Ta photo de profil">`:escapeHtml(initialsOf(CU.first,CU.last));
   document.getElementById('e-avatar-remove').style.display=CU.avatar_url?'':'none';
   openOverlay('ov-profil');
 }
@@ -2806,11 +2830,11 @@ async function saveProfil(){
   const updateObj={first,last,email,username};
   if(pendingAvatarDataUrl!==undefined)updateObj.avatar_url=pendingAvatarDataUrl;
   const{error}=await sb.from('users').update(updateObj).eq('id',CU.id);
-  if(error){showMsg(m,'err',error.code==='23505'?'Ce pseudo est déjà utilisé.':'Erreur. Réessayez.');return;}
+  if(error){showMsg(m,'err',error.code==='23505'?'Ce pseudo est déjà utilisé.':'Erreur. Réessaie.');return;}
   CU={...CU,...updateObj};
   closeEditProfil();renderProfil();
   document.getElementById('ubadge').innerHTML=CU.is_admin?'Admin':'@'+CU.username;
-  showToast('Profil mis à jour !');
+  showToast('Profil mis à jour.');
 }
 async function saveNotifPref(){
   const notif_available=document.getElementById('n-available').checked;

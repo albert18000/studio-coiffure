@@ -94,3 +94,12 @@ Avec « réduire les animations » activé dans le système, plus aucune animati
 - Zoom autorisé (pas de `user-scalable=no`).
 - Zones tactiles de 44 px minimum pour les actions principales.
 - Chaque image porte un texte alternatif utile.
+
+## Identité et fichiers publics
+
+- Logo : pas encore de logo. Le monogramme « A » (`assets/icons/icon.svg`) est un remplaçant. À changer quand le logo existe.
+- Favicon : `favicon.ico` (16 et 32 px), `assets/icons/icon.svg`, `apple-touch-icon.png` (180 px), `icon-192.png`, `icon-512.png`, déclarés dans `manifest.webmanifest`.
+- Image de partage : `assets/og.png` (1200 × 630), texte seul, sans portrait.
+- Portrait d'accueil : `assets/hero.jpg` est une image générée, provisoire. À remplacer par une vraie photo.
+- Pages : `index.html`, `confidentialite.html`, `mentions-legales.html`, `404.html`. Styles des pages statiques dans `assets/page.css`, mêmes variables.
+- `netlify.toml` masque `plans/`, `.claude/`, `netlify/`, `DESIGN.md` et fixe les en-têtes de sécurité.
