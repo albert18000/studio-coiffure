@@ -471,7 +471,7 @@ body.auth-mode .hdr,body.auth-mode .hdr-tabs,body.auth-mode .chat-fab{display:no
 .hero{position:relative;min-height:100vh;min-height:100svh;display:flex;flex-direction:column;color:#fff;isolation:isolate;overflow:hidden;background:radial-gradient(55% 60% at 82% 38%,rgba(138,82,240,.62),transparent 68%),radial-gradient(70% 55% at 0% 100%,rgba(66,30,138,.55),transparent 70%),linear-gradient(170deg,#170d3a 0%,#0b0620 100%)}
 .hero-bg{position:absolute;inset:0;z-index:-1;display:none;background:center/cover no-repeat}
 .hero.has-photo .hero-bg{display:block;background-image:var(--hero-img)}
-.hero.has-photo .hero-bg::after{content:'';position:absolute;inset:0;background:linear-gradient(90deg,rgba(11,6,32,.88) 0%,rgba(11,6,32,.42) 52%,rgba(46,18,110,.22) 100%),linear-gradient(180deg,rgba(11,6,32,.35),rgba(11,6,32,.62))}
+.hero.has-photo .hero-bg::after{content:'';position:absolute;inset:0;background:linear-gradient(90deg,rgba(11,6,32,.4) 0%,rgba(11,6,32,.08) 55%,transparent 100%),linear-gradient(180deg,transparent 60%,rgba(11,6,32,.55) 100%)}
 .hero-nav{position:absolute;top:0;left:0;right:0;z-index:5;display:flex;align-items:center;justify-content:space-between;padding:clamp(18px,3vw,30px) clamp(20px,4.4vw,64px)}
 .hero-brand{font-weight:800;letter-spacing:.24em;text-transform:uppercase;font-size:14px}
 .hero-pill{background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.3);color:#fff;border-radius:999px;padding:11px 20px;font-size:12px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;cursor:pointer;font-family:inherit;-webkit-backdrop-filter:blur(14px);backdrop-filter:blur(14px);transition:transform .12s var(--ease-out)}
@@ -490,9 +490,10 @@ body.auth-mode .hdr,body.auth-mode .hdr-tabs,body.auth-mode .chat-fab{display:no
 .hero-btn-glass{background:rgba(255,255,255,.1);border-color:rgba(255,255,255,.3);color:#fff;-webkit-backdrop-filter:blur(14px);backdrop-filter:blur(14px)}
 @media(hover:hover) and (pointer:fine){.hero-btn-solid:hover{background:#efe6ff}.hero-btn-glass:hover{background:rgba(255,255,255,.2)}}
 .hero-cards{display:flex;gap:12px;flex-wrap:wrap}
-.hero-card{padding:16px 18px;border-radius:20px;background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.22);border-top-color:rgba(255,255,255,.36);-webkit-backdrop-filter:blur(20px) saturate(170%);backdrop-filter:blur(20px) saturate(170%);box-shadow:inset 0 1px 0 rgba(255,255,255,.2);flex:1 1 230px;max-width:290px}
+.hero-card{display:flex;align-items:center;gap:14px;padding:16px 18px;border-radius:20px;background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.22);border-top-color:rgba(255,255,255,.36);-webkit-backdrop-filter:blur(20px) saturate(170%);backdrop-filter:blur(20px) saturate(170%);box-shadow:inset 0 1px 0 rgba(255,255,255,.2);flex:1 1 230px;max-width:290px}
 .hero-card strong{display:block;font-size:15px;font-weight:700;margin-bottom:3px}
-.hero-card span{font-size:12.5px;color:rgba(255,255,255,.76);line-height:1.45;display:block}
+.hero-card-ico{width:42px;height:42px;border-radius:50%;background:rgba(255,255,255,.12);display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.hero-card .t{font-size:12.5px;color:rgba(255,255,255,.76);line-height:1.45;display:block}
 .hero-form{display:none;flex:1;align-items:center;justify-content:center;padding:84px 16px 28px;position:relative;z-index:2}
 .hero:not(.land) .hero-form{display:flex}
 .hero:not(.land) .hero-land{display:none}
@@ -502,7 +503,7 @@ body.auth-mode .hdr,body.auth-mode .hdr-tabs,body.auth-mode .chat-fab{display:no
 .hero-tag{animation-delay:.07s}.hero-cta{animation-delay:.13s}.hero-card:nth-child(1){animation-delay:.18s}.hero-card:nth-child(2){animation-delay:.23s}
 .auth-card>div{animation:screenIn .25s var(--ease-out) both}
 @media(max-width:600px){.hero-btn{flex:1 1 100%}.hero-card{max-width:none}}
-@media(max-width:700px){.hero-bg,.app-bg.photo{background-position:80% center}}
+@media(max-width:700px){.app-bg.photo{background-position:90% center}.hero-bg{background-size:auto 740px;background-position:96% 0%;background-color:#0d0723}}
 @media(prefers-reduced-motion:reduce){.hero-title,.hero-tag,.hero-cta,.hero-card,.auth-card>div{animation:none!important}}
 
 /* Replis : moins de transparence, plus de contraste, navigateurs sans flou */
@@ -562,8 +563,8 @@ body.auth-mode .hdr,body.auth-mode .hdr-tabs,body.auth-mode .chat-fab{display:no
           </div>
         </div>
         <div class="hero-cards">
-          <div class="hero-card"><strong>En ligne</strong><span>Réservez à toute heure, sans appeler</span></div>
-          <div class="hero-card"><strong>Rappels</strong><span>Une notification avant votre rendez-vous</span></div>
+          <div class="hero-card"><span class="hero-card-ico"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="5" width="18" height="16" rx="3.5"/><path d="M3 9.5h18M8 3v4M16 3v4"/></svg></span><div><strong>En ligne</strong><span class="t">Réservez à toute heure, sans appeler</span></div></div>
+          <div class="hero-card"><span class="hero-card-ico"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M6 8a6 6 0 1 1 12 0c0 4 1.4 5.5 2 6.5H4c.6-1 2-2.5 2-6.5Z"/><path d="M9.5 18a2.5 2.5 0 0 0 5 0"/></svg></span><div><strong>Rappels</strong><span class="t">Une notification avant votre rendez-vous</span></div></div>
         </div>
       </div>
     </div>
