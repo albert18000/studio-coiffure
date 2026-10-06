@@ -598,17 +598,43 @@ body:has(.ov.on) .chat-fab{visibility:hidden}
           <input class="inp" id="r-user" placeholder="jean_dupont" autocomplete="username" autocapitalize="none" spellcheck="false">
           <p style="font-size:11px;color:var(--hint);margin-top:5px">Lettres, chiffres et _ uniquement.</p>
         </div>
+        <div class="fld"><label class="lbl">Mot de passe</label>
+          <input class="inp" id="r-pass" type="password" placeholder="8 caractères minimum" autocomplete="new-password" onkeydown="if(event.key==='Enter')doReg()">
+        </div>
         <button class="btn btn-dark" id="reg-btn" onclick="doReg()">Créer mon compte</button>
       </div>
       <div id="v-login" style="display:none">
         <h1>Connexion</h1>
-        <p class="sub">Entre ton pseudo.</p>
+        <p class="sub">Entre ton pseudo et ton mot de passe.</p>
         <div id="log-msg" class="msg"></div>
         <div class="fld"><label class="lbl">Pseudo</label>
           <input class="inp" id="l-user" placeholder="jean_dupont" autocomplete="username" autocapitalize="none" spellcheck="false" onkeydown="if(event.key==='Enter')doLogin()">
         </div>
+        <div class="fld"><label class="lbl">Mot de passe</label>
+          <input class="inp" id="l-pass" type="password" autocomplete="current-password" onkeydown="if(event.key==='Enter')doLogin()">
+          <p style="font-size:11px;color:var(--hint);margin-top:5px">Pas encore de mot de passe ? Entre juste ton pseudo.</p>
+        </div>
         <button class="btn btn-dark" id="login-btn" onclick="doLogin()">Se connecter</button>
         <div class="auth-ft"><button class="link" onclick="sv('v-land')">Retour</button></div>
+      </div>
+      <div id="v-claim" style="display:none">
+        <h1>Choisis ton mot de passe</h1>
+        <p class="sub">La connexion se fait maintenant avec un mot de passe. Confirme ton compte avec l'email donné à l'inscription.</p>
+        <div id="claim-msg" class="msg"></div>
+        <div class="fld"><label class="lbl">Pseudo</label>
+          <input class="inp" id="c-user" autocomplete="username" autocapitalize="none" spellcheck="false">
+        </div>
+        <div class="fld"><label class="lbl">Email</label>
+          <input class="inp" id="c-email" type="email" placeholder="jean@email.com" autocomplete="email">
+        </div>
+        <div class="fld"><label class="lbl">Nouveau mot de passe</label>
+          <input class="inp" id="c-pass" type="password" placeholder="8 caractères minimum" autocomplete="new-password" onkeydown="if(event.key==='Enter')doClaim()">
+        </div>
+        <div class="fld" id="c-code-fld" style="display:none"><label class="lbl">Code admin</label>
+          <input class="inp" id="c-code" autocomplete="off" autocapitalize="characters" spellcheck="false">
+        </div>
+        <button class="btn btn-dark" id="claim-btn" onclick="doClaim()">Valider</button>
+        <div class="auth-ft"><button class="link" onclick="sv('v-login')">Retour</button></div>
       </div>
     </div>
     </div>
@@ -1233,7 +1259,7 @@ async function runChatTurn(){
     while(iterations<6){
       iterations++;
       const res=await fetch('/.netlify/functions/chat',{
-        method:'POST',headers:{'Content-Type':'application/json'},
+        method:'POST',headers:await authHeaders(),
         body:JSON.stringify({system:buildChatSystemPrompt(),messages:chatMessages,tools:CHAT_TOOLS})
       });
       const data=await res.json();
@@ -1321,13 +1347,12 @@ async function executeToolCall(name,input){
     return 'Erreur lors de l\'exécution.';
   }
 }
+// Destinataires (admins) et texte construits par la fonction notify, pas ici.
 async function notifyAdminsOfSlotRequest(date,time){
-  const adminIds=allUsers.filter(u=>u.is_admin&&u.onesignal_id).map(u=>u.onesignal_id);
-  if(!adminIds.length)return;
   try{
     await fetch('/.netlify/functions/notify',{
-      method:'POST',headers:{'Content-Type':'application/json'},
-      body:JSON.stringify({player_ids:adminIds,title:'Nouvelle demande de créneau',message:(CU.first||CU.username)+' souhaite un créneau le '+date+' à '+time+'.'})
+      method:'POST',headers:await authHeaders(),
+      body:JSON.stringify({kind:'slot_request',date,time})
     });
   }catch(e){console.error(e);}
 }
@@ -1336,7 +1361,7 @@ async function notifyClientOfSlotRequestUpdate(clientId,title,message){
   if(!client||!client.onesignal_id)return;
   try{
     await fetch('/.netlify/functions/notify',{
-      method:'POST',headers:{'Content-Type':'application/json'},
+      method:'POST',headers:await authHeaders(),
       body:JSON.stringify({player_ids:[client.onesignal_id],title,message})
     });
   }catch(e){console.error(e);}
@@ -1442,7 +1467,7 @@ async function submitHairReco(){
   }catch(e){}
   try{
     const res=await fetch('/.netlify/functions/recommend',{
-      method:'POST',headers:{'Content-Type':'application/json'},
+      method:'POST',headers:await authHeaders(),
       body:JSON.stringify({questionnaire,images,trends})
     });
     const data=await res.json();
@@ -1485,13 +1510,9 @@ async function boot(){
   showLoader(true,'Chargement…');
   fillTimeDropdowns();
   try{
-    const sessId=localStorage.getItem('cb_session');
-    if(sessId){const{data:u}=await sb.from('users').select('*').eq('id',sessId).single();if(u)CU=u;}
-    const{data:inv}=await sb.from('settings').select('value').eq('key','invite_code').single();
-    if(inv)inviteCode=inv.value;
-    else{inviteCode=genCode();await sb.from('settings').insert({key:'invite_code',value:inviteCode});}
-    const{data:persona}=await sb.from('settings').select('value').eq('key','chatbot_persona').single();
-    if(persona)chatbotPersona=persona.value;
+    try{localStorage.removeItem('cb_session');}catch(e){}
+    const{data:{session}}=await sb.auth.getSession();
+    if(session){CU=await fetchMember();if(!CU)await sb.auth.signOut({scope:'local'});}
     const params=new URLSearchParams(location.search);
     const urlInv=params.get('inv');
     if(urlInv&&!CU){document.getElementById('inv-inp').value=urlInv.toUpperCase();sv('v-inv');setTimeout(()=>checkInvite(),300);}
@@ -1499,7 +1520,6 @@ async function boot(){
     else showScr('s-auth');
   }catch(e){console.error(e);showScr('s-auth');}
   showLoader(false);
-  setupRealtime();
 }
 
 function fillTimeDropdowns(){
@@ -1830,8 +1850,30 @@ async function showAnnoncePopup(){
 
 // ── AUTH ──
 function sv(id){
-  ['v-land','v-inv','v-reg','v-login'].forEach(v=>document.getElementById(v).style.display=v===id?'':'none');
+  ['v-land','v-inv','v-reg','v-login','v-claim'].forEach(v=>document.getElementById(v).style.display=v===id?'':'none');
   document.getElementById('hero').classList.toggle('land',id==='v-land');
+}
+let validInvite=null;
+async function fetchMember(){const{data,error}=await sb.rpc('current_member');return(!error&&data&&data.id)?data:null;}
+async function authHeaders(){
+  const{data:{session}}=await sb.auth.getSession();
+  return{'Content-Type':'application/json',...(session?{Authorization:'Bearer '+session.access_token}:{})};
+}
+// Adresse technique de connexion : jamais affichée ni utilisée pour écrire au client.
+const newLoginEmail=()=>'m-'+crypto.randomUUID()+'@membres.albarber.app';
+function authErrorText(e){
+  if(!e)return'Inscription impossible pour le moment. Préviens le salon.';
+  if(e.status===429)return'Trop d\'essais. Attends quelques minutes.';
+  if(e.code==='weak_password')return'Mot de passe trop faible. Choisis-en un plus long.';
+  return'Erreur. Réessaie.';
+}
+async function loadMemberSettings(){
+  const{data:persona}=await sb.from('settings').select('value').eq('key','chatbot_persona').maybeSingle();
+  chatbotPersona=persona?persona.value:'';
+  if(!CU.is_admin)return;
+  const{data:inv}=await sb.from('settings').select('value').eq('key','invite_code').maybeSingle();
+  if(inv)inviteCode=inv.value;
+  else{inviteCode=genCode();await sb.from('settings').insert({key:'invite_code',value:inviteCode});}
 }
 const genCode=()=>{const c='ABCDEFGHJKLMNPQRSTUVWXYZ23456789';let s='INV-';for(let i=0;i<6;i++)s+=c[Math.floor(Math.random()*c.length)];return s;};
 
@@ -1839,8 +1881,9 @@ async function checkInvite(){
   const raw=document.getElementById('inv-inp').value.trim().toUpperCase();
   const code=raw.startsWith('INV-')?raw:'INV-'+raw;
   const m=document.getElementById('inv-msg');
-  const{data:inv}=await sb.from('settings').select('value').eq('key','invite_code').single();
-  if(code!==(inv?.value||inviteCode)){showMsg(m,'err','Code invalide.');return;}
+  const{data:ok}=await sb.rpc('check_invite',{p_code:code});
+  if(!ok){showMsg(m,'err','Code invalide.');return;}
+  validInvite=code;
   showMsg(m,'ok','Code valide.');setTimeout(()=>sv('v-reg'),600);
 }
 
@@ -1853,37 +1896,98 @@ async function doReg(){
   if(!first||!last||!email||!username){showMsg(m,'err','Tous les champs sont obligatoires.');return;}
   if(!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)){showMsg(m,'err','Adresse email invalide.');return;}
   if(!/^[a-z0-9_]{2,20}$/.test(username)){showMsg(m,'err','Pseudo : 2-20 caractères (lettres, chiffres, _)');return;}
+  const pass=document.getElementById('r-pass').value;
+  if(pass.length<8){showMsg(m,'err','Mot de passe : 8 caractères minimum.');return;}
+  if(!validInvite){showMsg(m,'err','Entre d\'abord ton code d\'invitation.');setTimeout(()=>sv('v-inv'),900);return;}
   setBtnLoading('reg-btn',true);
-  const{data:exist}=await sb.from('users').select('id').eq('username',username).single();
-  if(exist){showMsg(m,'err','Ce pseudo est déjà utilisé.');setBtnLoading('reg-btn',false);return;}
-  const{data:u,error}=await sb.from('users').insert({
-    username,first,last,email,is_admin:false,
-    notif_available:true,notif_released:true,notif_reminder:true,notif_confirm:true
-  }).select().single();
-  if(error||!u){showMsg(m,'err',error&&error.code==='23505'?'Ce pseudo est déjà utilisé.':'Erreur. Réessaie.');setBtnLoading('reg-btn',false);return;}
-  CU=u;localStorage.setItem('cb_session',u.id);
+  const{data:st}=await sb.rpc('login_status',{p_username:username});
+  if(st&&st.exists){showMsg(m,'err','Ce pseudo est déjà utilisé.');setBtnLoading('reg-btn',false);return;}
+  const{data:au,error:ae}=await sb.auth.signUp({email:newLoginEmail(),password:pass});
+  if(ae||!au.session){showMsg(m,'err',authErrorText(ae));setBtnLoading('reg-btn',false);return;}
+  const{data:u,error}=await sb.rpc('register_profile',{p_invite:validInvite,p_username:username,p_first:first,p_last:last,p_email:email});
+  if(error||!u||!u.id){
+    await sb.rpc('discard_orphan_auth');await sb.auth.signOut({scope:'local'});
+    showMsg(m,'err',error&&error.code==='23505'?'Ce pseudo est déjà utilisé.':'Erreur. Réessaie.');setBtnLoading('reg-btn',false);return;
+  }
+  CU=u;validInvite=null;
   showMsg(m,'ok','Compte créé. Bienvenue '+first+'.');setTimeout(enterApp,700);
 }
 
 async function doLogin(){
   const username=document.getElementById('l-user').value.trim().toLowerCase();
   const m=document.getElementById('log-msg');
+  const pass=document.getElementById('l-pass').value;
   if(!username){showMsg(m,'err','Entre ton pseudo.');return;}
   setBtnLoading('login-btn',true);
-  const{data:u}=await sb.from('users').select('*').eq('username',username).single();
-  if(!u){showMsg(m,'err','Pseudo introuvable.');setBtnLoading('login-btn',false);return;}
-  CU=u;localStorage.setItem('cb_session',u.id);await enterApp();
+  const{data:st,error:se}=await sb.rpc('login_status',{p_username:username});
+  if(se||!st){showMsg(m,'err','Erreur. Réessaie.');setBtnLoading('login-btn',false);return;}
+  if(!st.exists){showMsg(m,'err','Pseudo introuvable.');setBtnLoading('login-btn',false);return;}
+  if(!st.claimed){setBtnLoading('login-btn',false);openClaim(username,st);return;}
+  if(!pass){showMsg(m,'err','Entre ton mot de passe.');setBtnLoading('login-btn',false);return;}
+  const{error}=await sb.auth.signInWithPassword({email:st.email,password:pass});
+  if(error){showMsg(m,'err',error.status===429?'Trop d\'essais. Attends quelques minutes.':'Mot de passe incorrect.');setBtnLoading('login-btn',false);return;}
+  CU=await fetchMember();
+  setBtnLoading('login-btn',false);
+  if(!CU){await sb.auth.signOut({scope:'local'});showMsg(m,'err','Erreur. Réessaie.');return;}
+  await enterApp();
+}
+
+// Membre inscrit avant les mots de passe : il relie son compte avec son email.
+function openClaim(username,st){
+  document.getElementById('c-user').value=username;
+  document.getElementById('c-code-fld').style.display='none';
+  sv('v-claim');
+  const m=document.getElementById('claim-msg');
+  if(st.locked)showMsg(m,'err','Trop d\'essais. Demande au salon de débloquer ton compte.');
+  else if(!st.has_email)showMsg(m,'err','Aucun email enregistré sur ce compte. Demande au salon.');
+  else showMsg(m,'ok','Première connexion avec mot de passe.');
+}
+const CLAIM_ERRORS={
+  email:'Email incorrect. Mets celui donné à l\'inscription.',
+  admin_code_required:'Compte admin : entre aussi le code admin.',
+  admin_code:'Code admin incorrect.',
+  locked:'Trop d\'essais. Demande au salon de débloquer ton compte.',
+  no_email:'Aucun email enregistré sur ce compte. Demande au salon.',
+  already_claimed:'Ce compte a déjà un mot de passe. Connecte-toi.',
+  not_found:'Pseudo introuvable.'
+};
+async function doClaim(){
+  const username=document.getElementById('c-user').value.trim().toLowerCase();
+  const email=document.getElementById('c-email').value.trim().toLowerCase();
+  const pass=document.getElementById('c-pass').value;
+  const code=document.getElementById('c-code').value.trim().toUpperCase();
+  const m=document.getElementById('claim-msg');
+  if(!username||!email){showMsg(m,'err','Pseudo et email obligatoires.');return;}
+  if(pass.length<8){showMsg(m,'err','Mot de passe : 8 caractères minimum.');return;}
+  setBtnLoading('claim-btn',true);
+  const{data:au,error:ae}=await sb.auth.signUp({email:newLoginEmail(),password:pass});
+  if(ae||!au.session){showMsg(m,'err',authErrorText(ae));setBtnLoading('claim-btn',false);return;}
+  const{data:r,error}=await sb.rpc('claim_profile',{p_username:username,p_email:email,p_admin_code:code||null});
+  if(error||!r||!r.ok){
+    // En cas d'échec, claim_profile a déjà supprimé le compte de connexion créé juste avant.
+    if(error)await sb.rpc('discard_orphan_auth');
+    await sb.auth.signOut({scope:'local'});
+    setBtnLoading('claim-btn',false);
+    const reason=r&&r.reason;
+    if(reason==='admin_code_required'||reason==='admin_code')document.getElementById('c-code-fld').style.display='';
+    showMsg(m,'err',CLAIM_ERRORS[reason]||'Erreur. Réessaie.');
+    return;
+  }
+  CU=r.member;
+  setBtnLoading('claim-btn',false);
+  showMsg(m,'ok','Mot de passe enregistré.');setTimeout(enterApp,600);
 }
 
 function doLogout(){
-  CU=null;localStorage.removeItem('cb_session');
+  CU=null;sb.auth.signOut();
+  if(rtChannel){sb.removeChannel(rtChannel);rtChannel=null;}
   document.getElementById('ubadge').style.display='none';
   document.getElementById('logout-btn').style.display='none';
   document.getElementById('hdr-tabs').style.display='none';
   document.getElementById('bell-btn').style.display='none';
   document.getElementById('leg-hidden').style.display='none';
-  ['l-user','r-first','r-last','r-email','r-user','inv-inp'].forEach(id=>{const el=document.getElementById(id);if(el)el.value='';});
-  ['log-msg','reg-msg','inv-msg'].forEach(id=>{const el=document.getElementById(id);if(el)el.classList.remove('on');});
+  ['l-user','l-pass','r-first','r-last','r-email','r-user','r-pass','c-user','c-email','c-pass','c-code','inv-inp'].forEach(id=>{const el=document.getElementById(id);if(el)el.value='';});
+  ['log-msg','reg-msg','inv-msg','claim-msg'].forEach(id=>{const el=document.getElementById(id);if(el)el.classList.remove('on');});
   closeM();closeAlert();closeAnnonces();pendSlot=null;
   history.replaceState(null,'',location.pathname);
   showScr('s-auth');sv('v-land');
@@ -1898,7 +2002,9 @@ async function touchLastSeen(){
 async function enterApp(){
   showLoader(true,'Chargement…');
   await touchLastSeen();
+  await loadMemberSettings();
   await loadSlots();await loadUsers();await loadAnnonces();await loadServices();await loadPayments();
+  setupRealtime();
   populateServiceSelects();
   showLoader(false);
   const badge=document.getElementById('ubadge');
@@ -2687,8 +2793,10 @@ function renderMembres(){
       <div style="display:flex;align-items:center;gap:11px;margin-bottom:${reservations.length?'9':'0'}px">
         <div style="width:38px;height:38px;border-radius:var(--r);background:var(--acc);display:flex;align-items:center;justify-content:center;color:var(--on-cta);font-weight:700;font-size:13px;flex-shrink:0;font-family:'Libre Franklin',sans-serif;overflow:hidden">${pic}</div>
         <div style="flex:1"><div style="font-weight:700;font-size:14px">${escapeHtml(u.first)} ${escapeHtml(u.last)}</div>
-        <div style="font-size:12px;color:var(--muted)">@${escapeHtml(u.username)} · ${escapeHtml(u.email||'')} · ${reservations.length} résa</div></div>
+        <div style="font-size:12px;color:var(--muted)">@${escapeHtml(u.username)} · ${escapeHtml(u.email||'')} · ${reservations.length} résa</div>
+        <div style="font-size:11px;color:var(--hint)">${u.auth_id?'Mot de passe activé':(u.claim_attempts>=5?'Bloqué après 5 essais':'Pas encore de mot de passe')}</div></div>
         <span class="mb-lastseen">${relTime(u.last_seen_at)}</span>
+        ${u.auth_id||u.claim_attempts>=5?`<button class="btn btn-out btn-sm" style="padding:5px 10px;font-size:12px" onclick="resetAccess('${u.id}')">${u.auth_id?'Mot de passe oublié':'Débloquer'}</button>`:''}
         <button class="btn btn-out btn-sm" style="color:var(--red);border-color:var(--red-b);padding:5px 10px;font-size:12px" onclick="delUser('${u.id}')">Supprimer</button>
       </div>${resHtml}</div>`;
   }).join('');
@@ -2713,7 +2821,7 @@ async function refreshTrends(){
   btn.disabled=true;
   showMsg(m,'ok','Recherche en cours…');
   try{
-    const res=await fetch('/.netlify/functions/refresh-trends',{method:'POST'});
+    const res=await fetch('/.netlify/functions/refresh-trends',{method:'POST',headers:await authHeaders()});
     const data=await res.json();
     if(!res.ok||data.error||!data.summary){
       console.error('refresh-trends error',data);
@@ -2736,6 +2844,12 @@ function cpInvite(){
 async function regenInvite(){
   if(!confirm('Nouveau code ? L\'ancien ne fonctionnera plus.'))return;
   inviteCode=genCode();await sb.from('settings').upsert({key:'invite_code',value:inviteCode});renderAInvite();showToast('Nouveau code généré.');
+}
+async function resetAccess(id){
+  if(!confirm('Retirer le mot de passe de ce membre ? Il en choisira un nouveau à sa prochaine connexion, avec son email.'))return;
+  const{error}=await sb.rpc('admin_reset_access',{p_member:id});
+  if(error){console.error(error);showToast('Erreur. Réessaie.');return;}
+  await loadUsers();renderMembres();showToast('Mot de passe retiré.');
 }
 async function delUser(id){
   if(!confirm('Supprimer ce membre et ses réservations ?'))return;
@@ -2857,7 +2971,7 @@ async function saveNotifPref(){
 }
 
 // ── UTILS ──
-function setBtnLoading(id,v){const b=document.getElementById(id);if(!b)return;b.disabled=v;b.textContent=v?'Chargement…':(id==='login-btn'?'Se connecter':'Créer mon compte');}
+function setBtnLoading(id,v){const b=document.getElementById(id);if(!b)return;b.disabled=v;b.textContent=v?'Chargement…':({'login-btn':'Se connecter','claim-btn':'Valider'}[id]||'Créer mon compte');}
 function showMsg(el,type,text){el.textContent=text;el.className='msg on '+type;clearTimeout(el._t);el._t=setTimeout(()=>el.classList.remove('on'),5000);}
 let tTimer;
 function showToast(msg){const t=document.getElementById('toast');t.textContent=msg;t.classList.add('on');clearTimeout(tTimer);tTimer=setTimeout(()=>t.classList.remove('on'),2600);}

@@ -1,3 +1,5 @@
+const { getMember, unauthorized } = require('./_shared/auth');
+
 exports.handler = async function(event) {
   if (event.httpMethod !== 'POST') {
     return { statusCode: 405, body: 'Method Not Allowed' };
@@ -18,11 +20,22 @@ exports.handler = async function(event) {
     };
   }
 
+  const member = await getMember(event);
+  if (!member) return unauthorized();
+
+  // Garde-fous de taille : la conversation du site reste bien en dessous.
+  if ((event.body || '').length > 200000) {
+    return { statusCode: 413, body: JSON.stringify({ error: 'Conversation trop longue.' }) };
+  }
+
   try {
     const { system, messages, tools } = JSON.parse(event.body);
 
-    if (!messages || !messages.length) {
+    if (!Array.isArray(messages) || !messages.length) {
       return { statusCode: 400, body: JSON.stringify({ error: 'Paramètres manquants (messages).' }) };
+    }
+    if (messages.length > 60) {
+      return { statusCode: 413, body: JSON.stringify({ error: 'Conversation trop longue.' }) };
     }
 
     const response = await fetch('https://api.anthropic.com/v1/messages', {
@@ -48,7 +61,6 @@ exports.handler = async function(event) {
     }
     return {
       statusCode: response.ok ? 200 : response.status,
-      headers: { 'Access-Control-Allow-Origin': '*' },
       body: JSON.stringify(data)
     };
   } catch (e) {

@@ -1,3 +1,5 @@
+const { getMember, unauthorized } = require('./_shared/auth');
+
 exports.handler = async function(event) {
   if (event.httpMethod !== 'POST') {
     return { statusCode: 405, body: 'Method Not Allowed' };
@@ -12,6 +14,14 @@ exports.handler = async function(event) {
       statusCode: 500,
       body: JSON.stringify({ error: 'Configuration Anthropic manquante sur Netlify (ANTHROPIC_API_KEY).' })
     };
+  }
+
+  const member = await getMember(event);
+  if (!member) return unauthorized();
+
+  // 3 photos compressées par le site : quelques centaines de Ko au total.
+  if ((event.body || '').length > 5000000) {
+    return { statusCode: 413, body: JSON.stringify({ error: 'Photos trop lourdes.' }) };
   }
 
   try {
@@ -88,7 +98,6 @@ exports.handler = async function(event) {
     }
     return {
       statusCode: response.ok ? 200 : response.status,
-      headers: { 'Access-Control-Allow-Origin': '*' },
       body: JSON.stringify(data)
     };
   } catch (e) {
