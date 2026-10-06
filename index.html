@@ -20,7 +20,7 @@
 <meta property="og:image:alt" content="AlBarber, réserve ta coupe en ligne">
 <meta name="twitter:card" content="summary_large_image">
 <link rel="icon" href="favicon.ico" sizes="32x32">
-<link rel="icon" href="assets/icons/icon.svg" type="image/svg+xml">
+<link rel="icon" href="assets/icons/icon-192.png" type="image/png" sizes="192x192">
 <link rel="apple-touch-icon" href="assets/icons/apple-touch-icon.png">
 <link rel="manifest" href="manifest.webmanifest">
 <link rel="preload" href="assets/fonts/lf-latin.woff2" as="font" type="font/woff2" crossorigin>
@@ -470,7 +470,8 @@ body:has(.ov.on) .chat-fab{visibility:hidden}
 .hero.has-photo .hero-bg{display:block;background-image:var(--hero-img)}
 .hero.has-photo .hero-bg::after{content:'';position:absolute;inset:0;background:var(--veil-hero)}
 .hero-nav{position:absolute;top:0;left:0;right:0;z-index:5;display:flex;align-items:center;justify-content:space-between;padding:clamp(18px,3vw,30px) clamp(20px,4.4vw,64px)}
-.hero-brand{font-weight:800;letter-spacing:.24em;text-transform:uppercase;font-size:14px}
+.hero-brand{font-weight:800;letter-spacing:.24em;text-transform:uppercase;font-size:14px;display:flex;align-items:center;gap:10px}
+.brand-mark{height:24px;width:auto;display:block}
 .hero-pill{background:var(--f3);border:1px solid var(--l2);color:var(--white);padding:11px 20px;font-size:12px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;cursor:pointer;font-family:inherit;-webkit-backdrop-filter:blur(14px);backdrop-filter:blur(14px);transition:transform .12s var(--ease-out)}
 .hero-pill:active{transform:scale(.97)}
 .hero:not(.land) .hero-pill{display:none}
@@ -526,7 +527,7 @@ body:has(.ov.on) .chat-fab{visibility:hidden}
 <div class="app-bg" id="app-bg" aria-hidden="true"></div>
 
 <div class="hdr">
-  <div class="logo"><span>AlBarber</span></div>
+  <div class="logo"><img class="brand-mark" src="assets/logo.png" alt="" width="33" height="24"><span>AlBarber</span></div>
   <div class="hdr-r">
     <button class="bell-btn" id="bell-btn" style="display:none" onclick="openAnnonces()" title="Annonces">Annonces<span class="bell-badge" id="bell-badge"></span></button>
     <span class="badge" id="ubadge" style="display:none"></span>
@@ -555,7 +556,7 @@ body:has(.ov.on) .chat-fab{visibility:hidden}
   <div class="hero land" id="hero">
     <div class="hero-bg"></div>
     <div class="hero-nav">
-      <div class="hero-brand">AlBarber</div>
+      <div class="hero-brand"><img class="brand-mark" src="assets/logo.png" alt="" width="33" height="24"><span>AlBarber</span></div>
       <button class="hero-pill" onclick="sv('v-login')">Se connecter</button>
     </div>
     <div id="v-land" class="hero-land">
