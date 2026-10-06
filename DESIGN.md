@@ -63,7 +63,12 @@ Pas de capitales espacées en dehors du nom « ALBARBER » et du titre d'accueil
 ## Icônes
 
 Un seul jeu : Phosphor, style Regular, 20 px, trait de la couleur du texte.
-Usages autorisés : calendrier et cloche sur l'accueil. Le reste de l'interface est en texte.
+Usages autorisés : calendrier et cloche sur l'accueil, calendrier dans la bulle centrale de la barre du bas (26 px). Le reste de l'interface est en texte.
+
+## Barre du bas
+
+Calendrier au centre, dans une bulle surélevée de 56 px (rayon `--r`, fond `--cta` quand l'onglet est ouvert, `--f3` sinon), icône et libellé.
+Les autres onglets restent en texte, répartis de chaque côté : Paiement à gauche, Profil et Admin à droite.
 Aucun emoji dans l'interface.
 
 ## Mouvement
