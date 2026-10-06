@@ -102,8 +102,8 @@ Avec « réduire les animations » activé dans le système, plus aucune animati
 
 ## Identité et fichiers publics
 
-- Logo : pas encore de logo. Le monogramme « A » (`assets/icons/icon.svg`) est un remplaçant. À changer quand le logo existe.
-- Favicon : `favicon.ico` (16 et 32 px), `assets/icons/icon.svg`, `apple-touch-icon.png` (180 px), `icon-192.png`, `icon-512.png`, déclarés dans `manifest.webmanifest`.
+- Logo : monogramme « AB » prune (`#4A1637`) sur crème (`#F3EBDE`). Sur le fond sombre du site, version claire `assets/logo.png` (couleur `--tx`, fond transparent), 24 px de haut, à gauche du nom « ALBARBER ». Les icônes d'app gardent le fond crème.
+- Favicon : `favicon.ico` (16, 32 et 48 px), `apple-touch-icon.png` (180 px), `icon-192.png`, `icon-512.png`, déclarés dans `manifest.webmanifest`.
 - Image de partage : `assets/og.png` (1200 × 630), texte seul, sans portrait.
 - Portrait d'accueil : `assets/hero.jpg` est une image générée, provisoire. À remplacer par une vraie photo.
 - Pages : `index.html` et `404.html`. Styles de la page 404 dans `assets/page.css`, mêmes variables.
