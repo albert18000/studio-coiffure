@@ -1,3 +1,5 @@
+const { getMember, unauthorized, forbidden } = require('./_shared/auth');
+
 exports.handler = async function(event) {
   if (event.httpMethod !== 'POST') {
     return { statusCode: 405, body: 'Method Not Allowed' };
@@ -12,6 +14,10 @@ exports.handler = async function(event) {
       body: JSON.stringify({ error: 'Configuration Anthropic manquante sur Netlify (ANTHROPIC_API_KEY).' })
     };
   }
+
+  const member = await getMember(event);
+  if (!member) return unauthorized();
+  if (!member.is_admin) return forbidden();
 
   try {
     const response = await fetch('https://api.anthropic.com/v1/messages', {
@@ -38,8 +44,7 @@ exports.handler = async function(event) {
       console.error('Erreur API Anthropic:', JSON.stringify(data));
       return {
         statusCode: response.status,
-        headers: { 'Access-Control-Allow-Origin': '*' },
-        body: JSON.stringify(data)
+          body: JSON.stringify(data)
       };
     }
 
@@ -48,7 +53,6 @@ exports.handler = async function(event) {
 
     return {
       statusCode: 200,
-      headers: { 'Access-Control-Allow-Origin': '*' },
       body: JSON.stringify({ summary })
     };
   } catch (e) {
