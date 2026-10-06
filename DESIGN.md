@@ -102,7 +102,7 @@ Avec « réduire les animations » activé dans le système, plus aucune animati
 
 ## Identité et fichiers publics
 
-- Logo : monogramme « AB » prune (`#4A1637`) sur crème (`#F3EBDE`). Sur le fond sombre du site, version claire `assets/logo.png` (couleur `--tx`, fond transparent), 24 px de haut, à gauche du nom « ALBARBER ». Les icônes d'app gardent le fond crème.
+- Logo : monogramme « AB » prune (`#4A1637`) sur crème (`#F3EBDE`). Sur le fond sombre du site, version claire `assets/logo.png` (couleur `--tx`, fond transparent), seul, sans le nom écrit : 28 px de haut dans l'en-tête et sur l'accueil, 64 px sur l'écran de chargement (fixe, sans animation). Les icônes d'app gardent le fond crème.
 - Favicon : `favicon.ico` (16, 32 et 48 px), `apple-touch-icon.png` (180 px), `icon-192.png`, `icon-512.png`, déclarés dans `manifest.webmanifest`.
 - Image de partage : `assets/og.png` (1200 × 630), texte seul, sans portrait.
 - Portrait d'accueil : `assets/hero.jpg` est une image générée, provisoire. À remplacer par une vraie photo.

@@ -59,7 +59,6 @@ button,input,select,textarea{font-family:inherit}
 /* LOADER */
 .loader-wrap{position:fixed;inset:0;background:var(--bg);display:flex;flex-direction:column;align-items:center;justify-content:center;z-index:999;gap:8px;transition:opacity .35s var(--ease-out)}
 .loader-wrap.hide{opacity:0;pointer-events:none}
-.loader-brand{font-family:'Libre Franklin',sans-serif;font-size:32px;color:var(--acc)}
 .loader-txt{font-size:12px;color:var(--muted)}
 
 .rt-dot{width:7px;height:7px;border-radius:var(--r);background:var(--green);display:inline-block;margin-right:4px}
@@ -451,7 +450,6 @@ table.cal,.cal th{background:transparent}
 .chat-slot-chip{background:var(--f2);color:var(--tx);border-color:var(--l2)}
 .toast{background:var(--cta);color:var(--on-cta);box-shadow:0 12px 40px var(--shade)}
 .loader-wrap{background:var(--bg)}
-.loader-brand{color:var(--white);font-weight:800;letter-spacing:.24em;text-transform:uppercase;font-size:20px}
 .loader-txt{color:var(--muted)}
 @media(hover:hover) and (pointer:fine){
   .sc.free:hover{background:var(--green-h)}
@@ -471,7 +469,8 @@ body:has(.ov.on) .chat-fab{visibility:hidden}
 .hero.has-photo .hero-bg::after{content:'';position:absolute;inset:0;background:var(--veil-hero)}
 .hero-nav{position:absolute;top:0;left:0;right:0;z-index:5;display:flex;align-items:center;justify-content:space-between;padding:clamp(18px,3vw,30px) clamp(20px,4.4vw,64px)}
 .hero-brand{font-weight:800;letter-spacing:.24em;text-transform:uppercase;font-size:14px;display:flex;align-items:center;gap:10px}
-.brand-mark{height:24px;width:auto;display:block}
+.brand-mark{height:28px;width:auto;display:block}
+.loader-logo{height:64px;width:auto;display:block;margin-bottom:8px}
 .hero-pill{background:var(--f3);border:1px solid var(--l2);color:var(--white);padding:11px 20px;font-size:12px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;cursor:pointer;font-family:inherit;-webkit-backdrop-filter:blur(14px);backdrop-filter:blur(14px);transition:transform .12s var(--ease-out)}
 .hero-pill:active{transform:scale(.97)}
 .hero:not(.land) .hero-pill{display:none}
@@ -520,14 +519,14 @@ body:has(.ov.on) .chat-fab{visibility:hidden}
 <body>
 
 <div class="loader-wrap" id="loader">
-  <div class="loader-brand">AlBarber</div>
+  <img class="loader-logo" src="assets/logo.png" alt="AlBarber" width="88" height="64">
   <div class="loader-txt" id="loader-txt">Chargement…</div>
 </div>
 
 <div class="app-bg" id="app-bg" aria-hidden="true"></div>
 
 <div class="hdr">
-  <div class="logo"><img class="brand-mark" src="assets/logo.png" alt="" width="33" height="24"><span>AlBarber</span></div>
+  <div class="logo"><img class="brand-mark" src="assets/logo.png" alt="AlBarber" width="38" height="28"></div>
   <div class="hdr-r">
     <button class="bell-btn" id="bell-btn" style="display:none" onclick="openAnnonces()" title="Annonces">Annonces<span class="bell-badge" id="bell-badge"></span></button>
     <span class="badge" id="ubadge" style="display:none"></span>
@@ -556,7 +555,7 @@ body:has(.ov.on) .chat-fab{visibility:hidden}
   <div class="hero land" id="hero">
     <div class="hero-bg"></div>
     <div class="hero-nav">
-      <div class="hero-brand"><img class="brand-mark" src="assets/logo.png" alt="" width="33" height="24"><span>AlBarber</span></div>
+      <div class="hero-brand"><img class="brand-mark" src="assets/logo.png" alt="AlBarber" width="38" height="28"></div>
       <button class="hero-pill" onclick="sv('v-login')">Se connecter</button>
     </div>
     <div id="v-land" class="hero-land">
